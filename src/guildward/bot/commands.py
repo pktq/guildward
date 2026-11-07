@@ -12,12 +12,12 @@ from typing import TYPE_CHECKING
 import discord
 from discord import app_commands
 from discord.app_commands import locale_str
-from guildward.intel.message import MESSAGE_BASE, analyze_message
 
 from guildward.bot import render
 from guildward.bot.adapters import display_name, invite_facts, parse_invite_code, user_facts
 from guildward.core.i18n import Lang, has, lang_for, register, t
 from guildward.core.models import Confidence, Kind, Signal, Verdict, build_verdict
+from guildward.intel.message import MESSAGE_BASE, analyze_message
 from guildward.intel.person import account_age_signals, score_user
 from guildward.intel.server import score_invite
 
@@ -47,6 +47,8 @@ async def _reply(interaction: discord.Interaction, embed: discord.Embed,
 
 async def _send_verdict(interaction: discord.Interaction, v: Verdict, lang: Lang, subject: str) -> None:
     log.info("check kind=%s level=%s score=%d", v.kind, v.level, v.score)  # no IDs, no content
+    if (store := getattr(interaction.client, "store", None)) is not None:
+        store.bump(0, f"pocket.{v.kind}.{v.level}")  # daily count per kind+level for the owner dashboard
     await _reply(interaction, render.verdict_embed(v, lang, subject=subject), render.help_buttons(v, lang))
 
 

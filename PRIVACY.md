@@ -2,7 +2,7 @@
 
 > **Draft: needs legal review before launch.** / **Utkast: måste juridiskt granskas före lansering.**
 
-Applies to Phase 1 only: the Guildward Discord app (`/check`, "Safety check", "Is this sketchy?") and the lockdown wizard web page. / Gäller bara fas 1.
+Applies to the Guildward Discord app (`/check`, "Safety check", "Is this sketchy?") and the lockdown wizard web page. / Gäller appen, Guard och guiden (Guard-avsnittet finns än så länge bara på engelska).
 
 ---
 
@@ -28,6 +28,22 @@ We use this to make a safety verdict and send it back to you privately (only you
 - **Message text, invites, profiles and verdicts: not stored.** They are processed in memory and discarded when the reply is sent.
 - **Operational logs:** command name, outcome level (for example green, yellow, red, or error) and a timestamp. No user IDs, no content. Deleted after **14 days**.
 - **The wizard web page:** no trackers, no cookies, no analytics. Your language choice and ticked steps are kept in your own browser (localStorage) and never sent to us.
+
+## Guildward Guard (server-admin bot)
+
+Guard is a separate bot that a server's admins choose to add. In those servers only:
+
+| What | Stored? |
+|---|---|
+| Message text | **No.** Read in memory to check it, then discarded. A flagged excerpt may be posted in the server's own private moderator channel (admins can turn this off); Guard does not keep it. |
+| Member ID, username, display name, avatar link, join date, roles | Yes, to show moderators who is who |
+| An age a member said about themselves ("I'm 13"), or an age role | Yes, as a number or "under 18 / adult", to protect younger members first |
+| Warning signs: a code such as "asked someone's age", its weight, the message/channel IDs, who it was aimed at, when | Yes |
+| Reports from members, moderation actions, alerts and how they were handled | Yes |
+| Risk scores per member and per day | Yes |
+| Safety Network: "banned for child safety in this server" | Only if the server opted in; shared as a count with other opted-in servers |
+
+**Purpose and legal basis:** protecting children in that server (legitimate interest, Art. 6(1)(f), balanced by text never being stored, per-server scope, and retention limits). **Retention:** 90 days by default (admins can choose 7–365), aggregated daily counts up to 400 days. **Erasure:** admins can erase everything with `/guard erase`; members can ask the server's admins or us. **Who sees it:** that server's admins and moderators (Manage Server for the dashboard), and the Guildward operator for running the service. Nothing is used to train AI.
 
 ## Where and who
 Hosted in the EU (Hetzner, Germany or Finland). We do not sell data, show ads or build profiles. Nothing is used to train AI, and Discord's Developer Policy also forbids training on message content. We use no cloud AI service: analysis runs on our own servers.

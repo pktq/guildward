@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src 'self'; font-src 'self'; object-src 'none'; base-uri 'none'; form-action 'self'">
+  <meta name="referrer" content="no-referrer">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="color-scheme" content="dark light">
+  <title>Guildward Guard</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 2l8.5 3.4v6.1c0 5.2-3.5 9.5-8.5 11.3-5-1.8-8.5-6.1-8.5-11.3V5.4L12 2z' fill='%235b9bd5'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="app.css">
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+  <div class="app">
+    <aside class="side" id="side"></aside>
+    <main class="main" id="main" tabindex="-1"><div class="skeleton" aria-busy="true"><div class="sk sk-h"></div></div></main>
+  </div>
+  <dialog id="confirm" class="dialog" aria-labelledby="confirm-title" aria-describedby="confirm-body">
+    <form method="dialog">
+      <h2 id="confirm-title"></h2>
+      <p id="confirm-body"></p>
+      <div class="dialog-actions">
+        <button class="btn" value="cancel"></button>
+        <button class="btn btn-danger" value="ok"></button>
+      </div>
+    </form>
+  </dialog>
+  <div class="toasts" id="toasts" role="status" aria-live="polite"></div>
+  <script src="app.js"></script>
+</body>
+</html>

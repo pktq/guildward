@@ -1,0 +1,21 @@
+{
+  "user": {
+    "id": "1",
+    "name": "morphh",
+    "avatar": null
+  },
+  "owner": true,
+  "lang": "en",
+  "guilds": [
+    {
+      "id": "10",
+      "name": "Blockhaven Minecraft Kids",
+      "icon": null
+    },
+    {
+      "id": "11",
+      "name": "Pixel Pals Art Club",
+      "icon": null
+    }
+  ]
+}

@@ -1,0 +1,73 @@
+{
+  "settings": {
+    "mode": "protect",
+    "alert_channel_id": "500",
+    "alert_min_level": "yellow",
+    "ping_role_id": "601",
+    "auto_delete": true,
+    "auto_timeout": true,
+    "quarantine_role_id": "604",
+    "quarantine_new_accounts": false,
+    "raid_protection": true,
+    "warn_targets": true,
+    "network_share": true,
+    "quote_in_alerts": true,
+    "minor_role_ids": [
+      "602"
+    ],
+    "retention_days": 90,
+    "lang": "en"
+  },
+  "channels": [
+    {
+      "id": "500",
+      "name": "mod-alerts"
+    },
+    {
+      "id": "501",
+      "name": "mod-chat"
+    },
+    {
+      "id": "300",
+      "name": "general"
+    },
+    {
+      "id": "301",
+      "name": "survival-chat"
+    },
+    {
+      "id": "302",
+      "name": "builds"
+    },
+    {
+      "id": "305",
+      "name": "trading"
+    }
+  ],
+  "roles": [
+    {
+      "id": "600",
+      "name": "Admins"
+    },
+    {
+      "id": "601",
+      "name": "Mods"
+    },
+    {
+      "id": "602",
+      "name": "Under 13"
+    },
+    {
+      "id": "603",
+      "name": "13-17"
+    },
+    {
+      "id": "604",
+      "name": "Quarantine"
+    },
+    {
+      "id": "605",
+      "name": "Member"
+    }
+  ]
+}

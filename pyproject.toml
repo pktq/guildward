@@ -1,6 +1,6 @@
 [project]
 name = "guildward"
-version = "0.1.0"
+version = "0.2.0"
 description = "Open-source Discord child-safety app: kids check servers, people and messages; parents and admins get real signals."
 readme = "README.md"
 license = "AGPL-3.0-or-later"
@@ -36,6 +36,10 @@ ignore = ["RUF001", "RUF002", "RUF003"]
 
 [tool.ruff.lint.per-file-ignores]
 "src/guildward/bot/render.py" = ["E501"]  # translation table: one string per line reads better
+"src/guildward/intel/behavior.py" = ["E501"]
+"src/guildward/intel/audit.py" = ["E501"]
+"src/guildward/guard/reports.py" = ["E501"]
+"src/guildward/guard/render.py" = ["E501"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
