@@ -1,0 +1,675 @@
+<title>The Door Animatic</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Literata:opsz,wght@7..72,400;7..72,600&display=swap" rel="stylesheet">
+<style>
+/* Layout: one centred film player with burned-in captions, chapter strip beneath. Single night theme on purpose: it's a film. */
+:root{
+  color-scheme: dark;
+  --ink:#0a0d16; --panel:#121827; --line:#262f47; --text:#e9edf5; --muted:#8d96ab;
+  --screen:#7cc4ff; --lamp:#f2a65a; --danger:#ff6b6b; --safe:#5fd3a2; --warn:#ffc857;
+  --display:"Literata", Georgia, "Times New Roman", serif;
+  --body:"Atkinson Hyperlegible", system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{background:var(--ink);color:var(--text);font-family:var(--body);font-size:15px;line-height:1.5;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:20px 48px}
+.wrap{max-width:1180px;margin:0 auto;display:flex;flex-direction:column;gap:16px;align-items:center}
+header{width:100%;display:flex;flex-wrap:wrap;gap:8px 20px;align-items:baseline;justify-content:space-between}
+header h1{font-family:var(--display);font-weight:600;font-size:clamp(22px,3vw,30px);margin:0;text-wrap:balance}
+header p{margin:0;color:var(--muted);font-size:14px}
+
+.player{width:min(100%, calc((100svh - 250px) * var(--ar))); min-width:min(100%,300px)}
+.stage{position:relative;width:100%;aspect-ratio:var(--arw)/var(--arh);background:#070a12;overflow:hidden;border-radius:10px;
+  container-type:size;container-name:stage;cursor:pointer;box-shadow:0 20px 60px #0008}
+.scene{position:absolute;inset:0}
+.layer{position:absolute;inset:0}
+
+/* captions */
+.cap{position:absolute;left:6cqw;right:6cqw;bottom:4.5cqh;display:flex;justify-content:center;pointer-events:none;z-index:20}
+.cap span{background:#05070dcc;padding:.6cqmin 1.6cqmin;border-radius:.8cqmin;font-size:3.4cqmin;line-height:1.35;text-align:center;max-width:80cqw;text-wrap:balance}
+.cap b{display:block;font-size:2cqmin;letter-spacing:.14em;color:var(--warn);text-transform:uppercase;margin-bottom:.2cqmin}
+.cap .N b{color:var(--screen)} .cap .L b{color:var(--safe)}
+@container stage (aspect-ratio < 1){ .cap span{font-size:3.9cqmin;max-width:90cqw} .cap b{font-size:2.5cqmin} .cap{bottom:2.5cqh;left:4cqw;right:4cqw} }
+
+.bigplay{position:absolute;inset:0;display:grid;place-items:center;z-index:30;background:#0006;border:0;color:var(--text);cursor:pointer;font:inherit}
+.bigplay span{display:flex;align-items:center;gap:1.4cqmin;background:#0b0f1ce6;border:1px solid var(--line);padding:1.6cqmin 3cqmin;border-radius:99px;font-size:3cqmin}
+.bigplay span::before{content:"";border-left:2.4cqmin solid var(--text);border-top:1.4cqmin solid transparent;border-bottom:1.4cqmin solid transparent}
+.bigplay:focus-visible span{outline:2px solid var(--screen)}
+
+/* controls */
+.controls{width:100%;display:flex;flex-wrap:wrap;gap:10px 14px;align-items:center;margin-top:12px}
+.btn{background:var(--panel);color:var(--text);border:1px solid var(--line);border-radius:8px;padding:7px 12px;font:inherit;font-size:14px;cursor:pointer;min-width:0}
+.btn:hover{border-color:#3b4766} .btn:focus-visible{outline:2px solid var(--screen);outline-offset:2px}
+.btn[aria-pressed="true"]{background:#1e2a44;border-color:var(--screen)}
+.time{font-variant-numeric:tabular-nums;color:var(--muted);font-size:14px;min-width:92px}
+.scrub{flex:1 1 220px;min-width:0;accent-color:var(--screen)}
+.fmt{display:flex;gap:6px}
+.chapters{width:100%;display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px}
+.chapters button{text-align:left;display:flex;flex-direction:column;gap:2px}
+.chapters small{color:var(--muted);font-variant-numeric:tabular-nums}
+.chapters button.on{border-color:var(--warn)}
+.note{color:var(--muted);font-size:14px;max-width:70ch;text-align:center;margin:4px auto 0}
+
+/* shared stage pieces */
+.serif{font-family:var(--display)}
+.centerline{position:absolute;left:6cqw;right:6cqw;text-align:center}
+.hook{top:10cqh;font-family:var(--display);font-size:6.2cqmin;font-weight:600;text-shadow:0 2px 20px #000}
+svg text{font-family:var(--body)}
+
+/* S2 */
+.s2title{position:absolute;left:0;right:0;text-align:center;font-family:var(--display);font-weight:600;font-size:11cqmin;letter-spacing:.02em}
+.s2sub{position:absolute;left:0;right:0;text-align:center;color:var(--muted);font-size:3.2cqmin}
+.diag{position:absolute;left:5cqw;right:5cqw;top:27cqh;height:48cqh}
+.diag svg{width:100%;height:100%}
+.duo{position:absolute;left:6cqw;right:6cqw;top:24cqh;display:grid;grid-template-columns:1fr 1fr;gap:3cqw}
+.kcard{background:#121a2c;border:1px solid var(--line);border-radius:1.4cqmin;padding:2.6cqmin;display:flex;flex-direction:column;gap:1cqmin}
+.kcard h3{margin:0;font-family:var(--display);font-size:4.4cqmin;font-weight:600}
+.kcard.money h3{color:var(--warn)} .kcard.control h3{color:#c9a7ff}
+.kcard p{margin:0;font-size:2.6cqmin;color:#cfd5e2}
+@container stage (aspect-ratio < 1){
+  .duo{grid-template-columns:1fr;top:20cqh;gap:2cqh} .kcard h3{font-size:6cqmin} .kcard p{font-size:3.8cqmin}
+  .diag{top:24cqh;height:40cqh}
+}
+
+/* S3 chat */
+.rail{position:absolute;top:4cqh;left:0;right:0;display:flex;justify-content:center;align-items:center;gap:1.4cqmin;font-size:2.8cqmin}
+.rail .step{padding:.5cqmin 1.8cqmin;border-radius:99px;border:1px solid var(--line);color:var(--muted);transition:all .3s}
+.rail .step.on{color:#0a0d16;background:var(--warn);border-color:var(--warn);font-weight:700}
+.rail .step.past{color:var(--text)}
+.rail .arr{color:#4a5572}
+.chatpos{position:absolute;left:50%;top:13cqh;bottom:18cqh;width:46cqw;transform:translateX(-50%)}
+.chat{position:absolute;inset:0;background:#171c2b;border:1px solid var(--line);border-radius:1.4cqmin;overflow:hidden;display:flex;flex-direction:column}
+.chead{display:flex;align-items:center;gap:1.4cqmin;padding:1.4cqmin 1.8cqmin;background:#1f2538;border-bottom:1px solid var(--line);transition:background .4s,color .4s}
+.chead.app2{background:#e8b84a;color:#1a1408}
+.chead .av{width:4.6cqmin;height:4.6cqmin;border-radius:50%;background:linear-gradient(135deg,#ffb3c7,#c79bff);flex:none}
+.chead b{display:block;font-size:2.6cqmin}
+.chead small{display:block;font-size:1.9cqmin;opacity:.7}
+.cbody{position:absolute;left:0;right:0;top:8.6cqmin;bottom:0;padding:1.8cqmin;display:flex;flex-direction:column;gap:1.2cqmin}
+.bub{max-width:78%;padding:1cqmin 1.6cqmin;border-radius:1.6cqmin;font-size:2.4cqmin;line-height:1.3;opacity:0}
+.bub.them{background:#2a3150;align-self:flex-start;border-bottom-left-radius:.4cqmin}
+.bub.me{background:#2f7f86;align-self:flex-end;border-bottom-right-radius:.4cqmin}
+.bub.blur{filter:blur(.5cqmin)}
+.bub.lit{box-shadow:0 0 0 .45cqmin var(--warn)}
+.sys{font-size:2cqmin;color:var(--muted);text-align:center;padding:.6cqmin;border:1px dashed var(--line);border-radius:1cqmin}
+.sys .acc{color:var(--safe)}
+.flycard{position:absolute;width:6cqmin;height:7.6cqmin;background:#f4f6fb;border-radius:.6cqmin;box-shadow:0 0 30px #fff6;opacity:0}
+.grid6{position:absolute;left:5cqw;right:5cqw;top:12cqh;bottom:30cqh;display:grid;grid-template-columns:repeat(3,1fr);gap:1.6cqmin;opacity:0}
+.mini{background:#151a28;border:1px solid var(--line);border-radius:1cqmin;padding:1.2cqmin;display:flex;flex-direction:column;gap:.8cqmin;overflow:hidden}
+.mini b{font-size:1.9cqmin;color:var(--muted)}
+.mini .bub{opacity:1;font-size:1.8cqmin}
+.silh{position:absolute;left:50%;bottom:0;width:40cqw;transform:translateX(-50%);opacity:0}
+.threat{position:absolute;left:50%;top:14cqh;width:56cqw;transform:translateX(-50%);display:flex;flex-direction:column;gap:1.4cqmin;align-items:flex-start}
+.threat .tb{background:#3a1820;border:1px solid var(--danger);color:#ffd9d9;padding:1.2cqmin 1.8cqmin;border-radius:1.6cqmin;font-size:3cqmin;opacity:0}
+.timer{align-self:center;font-variant-numeric:tabular-nums;font-size:8cqmin;color:var(--danger);font-weight:700;letter-spacing:.04em;opacity:0;margin-top:1cqmin}
+@container stage (aspect-ratio < 1){
+  .chatpos{width:84cqw;top:10cqh;bottom:16cqh} .bub{font-size:3.6cqmin} .chead b{font-size:3.8cqmin} .chead small{font-size:2.8cqmin}
+  .cbody{top:11cqmin} .rail{font-size:3.4cqmin;top:3cqh}
+  .grid6{grid-template-columns:repeat(2,1fr);top:9cqh;bottom:28cqh} .mini .bub{font-size:2.6cqmin} .mini b{font-size:2.6cqmin}
+  .threat{width:84cqw} .threat .tb{font-size:4.2cqmin} .silh{width:80cqw}
+}
+
+/* S4 */
+.stat{position:absolute;left:6cqw;right:6cqw;top:22cqh;text-align:center;opacity:0}
+.stat .num{font-family:var(--display);font-weight:600;font-size:16cqmin;line-height:1;font-variant-numeric:tabular-nums}
+.stat .lbl{font-size:3.6cqmin;color:#cfd5e2;max-width:60ch;margin:2cqmin auto 0;text-wrap:balance}
+.src{position:absolute;right:3cqw;top:3cqh;font-size:1.8cqmin;color:var(--muted)}
+.kid{position:absolute;left:50%;top:14cqh;height:52cqh;transform:translateX(-50%);opacity:0}
+.signs{position:absolute;left:8cqw;right:8cqw;top:12cqh;bottom:24cqh;display:grid;grid-template-columns:1fr 1fr;gap:2.4cqmin}
+.sign{position:relative;display:grid;place-items:center;text-align:center;font-family:var(--display);font-size:3.8cqmin;background:#10162499;border-radius:1.4cqmin;padding:2cqmin;opacity:0}
+.sign svg{position:absolute;inset:4% 3%;width:94%;height:92%;overflow:visible}
+@container stage (aspect-ratio < 1){ .stat .lbl{font-size:4.6cqmin} .sign{font-size:4.6cqmin} .signs{left:5cqw;right:5cqw} }
+
+/* S5–S7 door */
+.split{position:absolute;inset:5cqh 5cqw 22cqh;display:grid;grid-template-columns:40% 1fr;gap:4cqw;align-items:center}
+.doorbox{height:100%;min-height:0;display:grid;place-items:center}
+.doorbox svg{width:100%;height:100%}
+.door .c{stroke:var(--screen);stroke-width:4;stroke-linecap:round}
+.door .n circle{fill:#1d2a44;stroke:var(--screen);stroke-width:2}
+.door .n.done circle{fill:#123a2e;stroke:var(--safe)}
+.door .n text{fill:var(--text);font-size:15px;font-weight:700;text-anchor:middle}
+.side{position:relative;height:100%;min-height:0;display:flex;flex-direction:column;justify-content:center;gap:1.6cqmin}
+.side h2{margin:0;font-size:2.2cqmin;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);font-weight:700}
+.gap{display:grid;grid-template-columns:auto 1fr;gap:.4cqmin 1.6cqmin;align-items:start;opacity:.12}
+.gap .badge{width:3.8cqmin;height:3.8cqmin;border-radius:50%;display:grid;place-items:center;font-weight:700;font-size:2.1cqmin;background:#1d2a44;border:2px solid var(--screen)}
+.gap .ttl{font-size:2.9cqmin;font-weight:700;line-height:1.25}
+.gap .sub{grid-column:2;font-size:2.1cqmin;color:#b9c1d3;line-height:1.3}
+.fixes{position:relative;flex:1;min-height:0}
+.fix{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;gap:1.4cqmin;opacity:0}
+.fix .gl{font-size:2.4cqmin;color:var(--muted)}
+.fix .gl s{color:#b9c1d3;text-decoration-color:var(--safe);text-decoration-thickness:2px}
+.side .head{display:flex;justify-content:space-between;align-items:center;gap:2cqmin;flex-wrap:wrap}
+.fix h3{margin:0;font-family:var(--display);font-size:4.8cqmin;font-weight:600;color:var(--safe)}
+.dots{display:flex;gap:1cqmin;align-items:center;font-size:2cqmin;color:var(--muted)}
+.dots i{width:2.2cqmin;height:2.2cqmin;border-radius:50%;background:#1d2a44;border:2px solid var(--screen);display:inline-block}
+.dots i.done{background:var(--safe);border-color:var(--safe)}
+.mock{background:#151b2b;border:1px solid var(--line);border-radius:1.2cqmin;padding:1.8cqmin;font-size:2.2cqmin;display:flex;flex-direction:column;gap:1.1cqmin}
+.mock .row{display:flex;justify-content:space-between;align-items:center;gap:2cqmin}
+.tog{width:5.2cqmin;height:2.8cqmin;border-radius:99px;background:#3a4258;position:relative;flex:none;transition:background .3s}
+.tog::after{content:"";position:absolute;top:.35cqmin;left:.35cqmin;width:2.1cqmin;height:2.1cqmin;border-radius:50%;background:#e9edf5;transition:transform .3s}
+.tog.on{background:var(--safe)} .tog.on::after{transform:translateX(2.4cqmin)}
+.menu{display:flex;flex-direction:column;background:#0f1422;border:1px solid var(--line);border-radius:.8cqmin;padding:.6cqmin;width:max-content;max-width:100%}
+.menu span{padding:.5cqmin 1.2cqmin;border-radius:.5cqmin;color:#b9c1d3}
+.menu span.hl{background:#2a3a5c;color:var(--text)}
+.embed{border-left:.7cqmin solid var(--danger);background:#1c2335;padding:1.4cqmin 1.6cqmin;border-radius:.8cqmin;display:flex;flex-direction:column;gap:.5cqmin;opacity:0}
+.embed.y{border-left-color:var(--warn)}
+.embed b{font-size:2.5cqmin}
+.embed .muted{color:var(--muted);font-size:1.9cqmin}
+.btns{display:flex;gap:1cqmin;flex-wrap:wrap;margin-top:.6cqmin}
+.btns span{border:1px solid #3a4560;border-radius:.6cqmin;padding:.4cqmin 1.2cqmin;font-size:2cqmin}
+.cmd{font-family:ui-monospace,Consolas,monospace;background:#0f1422;border-radius:.6cqmin;padding:.8cqmin 1.2cqmin}
+.msgline{background:#2a3150;border-radius:1.4cqmin;padding:1cqmin 1.4cqmin;width:max-content;max-width:100%}
+.summary{display:flex;flex-direction:column;gap:1cqmin;opacity:0;position:absolute;inset:0;justify-content:center}
+.summary div{font-size:2.6cqmin;display:flex;gap:1.2cqmin;align-items:center}
+.summary .ok{color:var(--safe);font-weight:700}
+.summary .open{color:var(--screen);font-weight:700}
+@container stage (aspect-ratio < 1){
+  .split{grid-template-columns:1fr;grid-template-rows:40% 1fr;inset:3cqh 6cqw 21cqh;gap:2cqh}
+  .gap .sub{display:none} .gap .ttl{font-size:3.6cqmin} .gap .badge{width:4.6cqmin;height:4.6cqmin;font-size:2.6cqmin}
+  .side h2{font-size:3cqmin} .fix h3{font-size:5.4cqmin} .fix .gl{font-size:2.8cqmin}
+  .mock{font-size:2.8cqmin} .embed b{font-size:3cqmin} .embed .muted{font-size:2.5cqmin} .btns span{font-size:2.5cqmin}
+  .dots{font-size:2.8cqmin} .summary div{font-size:3.6cqmin}
+}
+.doorsolo{position:absolute;inset:4cqh 10cqw 15cqh}
+.doorsolo svg{width:100%;height:100%}
+.sentence{position:absolute;inset:0;display:grid;place-items:center;padding:0 9cqw;text-align:center;font-family:var(--display);font-size:6.4cqmin;font-weight:600;line-height:1.3;text-wrap:balance;opacity:0;text-shadow:0 2px 30px #000}
+.cover{position:absolute;inset:0;background:var(--ink);opacity:0}
+.help{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;gap:2cqmin;padding:0 10cqw 8cqh;opacity:0}
+.help h3{margin:0;font-family:var(--display);font-size:5cqmin;font-weight:600}
+.help ol{margin:0;padding-left:3.4cqmin;font-size:3.2cqmin;display:flex;flex-direction:column;gap:.6cqmin}
+.help .nf{font-size:3.6cqmin;color:var(--warn);font-weight:700}
+.help .res{font-size:2.4cqmin;color:#b9c1d3}
+.end{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:2.4cqmin;text-align:center;opacity:0}
+.end .tag{font-family:var(--display);font-size:8cqmin;font-weight:600;text-wrap:balance;padding:0 6cqw}
+.end .mark{font-size:3.6cqmin;letter-spacing:.3em;text-transform:uppercase;font-weight:700;color:var(--safe)}
+.end small{font-size:2.6cqmin;color:var(--muted)}
+@container stage (aspect-ratio < 1){ .help ol{font-size:4.2cqmin} .help h3{font-size:6.4cqmin} .help .res{font-size:3.2cqmin} .help .nf{font-size:4.6cqmin} .sentence{font-size:8cqmin} }
+
+@media (prefers-reduced-motion: reduce){ .rail .step,.tog,.tog::after,.chead{transition:none} }
+</style>
+
+<div class="wrap">
+  <header>
+    <h1>The Door · animatic</h1>
+    <p>Guildward launch film, timing and story preview. No audio: the captions carry the voiceover.</p>
+  </header>
+
+  <div class="player" id="player">
+    <div class="stage" id="stage" aria-label="Animated preview of the launch film">
+      <div class="scene" id="scene"></div>
+      <div class="cap" id="cap" aria-live="off"></div>
+      <button class="bigplay" id="bigplay" type="button"><span>Play film</span></button>
+    </div>
+    <div class="controls">
+      <button class="btn" id="play" type="button">Play</button>
+      <button class="btn" id="restart" type="button">Restart</button>
+      <span class="time" id="time">0:00 / 0:00</span>
+      <input class="scrub" id="scrub" type="range" min="0" step="0.1" value="0" aria-label="Position in film">
+      <div class="fmt" role="group" aria-label="Video format">
+        <button class="btn" type="button" data-ar="16:9" aria-pressed="true">16:9</button>
+        <button class="btn" type="button" data-ar="4:5" aria-pressed="false">4:5 LinkedIn</button>
+        <button class="btn" type="button" data-ar="9:16" aria-pressed="false">9:16</button>
+      </div>
+    </div>
+  </div>
+
+  <nav class="chapters" id="chapters" aria-label="Scenes"></nav>
+  <p class="note">Space plays and pauses. Arrow keys skip 5 seconds. Shapes, timing and captions are placeholders for the animator; the final film will be properly illustrated and voiced.</p>
+</div>
+
+<script>
+const $ = (s, r = document) => r.querySelector(s);
+const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+const clamp = (x, a = 0, b = 1) => Math.min(b, Math.max(a, x));
+const ease = x => x < .5 ? 2 * x * x : 1 - Math.pow(-2 * x + 2, 2) / 2;
+const P = (t, a, b) => ease(clamp((t - a) / (b - a)));
+// fade in over a..b, out over c..d
+const win = (t, a, b, c, d) => d === undefined ? P(t, a, b) : Math.min(P(t, a, b), 1 - P(t, c, d));
+function show(el, o, dy = 0, s = 1) { el.style.opacity = o; el.style.translate = `0 ${dy}cqh`; el.style.scale = s; }
+const fmt = s => `${Math.floor(s / 60)}:${String(Math.floor(s % 60)).padStart(2, '0')}`;
+
+/* ---------- door, shared by scenes 5–7 ---------- */
+const CRACKS = [
+  { x1: 119, y1: 92, x2: 119, y2: 228, nx: 84, ny: 160 },
+  { x1: 281, y1: 100, x2: 281, y2: 246, nx: 316, ny: 172 },
+  { x1: 152, y1: 59, x2: 256, y2: 59, nx: 204, ny: 30 },
+  { x1: 281, y1: 292, x2: 281, y2: 430, nx: 316, ny: 360 },
+  { x1: 119, y1: 272, x2: 119, y2: 430, nx: 84, ny: 350 },
+];
+function doorSVG() {
+  return `<svg class="door" viewBox="0 0 400 520" preserveAspectRatio="xMidYMid meet" role="img" aria-label="A closed bedroom door">
+  <defs>
+    <filter id="dglow" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="3.5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+    <linearGradient id="spill" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#7cc4ff" stop-opacity=".6"/><stop offset="1" stop-color="#7cc4ff" stop-opacity="0"/></linearGradient>
+    <linearGradient id="roomg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1b3352"/><stop offset="1" stop-color="#0d1a2c"/></linearGradient>
+    <radialGradient id="warmg" cx=".2" cy="1" r="1.2"><stop offset="0" stop-color="#f2a65a" stop-opacity=".75"/><stop offset="1" stop-color="#f2a65a" stop-opacity="0"/></radialGradient>
+  </defs>
+  <rect width="400" height="520" fill="#121829"/>
+  <rect y="470" width="400" height="50" fill="#1a1610"/>
+  <rect x="104" y="44" width="192" height="428" fill="#1b2134"/>
+  <g class="room">
+    <rect x="120" y="60" width="160" height="408" fill="url(#roomg)"/>
+    <circle cx="200" cy="178" r="25" fill="#070a12"/>
+    <rect x="166" y="206" width="68" height="262" rx="30" fill="#070a12"/>
+    <rect class="warm" x="120" y="60" width="160" height="408" fill="url(#warmg)" opacity="0"/>
+  </g>
+  <g class="panel">
+    <rect x="120" y="60" width="160" height="408" fill="#2b3150"/>
+    <rect x="138" y="82" width="124" height="150" rx="4" fill="none" stroke="#353c5c" stroke-width="3"/>
+    <rect x="138" y="262" width="124" height="180" rx="4" fill="none" stroke="#353c5c" stroke-width="3"/>
+    <circle cx="262" cy="262" r="6" fill="#9097ab"/>
+  </g>
+  <g filter="url(#dglow)">
+    ${CRACKS.map((c, i) => `<line class="c c${i + 1}" x1="${c.x1}" y1="${c.y1}" x2="${c.x2}" y2="${c.y2}" opacity="0"/>`).join('')}
+    <line class="c c6" x1="122" y1="469" x2="278" y2="469"/>
+  </g>
+  <polygon class="spill" points="120,471 280,471 340,520 60,520" fill="url(#spill)"/>
+  ${CRACKS.map((c, i) => `<g class="n n${i + 1}" opacity="0"><circle cx="${c.nx}" cy="${c.ny}" r="14"/><text x="${c.nx}" y="${c.ny + 5}">${i + 1}</text></g>`).join('')}
+  </svg>`;
+}
+function openDoor(svg, s) { $('.panel', svg).setAttribute('transform', `translate(120 0) scale(${s} 1) translate(-120 0)`); }
+
+const GAPS = [
+  ['Strangers can reach them', 'Anyone in a shared server can send a friend request or a message, depending on settings.'],
+  ['Anyone can pretend', 'A new account and a stolen photo look exactly like a real 15-year-old.'],
+  ['The playbook looks like normal chat', 'Compliments, age questions, "add me on snap". None of it looks like danger to a kid.'],
+  ['Some servers exist to find kids', 'And an invite link looks the same whoever sent it.'],
+  ['No one is watching', 'Most servers are run by volunteers who can\'t read every message.'],
+];
+
+/* ---------- scenes ---------- */
+const S1 = {
+  title: 'The door', dur: 12,
+  caps: [[1.8, 6.6, 'M', 'He was home. Door closed, headphones on.'], [6.8, 11.8, 'M', 'I remember thinking: at least he\'s safe in there.']],
+  build(root) {
+    root.innerHTML = `
+    <svg class="layer hall" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice" style="transform-origin:50% 60%">
+      <defs>
+        <radialGradient id="warm" cx="300" cy="380" r="520" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#f2a65a" stop-opacity=".55"/><stop offset="1" stop-color="#f2a65a" stop-opacity="0"/></radialGradient>
+        <linearGradient id="bspill" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#7cc4ff" stop-opacity=".7"/><stop offset="1" stop-color="#7cc4ff" stop-opacity="0"/></linearGradient>
+        <filter id="hglow"><feGaussianBlur stdDeviation="3"/></filter>
+      </defs>
+      <rect width="1600" height="900" fill="#0b1020"/>
+      <polygon points="0,0 1600,0 980,170 620,170" fill="#0d1222"/>
+      <polygon points="0,0 620,170 620,690 0,900" fill="#141a2c"/>
+      <polygon points="1600,0 980,170 980,690 1600,900" fill="#10152a"/>
+      <polygon points="0,900 1600,900 980,690 620,690" fill="#1b1610"/>
+      <rect x="620" y="170" width="360" height="520" fill="#171d31"/>
+      <polygon points="120,300 300,330 300,470 120,470" fill="#1d2440" stroke="#2a3254" stroke-width="4"/>
+      <polygon points="1440,260 1300,300 1300,430 1440,420" fill="#1b2140" stroke="#283050" stroke-width="4"/>
+      <polygon points="80,800 260,760 300,860 110,900" fill="#2a2418"/>
+      <rect x="730" y="290" width="140" height="400" fill="#1f2640"/>
+      <rect x="740" y="300" width="120" height="390" fill="#2b3150"/>
+      <circle cx="846" cy="500" r="5" fill="#9097ab"/>
+      <polygon class="spill" points="740,690 860,690 920,740 680,740" fill="url(#bspill)"/>
+      <rect class="strip" x="740" y="686" width="120" height="5" fill="#9fd4ff" filter="url(#hglow)"/>
+      <polygon points="270,330 330,330 345,370 255,370" fill="#e9b36f"/>
+      <rect x="296" y="370" width="8" height="40" fill="#3a3326"/>
+      <circle cx="300" cy="380" r="520" fill="url(#warm)"/>
+    </svg>
+    <div class="centerline hook">He was home. Door closed. Safe.</div>`;
+    this.r = { hall: $('.hall', root), hook: $('.hook', root), spill: $('.spill', root), strip: $('.strip', root) };
+  },
+  update(t) {
+    const r = this.r;
+    r.hall.style.scale = 1 + .38 * P(t, 0, 12);
+    show(r.hook, win(t, 0, .6, 4.2, 5.2));
+    const ping = Math.max(0, 1 - Math.abs(t - 9.2) * 1.6);
+    r.spill.setAttribute('opacity', .55 + .45 * ping + .08 * Math.sin(t * 2.2));
+    r.strip.setAttribute('opacity', .75 + .25 * ping);
+  }
+};
+
+const S2 = {
+  title: 'What sextortion is', dur: 28,
+  caps: [
+    [.6, 3.6, 'N', 'Sextortion is blackmail.'],
+    [3.7, 9.2, 'N', 'Someone gets a child to share an intimate photo or video, usually by pretending to be someone their own age.'],
+    [9.3, 15.2, 'N', 'Then they threaten to send it to everyone the child knows.'],
+    [16, 21, 'N', 'Some want money. Some want control.'],
+    [21.1, 27.6, 'N', 'Both work the same way, and both start with a friendly message.']],
+  build(root) {
+    root.innerHTML = `
+    <div class="s2title">Sextortion</div>
+    <div class="s2sub">sex + extortion = blackmail</div>
+    <div class="diag"><svg viewBox="0 0 1000 420" preserveAspectRatio="xMidYMid meet">
+      <defs><filter id="bl"><feGaussianBlur stdDeviation="5"/></filter></defs>
+      <rect x="40" y="95" width="130" height="230" rx="20" fill="#1e2740" stroke="#3a4668" stroke-width="4"/>
+      <rect x="54" y="120" width="102" height="180" rx="6" fill="#16203a"/>
+      <g class="card">
+        <rect x="60" y="150" width="90" height="115" rx="8" fill="#eef2f8"/>
+        <rect x="72" y="163" width="66" height="74" rx="4" fill="#aab4c8" filter="url(#bl)"/>
+        <g class="lock" opacity="0">
+          <path d="M88 205v-14a17 17 0 0 1 34 0v14" fill="none" stroke="#ff6b6b" stroke-width="7"/>
+          <rect x="80" y="203" width="50" height="40" rx="6" fill="#ff6b6b"/>
+        </g>
+      </g>
+      ${[95, 210, 325].map((y, i) => `<line class="ar" x1="560" y1="208" x2="790" y2="${y}" stroke="#ff6b6b" stroke-width="4" pathLength="1" stroke-dasharray="1" stroke-dashoffset="1"/>
+        <g class="ic" opacity="0"><circle cx="830" cy="${y}" r="34" fill="#1d2a44" stroke="#7cc4ff" stroke-width="3"/>
+        <circle cx="830" cy="${y - 8}" r="10" fill="#7cc4ff"/><path d="M810 ${y + 20}a20 16 0 0 1 40 0z" fill="#7cc4ff"/>
+        <text x="878" y="${y + 9}" font-size="26" fill="#e9edf5">${['Friends', 'Family', 'School'][i]}</text></g>`).join('')}
+    </svg></div>
+    <div class="duo">
+      <div class="kcard money"><h3>For money</h3><p>Organised groups running scripts.</p><p>They demand cash or gift cards, often within hours.</p><p>Most targets are boys aged 14 to 17.</p></div>
+      <div class="kcard control"><h3>For control</h3><p>Groups that demand more images, humiliation, even self-harm.</p><p>Some targets are younger than 12.</p></div>
+    </div>`;
+    this.r = { title: $('.s2title', root), sub: $('.s2sub', root), diag: $('.diag', root), card: $('.card', root), lock: $('.lock', root),
+      ar: $$('.ar', root), ic: $$('.ic', root), duo: $('.duo', root), cards: $$('.kcard', root) };
+  },
+  update(t) {
+    const r = this.r, up = P(t, 4.2, 5.4);
+    r.title.style.top = `${38 - 32 * up}cqh`; r.title.style.scale = 1 - .45 * up;
+    show(r.title, win(t, 0, .6));
+    r.sub.style.top = `${56 - 34 * up}cqh`;
+    show(r.sub, win(t, 1.6, 2.4, 14.6, 15.4));
+    show(r.diag, win(t, 4.6, 5.4, 14.6, 15.6));
+    r.card.setAttribute('transform', `translate(${380 * P(t, 5.8, 8.2)} 0)`);
+    r.lock.setAttribute('opacity', P(t, 9.2, 9.8));
+    r.ar.forEach((a, i) => a.setAttribute('stroke-dashoffset', 1 - P(t, 10.4 + i * .6, 11.6 + i * .6)));
+    r.ic.forEach((a, i) => a.setAttribute('opacity', P(t, 11.2 + i * .6, 11.8 + i * .6)));
+    show(r.duo, win(t, 15.8, 16.4));
+    r.cards.forEach((c, i) => show(c, P(t, 16.2 + i * 2.2, 17 + i * 2.2), 3 * (1 - P(t, 16.2 + i * 2.2, 17 + i * 2.2))));
+  }
+};
+
+const KIDS = ['jay_14', 'noah.k', 'eli', 'maxx', 'liam_09', 'theo'];
+const S3 = {
+  title: 'How it works', dur: 37,
+  caps: [
+    [.6, 4.2, 'N', 'It starts where kids already are: a gaming server, a fan server, a homework server.'],
+    [4.3, 7.9, 'N', 'The account is new. The photo is stolen.'],
+    [8.5, 15.5, 'N', 'Compliments. Shared games. And, early on, a question about age.'],
+    [16.4, 21.6, 'N', 'Then a move somewhere private, where no moderator can see.'],
+    [27.4, 31.6, 'N', 'There was never a Mia. There was a stranger with a script, and dozens of other kids in other windows.'],
+    [32, 36.8, 'N', 'From first message to threat can take one evening.']],
+  build(root) {
+    root.innerHTML = `
+    <div class="rail">${['Meet', 'Trust', 'Move', 'Trap'].map(s => `<span class="step">${s}</span>`).join('<span class="arr">→</span>')}</div>
+    <div class="chatpos"><div class="chat">
+      <div class="chead"><span class="av"></span><div><b class="cname">mia 🌸</b><small class="csub">Online</small></div></div>
+      <div class="cbody b1">
+        <div class="sys">mia 🌸 sent you a friend request <span class="acc">· Accepted</span></div>
+        <div class="bub them" data-at="2.8">saw u in the server, ur actually so funny lol</div>
+        <div class="bub me" data-at="4.6">haha thanks</div>
+        <div class="bub them" data-at="8.6" data-ring="8.6,15.6">how old r u?</div>
+        <div class="bub me" data-at="10.1">14</div>
+        <div class="bub them" data-at="11.4">omg same-ish 😊 15</div>
+        <div class="bub them" data-at="16.6" data-ring="16.6,21">this server is so public lol. add me on snap? 👻</div>
+        <div class="bub me" data-at="18.4">ok</div>
+      </div>
+      <div class="cbody b2" style="opacity:0">
+        <div class="bub them blur" data-at="21.4">ur so cute omg i can't stop smiling</div>
+        <div class="bub me blur" data-at="22.2">haha u too</div>
+        <div class="bub them blur" data-at="23">i showed u mine, ur turn</div>
+      </div>
+    </div></div>
+    <div class="flycard"></div>
+    <div class="grid6">${KIDS.map(k => `<div class="mini"><b>${k}</b><div class="bub them">saw u in the server, ur actually so funny lol</div><div class="bub them">how old r u?</div></div>`).join('')}</div>
+    <svg class="silh" viewBox="0 0 300 150"><g fill="#03050a" stroke="#7cc4ff" stroke-opacity=".45" stroke-width="2"><circle cx="150" cy="52" r="38"/><path d="M30 150c0-50 50-70 120-70s120 20 120 70z"/></g></svg>
+    <div class="threat">
+      <div class="tb">i have ur pic.</div>
+      <div class="tb">i have ur followers. ur school. ur mom.</div>
+      <div class="tb">$500 or everyone sees it. u have 2 hours.</div>
+      <div class="timer">1:59:59</div>
+    </div>`;
+    this.r = { steps: $$('.step', root), chatpos: $('.chatpos', root), chat: $('.chat', root), head: $('.chead', root), name: $('.cname', root),
+      sub: $('.csub', root), acc: $('.acc', root), sys: $('.sys', root), b1: $('.b1', root), b2: $('.b2', root), bubs: $$('.cbody .bub', root),
+      fly: $('.flycard', root), grid: $('.grid6', root), silh: $('.silh', root), tbs: $$('.tb', root), timer: $('.timer', root) };
+  },
+  update(t) {
+    const r = this.r, bounds = [0, 8, 16, 21.2, 99];
+    r.steps.forEach((s, i) => { s.classList.toggle('on', t >= bounds[i] && t < bounds[i + 1]); s.classList.toggle('past', t >= bounds[i + 1]); });
+    show(r.sys, P(t, .4, .9)); r.acc.style.opacity = P(t, 2, 2.4);
+    r.bubs.forEach(b => {
+      const at = +b.dataset.at, p = P(t, at, at + .35); show(b, p, (1 - p) * 1.5);
+      if (b.dataset.ring) { const [a, z] = b.dataset.ring.split(',').map(Number); b.classList.toggle('lit', t > a + .5 && t < z); }
+    });
+    const app2 = t >= 19.6;
+    r.head.classList.toggle('app2', app2);
+    r.sub.textContent = app2 ? 'Another app · private' : 'Online';
+    r.b1.style.opacity = 1 - P(t, 19.4, 20); r.b2.style.opacity = P(t, 20, 20.4);
+    // card leaves the phone
+    const f = clamp((t - 24) / 1.8);
+    r.fly.style.opacity = t > 24 && t < 26 ? 1 - f * .6 : 0;
+    r.fly.style.left = `${62 + 30 * f}cqw`; r.fly.style.top = `${66 - 80 * f}cqh`;
+    r.fly.style.transform = `rotate(${f * 40}deg) scale(${1 - .6 * f})`;
+    // glitch, then reveal
+    const g = t > 25.8 && t < 27.2;
+    r.chat.style.translate = g ? `${Math.sin(t * 97) * 1.4}cqw ${Math.cos(t * 71) * .8}cqh` : '0 0';
+    r.name.textContent = g && Math.sin(t * 40) > 0 ? '█▓░ ▒█' : (t > 27.2 ? '' : 'mia 🌸');
+    r.chatpos.style.opacity = 1 - P(t, 26.8, 27.4);
+    show(r.grid, win(t, 27.2, 27.9) * (1 - .88 * P(t, 31.2, 31.9)));
+    show(r.silh, win(t, 27.6, 28.4) * (1 - .6 * P(t, 31.2, 31.9)));
+    r.tbs.forEach((b, i) => show(b, P(t, 31.6 + i * 1.1, 32 + i * 1.1)));
+    r.timer.style.opacity = P(t, 34.4, 34.8);
+    const left = Math.max(0, 7199 - Math.floor(Math.max(0, t - 34.4) * 1));
+    r.timer.textContent = `${Math.floor(left / 3600)}:${String(Math.floor(left % 3600 / 60)).padStart(2, '0')}:${String(left % 60).padStart(2, '0')}`;
+  }
+};
+
+const S4 = {
+  title: 'Why kids are exposed', dur: 34,
+  caps: [
+    [12.6, 15.6, 'N', 'It isn\'t because they\'re careless. They\'re fourteen. They want to be liked,'],
+    [15.7, 18.6, 'N', 'and the person on the other side does this for a living.'],
+    [18.7, 22.6, 'N', 'When it goes wrong, they\'re more afraid of you finding out than of the person threatening them.'],
+    [22.7, 26.8, 'N', 'That fear is the only power the blackmailer has. Take it away, and they lose their grip.'],
+    [28, 33.6, 'N', 'The signs are quiet. They look like a normal week.']],
+  build(root) {
+    const stats = [
+      ['50,000+', 'sextortion reports in 2025, in the US alone'],
+      ['137', 'every day'],
+      ['14–17', 'the age of most targets. Most are boys.'],
+      ['36+', 'teenage boys who took their own lives after being targeted, since 2021']];
+    root.innerHTML = `
+    ${stats.map(([n, l]) => `<div class="stat"><div class="num">${n}</div><div class="lbl">${l}</div></div>`).join('')}
+    <div class="src">Sources: NCMEC, FBI</div>
+    <svg class="kid" viewBox="0 0 300 260">
+      <defs><radialGradient id="mon" cx=".5" cy=".5" r=".6"><stop offset="0" stop-color="#7cc4ff" stop-opacity=".5"/><stop offset="1" stop-color="#7cc4ff" stop-opacity="0"/></radialGradient></defs>
+      <circle cx="210" cy="95" r="110" fill="url(#mon)"/>
+      <rect x="175" y="55" width="90" height="62" rx="6" fill="#9fd4ff"/><rect x="214" y="117" width="10" height="28" fill="#2a3150"/>
+      <rect x="40" y="145" width="250" height="10" fill="#2a3150"/>
+      <circle cx="110" cy="92" r="24" fill="#05070d"/><path d="M70 200c0-55 18-82 42-82s40 27 40 82z" fill="#05070d"/>
+      <rect x="60" y="150" width="70" height="80" rx="10" fill="#0d1220"/>
+    </svg>
+    <div class="signs">
+      ${['Phone face-down at dinner', '“Can I borrow some money?”', 'Jumps when it buzzes', '“Just tired.”'].map(s =>
+        `<div class="sign"><span>${s}</span><svg viewBox="0 0 100 60" preserveAspectRatio="none"><ellipse cx="50" cy="30" rx="47" ry="26" fill="none" stroke="#ffc857" stroke-width="1.2" vector-effect="non-scaling-stroke" pathLength="1" stroke-dasharray="1" stroke-dashoffset="1" transform="rotate(-2 50 30)"/></svg></div>`).join('')}
+    </div>`;
+    this.r = { stats: $$('.stat', root), num0: $('.stat .num', root), src: $('.src', root), kid: $('.kid', root), signs: $$('.sign', root) };
+  },
+  update(t) {
+    const r = this.r;
+    r.stats.forEach((s, i) => show(s, win(t, i * 3 + .2, i * 3 + .8, i * 3 + 2.6, i * 3 + 3.1), 0, .96 + .04 * P(t, i * 3, i * 3 + 3)));
+    r.stats[3].style.opacity = win(t, 9.2, 9.8, 11.8, 12.4);
+    r.num0.textContent = Math.round(50000 * P(t, .2, 2)).toLocaleString('en-US') + '+';
+    r.src.style.opacity = win(t, 0, .5, 11.8, 12.4);
+    show(r.kid, win(t, 12.6, 13.6, 26.8, 27.5));
+    r.signs.forEach((s, i) => {
+      const a = 27.6 + i * .9; show(s, P(t, a, a + .4));
+      $('ellipse', s).setAttribute('stroke-dashoffset', 1 - P(t, a + .4, a + 1.2));
+    });
+  }
+};
+
+const S5 = {
+  title: 'Where it gets in', dur: 22,
+  caps: [[.4, 3.8, 'N', 'A closed door feels safe. But there are gaps.'],
+    ...GAPS.map(([a, b], i) => [4 + i * 3.6, 7.5 + i * 3.6, 'N', `${a}. ${b}`])],
+  build(root) {
+    root.innerHTML = `<div class="split"><div class="doorbox">${doorSVG()}</div>
+      <div class="side"><h2>Where it gets in</h2>
+      ${GAPS.map(([a, b], i) => `<div class="gap"><span class="badge">${i + 1}</span><span class="ttl">${a}</span><span class="sub">${b}</span></div>`).join('')}
+      </div></div>`;
+    this.r = { svg: $('svg', root), cracks: $$('.c', root).slice(0, 5), nums: $$('.n', root), gaps: $$('.gap', root), h2: $('h2', root) };
+  },
+  update(t) {
+    const r = this.r;
+    r.h2.style.opacity = P(t, .4, 1);
+    r.cracks.forEach((c, i) => {
+      const a = 4 + i * 3.6, p = P(t, a, a + .5);
+      c.setAttribute('opacity', p * (.8 + .2 * Math.sin(t * 3 + i)));
+      r.nums[i].setAttribute('opacity', p);
+      r.gaps[i].style.opacity = .12 + .88 * p;
+    });
+  }
+};
+
+const FIX = [
+  { name: 'Lockdown guide', caption: 'You and your child go through their settings together: DMs from servers off, friend requests limited, message requests on, sensitive images blurred.',
+    html: `<div class="mock"><b>Set up together · step by step</b>
+      ${['DMs from server members', 'Friend requests: friends of friends only', 'Message requests', 'Blur sensitive images'].map(x => `<div class="row"><span>${x}</span><span class="tog"></span></div>`).join('')}</div>`,
+    anim(el, t) { $$('.tog', el).forEach((g, i) => g.classList.toggle('on', t > 1.6 + i * .9)); } },
+  { name: 'Safety check', caption: 'Right-click any person to see how old the account is and any warning signs, explained in words a kid understands.',
+    html: `<div class="mock"><div class="menu"><span>Profile</span><span>Message</span><span class="hl">Apps › Safety check</span></div>
+      <div class="embed"><b>Be careful with this account</b><span>· Account created 3 days ago</span><span>· No profile picture or history</span><span class="muted">Confidence: low · outside view only</span>
+      <div class="btns"><span>How to report</span><span>Talk to Bris</span></div></div></div>`,
+    anim(el, t) { $('.menu', el).style.opacity = P(t, .8, 1.2) * (1 - P(t, 2.6, 3)); $('.menu', el).style.display = t > 3 ? 'none' : ''; $('.embed', el).style.opacity = P(t, 2.4, 2.9); } },
+  { name: 'Is this sketchy?', caption: 'Right-click any message. Guildward recognises the patterns: age questions, secrecy, moving to another app, photo requests, pressure.',
+    html: `<div class="mock"><div class="msgline">this server is so public lol. add me on snap? 👻</div>
+      <div class="menu"><span>Reply</span><span class="hl">Apps › Is this sketchy?</span></div>
+      <div class="embed"><b>Moving you to another app is a common first step.</b><span>People who mean well don't need to.</span>
+      <div class="btns"><span>How to report</span><span>Talk to Bris</span></div></div></div>`,
+    anim(el, t) { $('.menu', el).style.opacity = P(t, 1, 1.4) * (1 - P(t, 2.6, 3)); $('.menu', el).style.display = t > 3 ? 'none' : ''; $('.embed', el).style.opacity = P(t, 2.8, 3.3); } },
+  { name: 'Check an invite', caption: 'Check an invite before joining. See the server\'s age, its settings and any red flags.',
+    html: `<div class="mock"><div class="cmd">/check discord.gg/••••••</div>
+      <div class="embed y"><b>Look closer before joining</b><span>· Server is 4 days old</span><span>· Name mentions “e-dating”</span><span>· No verification needed to chat</span></div></div>`,
+    anim(el, t) { $('.embed', el).style.opacity = P(t, 1.8, 2.3); } },
+  { name: 'Guard, for server owners', caption: 'For server owners, Guard alerts moderators when an adult asks lots of kids their age, pushes them to other apps, or asks for photos.',
+    html: `<div class="mock"><span class="muted" style="color:var(--muted)">Moderator alert · #general</span>
+      <div class="embed"><b>Possible grooming</b><span>· Asked 4 different people their age</span><span>· Tried to move 3 people to Snapchat</span><span>· Account is 3 days old</span>
+      <div class="btns"><span>Jump to message</span><span>Time out</span></div></div></div>`,
+    anim(el, t) { $('.embed', el).style.opacity = P(t, 1.2, 1.7); } },
+];
+const FIX0 = 3.5, FIXLEN = 7.4;
+const S6 = {
+  title: 'What Guildward does', dur: 48,
+  caps: [[.3, 3.4, 'N', 'Guildward is a safety tool for Discord. It closes these gaps one at a time.'],
+    ...FIX.map((f, i) => [FIX0 + i * FIXLEN + .2, FIX0 + (i + 1) * FIXLEN - .1, 'N', f.caption]),
+    [40.6, 44.3, 'N', 'It doesn\'t read private messages, and it isn\'t spyware.'],
+    [44.4, 47.9, 'N', 'It\'s a tool your child holds: a warning at the moment it matters, and what to do next.']],
+  build(root) {
+    root.innerHTML = `<div class="split"><div class="doorbox">${doorSVG()}</div>
+      <div class="side"><div class="head"><h2>What Guildward does</h2><div class="dots">${GAPS.map(() => '<i></i>').join('')}<span>gaps closed</span></div></div>
+        <div class="fixes">
+          ${FIX.map((f, i) => `<div class="fix"><span class="gl">Gap ${i + 1}: <s>${GAPS[i][0]}</s></span><h3>${f.name}</h3>${f.html}</div>`).join('')}
+          <div class="summary">${GAPS.map(([a]) => `<div><span class="ok">Closed</span><span>${a}</span></div>`).join('')}
+            <div><span class="open">Open</span><span>The gap under the door</span></div></div>
+        </div>
+      </div></div>`;
+    this.r = { cracks: $$('.c', root).slice(0, 5), nums: $$('.n', root), fixes: $$('.fix', root), dots: $$('.dots i', root), sum: $('.summary', root) };
+  },
+  update(t) {
+    const r = this.r;
+    FIX.forEach((f, i) => {
+      const a = FIX0 + i * FIXLEN, lt = t - a, closed = P(t, a + 1.2, a + 2.4);
+      r.cracks[i].setAttribute('opacity', 1 - closed);
+      r.nums[i].setAttribute('opacity', 1);
+      r.nums[i].classList.toggle('done', closed > .5);
+      r.dots[i].classList.toggle('done', closed > .5);
+      show(r.fixes[i], win(t, a, a + .5, a + FIXLEN - .4, a + FIXLEN), 0);
+      f.anim(r.fixes[i], lt);
+    });
+    show(r.sum, P(t, 40.4, 41));
+  }
+};
+
+const S7 = {
+  title: 'The last gap', dur: 38,
+  caps: [[.4, 4.2, 'N', 'There\'s one gap no app can close.'],
+    [10.8, 14.7, 'N', 'If your child does tell you, how you react is everything.'],
+    [14.8, 18.4, 'N', 'No shame. No punishment. As long as they\'re safe, nothing is ruined.'],
+    [20.6, 23.9, 'L', 'Mom? Can I show you something?']],
+  build(root) {
+    root.innerHTML = `<div class="doorsolo">${doorSVG()}</div>
+      <div class="sentence">“Whatever happens online, you can tell me. You won't be in trouble.”</div>
+      <div class="help tell"><h3>If your child tells you</h3>
+        <ol><li>Stay calm. Thank them for telling you.</li><li>Don't ask why they sent it.</li><li>Don't take their phone away as punishment.</li><li>Say: “We'll fix this together.”</li><li>Then report it, together.</li></ol>
+        <div class="nf">They're safe. That's what matters.</div></div>
+      <div class="cover"></div>
+      <div class="help kidhelp"><h3>If this is happening to you</h3>
+        <ol><li>Don't pay. Don't reply.</li><li>Save the messages.</li><li>Block them.</li><li>Tell an adult you trust.</li></ol>
+        <div class="nf">It is not your fault.</div>
+        <div class="res">Remove images: takeitdown.ncmec.org · Sweden: Bris 116 111 · US: report.cybertip.org</div></div>
+      <div class="end"><div class="tag">Be the one they tell.</div><div class="mark">Guildward</div><small>Starting on Discord</small></div>`;
+    this.r = { svg: $('svg', root), door: $('.doorsolo', root), c6: $('.c6', root), spill: $('.spill', root), warm: $('.warm', root), sent: $('.sentence', root),
+      cover: $('.cover', root), tell: $('.tell', root), help: $('.kidhelp', root), end: $('.end', root) };
+  },
+  update(t) {
+    const r = this.r, pulse = .7 + .3 * Math.sin(t * 2.4);
+    r.c6.setAttribute('opacity', pulse); r.spill.setAttribute('opacity', pulse);
+    r.door.style.opacity = 1 - .85 * win(t, 4.4, 5, 18.4, 19);
+    show(r.sent, win(t, 4.6, 5.4, 9.8, 10.4));
+    show(r.tell, win(t, 10.6, 11.3, 17.9, 18.5));
+    openDoor(r.svg, 1 - .88 * P(t, 19, 20.8));
+    r.warm.setAttribute('opacity', P(t, 19.4, 21.4));
+    r.cover.style.opacity = P(t, 24, 24.8);
+    show(r.help, win(t, 24.6, 25.4, 31.2, 31.8));
+    show(r.end, P(t, 32, 33), 0, .97 + .03 * P(t, 32, 38));
+  }
+};
+
+const SCENES = [S1, S2, S3, S4, S5, S6, S7];
+const STARTS = []; let TOTAL = 0;
+SCENES.forEach(s => { STARTS.push(TOTAL); TOTAL += s.dur; });
+const WHO = { M: 'Mom', N: 'Narrator', L: 'Leo' };
+
+/* ---------- player ---------- */
+const sceneEl = $('#scene'), capEl = $('#cap'), scrub = $('#scrub'), playBtn = $('#play'), timeEl = $('#time'), bigplay = $('#bigplay');
+scrub.max = TOTAL;
+let t = 1.2, playing = false, cur = -1, lastNow = 0, lastCap = '';
+const chaps = $('#chapters');
+SCENES.forEach((s, i) => {
+  const b = document.createElement('button'); b.type = 'button'; b.className = 'btn';
+  b.innerHTML = `<span>${i + 1}. ${s.title}</span><small>${fmt(STARTS[i])}</small>`;
+  b.onclick = () => { seek(STARTS[i] + .01); };
+  chaps.append(b);
+});
+const chapBtns = $$('#chapters button');
+
+function sceneAt(x) { let i = SCENES.length - 1; while (i > 0 && x < STARTS[i]) i--; return i; }
+function render() {
+  const i = sceneAt(t);
+  if (i !== cur) { sceneEl.replaceChildren(); SCENES[i].build(sceneEl); cur = i; chapBtns.forEach((b, j) => b.classList.toggle('on', j === i)); }
+  const lt = t - STARTS[i];
+  SCENES[i].update(lt);
+  const c = SCENES[i].caps.find(([a, b]) => lt >= a && lt < b);
+  const key = c ? c[3] : '';
+  if (key !== lastCap) { capEl.innerHTML = c ? `<span class="${c[2]}"><b>${WHO[c[2]]}</b>${c[3]}</span>` : ''; lastCap = key; }
+  scrub.value = t; timeEl.textContent = `${fmt(t)} / ${fmt(TOTAL)}`;
+}
+function setPlaying(p) {
+  playing = p; if (p && t >= TOTAL - .05) t = 0;
+  playBtn.textContent = p ? 'Pause' : 'Play'; bigplay.hidden = true;
+}
+function seek(x) { t = clamp(x, 0, TOTAL); bigplay.hidden = true; render(); }
+function frame(now) {
+  if (playing) { t += Math.min(.1, (now - lastNow) / 1000); if (t >= TOTAL) { t = TOTAL; setPlaying(false); } render(); }
+  lastNow = now; requestAnimationFrame(frame);
+}
+playBtn.onclick = () => setPlaying(!playing);
+bigplay.onclick = e => { e.stopPropagation(); setPlaying(true); };
+$('#stage').addEventListener('click', () => setPlaying(!playing));
+$('#restart').onclick = () => { seek(0); setPlaying(true); };
+scrub.addEventListener('input', () => seek(+scrub.value));
+document.addEventListener('keydown', e => {
+  if (e.target.closest('input,button') && e.code === 'Space') return;
+  if (e.code === 'Space') { e.preventDefault(); setPlaying(!playing); }
+  if (e.code === 'ArrowRight') seek(t + 5);
+  if (e.code === 'ArrowLeft') seek(t - 5);
+});
+const AR = { '16:9': [16, 9], '4:5': [4, 5], '9:16': [9, 16] };
+function setAR(k) {
+  const [w, h] = AR[k], p = $('#player');
+  p.style.setProperty('--ar', w / h); p.style.setProperty('--arw', w); p.style.setProperty('--arh', h);
+  $$('.fmt .btn').forEach(b => b.setAttribute('aria-pressed', b.dataset.ar === k));
+  try { localStorage.setItem('door-ar', k); } catch (e) {}
+}
+$$('.fmt .btn').forEach(b => b.onclick = () => setAR(b.dataset.ar));
+let saved = '16:9'; try { saved = localStorage.getItem('door-ar') || '16:9'; } catch (e) {}
+setAR(AR[saved] ? saved : '16:9');
+window.seek = seek; // handy for reviewing a frame from the console
+render(); requestAnimationFrame(n => { lastNow = n; frame(n); });
+</script>
