@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<meta name="referrer" content="no-referrer">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'self'; script-src 'self'; img-src 'self' data:; base-uri 'none'; form-action 'none'">
+<title>Guildward: Discord lockdown wizard</title>
+<meta name="description" content="A step-by-step guide for a parent and a young person to set up Discord safely, together. English and Svenska.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath d='M16 3l11 4v8c0 7-4.5 12-11 14C9.500 27 5 22 5 15V7z' fill='%231f6f5c'/%3E%3Cpath d='M11 16l4 4 7-8' fill='none' stroke='%23fff' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="wizard.css">
+</head>
+<body>
+<a class="skip" href="#app" data-t="skip">Skip to content</a>
+<header class="top">
+  <div class="wrap bar-row">
+    <p class="brand">
+      <svg viewBox="0 0 32 32" width="28" height="28" aria-hidden="true" focusable="false"><path d="M16 3l11 4v8c0 7-4.5 12-11 14C9.5 27 5 22 5 15V7z" fill="currentColor"/><path d="M11 16l4 4 7-8" fill="none" stroke="var(--bg)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <span><strong>Guildward</strong> <span class="sub" data-t="tagline">Lockdown wizard</span></span>
+    </p>
+    <div class="lang" role="group" aria-label="Language / Språk">
+      <button type="button" data-lang="en" aria-pressed="true" lang="en">English</button>
+      <button type="button" data-lang="sv" aria-pressed="false" lang="sv">Svenska</button>
+    </div>
+  </div>
+</header>
+
+<main class="wrap" id="main">
+  <div id="app" tabindex="-1"></div>
+  <noscript><p class="card">This wizard needs JavaScript to show one step at a time. Nothing is sent anywhere; it all runs on your device. / Guiden behöver JavaScript för att visa ett steg i taget.</p></noscript>
+</main>
+
+<footer class="wrap foot">
+  <p data-t="footer">Guildward is free and open source.</p>
+  <p><a href="../../PRIVACY.md" data-t="privacy">Privacy policy</a></p>
+</footer>
+<script src="wizard.js"></script>
+</body>
+</html>
