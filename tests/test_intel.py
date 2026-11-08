@@ -5,6 +5,7 @@ import pytest
 from guildward.core.i18n import LANGS, has, missing_translations, t
 from guildward.core.models import Confidence, Kind, Level, Signal, build_verdict
 from guildward.core.snowflake import DISCORD_EPOCH_MS
+from guildward.core.text import normalize
 from guildward.intel.patterns import NameFlag, flags_in
 from guildward.intel.person import UserFacts, score_user
 from guildward.intel.server import InviteFacts, score_invite
@@ -114,6 +115,17 @@ def test_name_flags():
     assert NameFlag.ADULT in flags_in("𝓝𝓢𝓕𝓦 chat")
     assert NameFlag.ADULT in flags_in("18+ only")
     assert flags_in("Bedwars EU", None, "") == frozenset()
+
+
+@pytest.mark.parametrize(("raw", "want"), [
+    ("ѕnар", "snap"),            # Cyrillic s, a, p
+    ("dм mе", "dm me"),          # Cyrillic m, e
+    ("αge", "age"),              # Greek alpha
+    ("ЅNАР", "snap"),            # uppercase Cyrillic, casefolded first
+    ("Åsa är söt", "åsa är söt"),  # Swedish letters survive
+])
+def test_normalize_folds_lookalike_letters(raw, want):
+    assert normalize(raw) == want
 
 
 def test_every_signal_code_is_translated():

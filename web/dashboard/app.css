@@ -646,3 +646,21 @@ tr.is-left { opacity: .6; }
   .pill, .chip, .sev, .g-zone, .g-value, .ch-bar, .ch-area, .seg-green, .seg-yellow, .seg-red { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
   @page { margin: 14mm; }
 }
+
+/* ------------------------------------------------------------------ owner: accounts */
+.acct-intro { margin: 0 0 1rem; color: var(--ink-2); font-size: .875rem; max-width: 46rem; }
+.tab-n { margin-left: .35rem; padding: 0 .35rem; border-radius: 4px; background: var(--surface-3); font-size: .72rem; }
+.acct-list { list-style: none; margin: 0; padding: 0; display: grid; gap: .75rem; }
+.acct { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: .85rem 1rem; display: grid; gap: .7rem; min-width: 0; }
+.acct-head { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: .5rem 1rem; }
+.acct-head .who-name { display: grid; min-width: 0; overflow-wrap: anywhere; }
+.acct-chips { display: flex; flex-wrap: wrap; align-items: center; gap: .35rem; }
+.acct-facts { display: grid; grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr)); gap: .6rem 1rem; margin: 0; }
+.acct-facts dt { font-size: .75rem; font-weight: 600; color: var(--muted); }
+.acct-facts dd { margin: .1rem 0 0; font-size: .875rem; overflow-wrap: anywhere; }
+.acct-facts .acct-wide { grid-column: 1 / -1; }
+.acct-reasons { margin-top: 0; }
+.acct-links { list-style: none; margin: 0; padding: 0; display: grid; gap: .2rem; font-size: .8125rem; color: var(--ink-2); }
+.acct-links li { display: flex; gap: .4rem; align-items: baseline; overflow-wrap: anywhere; }
+.acct-links .ic { width: .9rem; height: .9rem; flex: none; align-self: center; }
+.acct-actions { display: flex; flex-wrap: wrap; gap: .5rem; }

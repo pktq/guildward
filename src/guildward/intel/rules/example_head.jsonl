@@ -1,0 +1,103 @@
+{"text": "how old are you", "labels": ["msg.age_probe"], "lang": "en", "note": "public example"}
+{"text": "what's your age?", "labels": ["msg.age_probe"], "lang": "en", "note": "public example"}
+{"text": "hur gammal är du", "labels": ["msg.age_probe"], "lang": "sv", "note": "public example"}
+{"text": "what grade are you in", "labels": ["msg.age_probe"], "lang": "en", "note": "public example"}
+{"text": "are you under 13?", "labels": ["msg.age_probe"], "lang": "en", "note": "public example"}
+{"text": "när fyller du år och hur gammal blir du", "labels": ["msg.age_probe"], "lang": "sv", "note": "public example"}
+{"text": "i'm 32, does my age bother you?", "labels": ["msg.age_gap"], "lang": "en", "note": "public example"}
+{"text": "age is just a number", "labels": ["msg.age_gap"], "lang": "en", "note": "public example"}
+{"text": "jag är 28, är det konstigt för dig?", "labels": ["msg.age_gap"], "lang": "sv", "note": "public example"}
+{"text": "i'm much older than you but that's ok", "labels": ["msg.age_gap"], "lang": "en", "note": "public example"}
+{"text": "i like girls younger than me", "labels": ["msg.age_gap"], "lang": "en", "note": "public example"}
+{"text": "where do you live?", "labels": ["msg.personal_info"], "lang": "en", "note": "public example"}
+{"text": "what school do you go to?", "labels": ["msg.personal_info"], "lang": "en", "note": "public example"}
+{"text": "what's your phone number", "labels": ["msg.personal_info"], "lang": "en", "note": "public example"}
+{"text": "var bor du?", "labels": ["msg.personal_info"], "lang": "en", "note": "public example"}
+{"text": "are you home alone right now?", "labels": ["msg.personal_info"], "lang": "en", "note": "public example"}
+{"text": "vilken skola går du på", "labels": ["msg.personal_info"], "lang": "sv", "note": "public example"}
+{"text": "add me on snapchat", "labels": ["msg.isolation"], "lang": "en", "note": "public example"}
+{"text": "text me on telegram instead", "labels": ["msg.isolation"], "lang": "en", "note": "public example"}
+{"text": "lägg till mig på snap", "labels": ["msg.isolation"], "lang": "sv", "note": "public example"}
+{"text": "let's talk on whatsapp", "labels": ["msg.isolation"], "lang": "en", "note": "public example"}
+{"text": "message me on instagram", "labels": ["msg.isolation"], "lang": "en", "note": "public example"}
+{"text": "let's go to a private call, just us", "labels": ["msg.isolation_private"], "lang": "en", "note": "public example"}
+{"text": "dm me alone, not in the group", "labels": ["msg.isolation_private"], "lang": "en", "note": "public example"}
+{"text": "vi kan ringa privat, bara du och jag", "labels": ["msg.isolation_private"], "lang": "en", "note": "public example"}
+{"text": "make a private server for just us two", "labels": ["msg.isolation_private"], "lang": "en", "note": "public example"}
+{"text": "only you and me in this chat ok", "labels": ["msg.isolation_private"], "lang": "en", "note": "public example"}
+{"text": "don't tell your parents about me", "labels": ["msg.secrecy"], "lang": "en", "note": "public example"}
+{"text": "this is our secret", "labels": ["msg.secrecy"], "lang": "en", "note": "public example"}
+{"text": "säg inte till din mamma", "labels": ["msg.secrecy"], "lang": "sv", "note": "public example"}
+{"text": "delete our chat after this", "labels": ["msg.secrecy"], "lang": "en", "note": "public example"}
+{"text": "keep this between us, nobody needs to know", "labels": ["msg.secrecy"], "lang": "en", "note": "public example"}
+{"text": "send me a pic of you", "labels": ["msg.photo_request"], "lang": "en", "note": "public example"}
+{"text": "turn on your camera", "labels": ["msg.photo_request"], "lang": "en", "note": "public example"}
+{"text": "skicka en bild på dig", "labels": ["msg.photo_request"], "lang": "sv", "note": "public example"}
+{"text": "show me what you look like", "labels": ["msg.photo_request"], "lang": "en", "note": "public example"}
+{"text": "send a selfie", "labels": ["msg.photo_request"], "lang": "en", "note": "public example"}
+{"text": "what are you wearing right now", "labels": ["msg.sexual"], "lang": "en", "note": "public example"}
+{"text": "are you a virgin", "labels": ["msg.sexual"], "lang": "en", "note": "public example"}
+{"text": "har du kysst någon", "labels": ["msg.sexual"], "lang": "sv", "note": "public example"}
+{"text": "do you want to be my girlfriend", "labels": ["msg.sexual"], "lang": "en", "note": "public example"}
+{"text": "you look hot", "labels": ["msg.sexual"], "lang": "en", "note": "public example"}
+{"text": "i'll give you free robux", "labels": ["msg.gifts"], "lang": "en", "note": "public example"}
+{"text": "want me to buy you nitro?", "labels": ["msg.gifts"], "lang": "en", "note": "public example"}
+{"text": "jag kan swisha dig pengar", "labels": ["msg.gifts"], "lang": "en", "note": "public example"}
+{"text": "i can gift you skins if you want", "labels": ["msg.gifts"], "lang": "en", "note": "public example"}
+{"text": "free vbucks for you if you do this", "labels": ["msg.gifts"], "lang": "en", "note": "public example"}
+{"text": "you're so mature for your age", "labels": ["msg.flattery"], "lang": "en", "note": "public example"}
+{"text": "you're not like other kids", "labels": ["msg.flattery"], "lang": "en", "note": "public example"}
+{"text": "du är så mogen för din ålder", "labels": ["msg.flattery"], "lang": "sv", "note": "public example"}
+{"text": "only i understand you", "labels": ["msg.flattery"], "lang": "en", "note": "public example"}
+{"text": "you're my special one", "labels": ["msg.flattery"], "lang": "en", "note": "public example"}
+{"text": "let's meet in real life", "labels": ["msg.meeting"], "lang": "en", "note": "public example"}
+{"text": "i can pick you up after school", "labels": ["msg.meeting"], "lang": "en", "note": "public example"}
+{"text": "vi kan ses i stan, bara vi", "labels": ["msg.meeting"], "lang": "en", "note": "public example"}
+{"text": "i'm outside your house", "labels": ["msg.meeting"], "lang": "en", "note": "public example"}
+{"text": "sneak out tonight and meet me", "labels": ["msg.meeting"], "lang": "en", "note": "public example"}
+{"text": "if you don't send it i'll tell everyone", "labels": ["msg.pressure"], "lang": "en", "note": "public example"}
+{"text": "you owe me after everything i did", "labels": ["msg.pressure"], "lang": "en", "note": "public example"}
+{"text": "om du inte gör det så sprider jag bilderna", "labels": ["msg.pressure"], "lang": "sv", "note": "public example"}
+{"text": "answer me now or else", "labels": ["msg.pressure"], "lang": "en", "note": "public example"}
+{"text": "send more or i post your pics", "labels": ["msg.pressure"], "lang": "en", "note": "public example"}
+{"text": "free nitro, claim here", "labels": ["msg.scam_link"], "lang": "en", "note": "public example"}
+{"text": "verify your account or it will be banned", "labels": ["msg.scam_link"], "lang": "en", "note": "public example"}
+{"text": "gratis nitro, klicka här", "labels": ["msg.scam_link"], "lang": "sv", "note": "public example"}
+{"text": "i accidentally reported you, contact this admin", "labels": ["msg.scam_link"], "lang": "en", "note": "public example"}
+{"text": "scan this qr code to get your gift", "labels": ["msg.scam_link"], "lang": "en", "note": "public example"}
+{"text": "gg", "labels": [], "lang": "en", "note": "public example, benign"}
+{"text": "nice shot bro", "labels": [], "lang": "en", "note": "public example, benign"}
+{"text": "meet at spawn", "labels": [], "lang": "en", "note": "public example, benign"}
+{"text": "send pics of your build", "labels": [], "lang": "en", "note": "public example, benign"}
+{"text": "how old is this server", "labels": [], "lang": "en", "note": "public example, benign"}
+{"text": "hur gammal är servern?", "labels": [], "lang": "sv", "note": "public example, benign"}
+{"text": "my snap streak is 200 days", "labels": [], "lang": "en", "note": "public example, benign"}
+{"text": "don't tell mom about the surprise party", "labels": [], "lang": "en", "note": "public example, benign"}
+{"text": "where are you from? your ping is crazy", "labels": [], "lang": "en", "note": "public example, benign"}
+{"text": "vi ses i skolan imorgon", "labels": [], "lang": "en", "note": "public example, benign"}
+{"text": "anyone want to play duos?", "labels": [], "lang": "en", "note": "public example, benign"}
+{"text": "the free nitro link in general is a scam, don't click it", "labels": [], "lang": "en", "note": "public example, benign"}
+{"text": "verify in #rules to see the channels", "labels": [], "lang": "en", "note": "public example, benign"}
+{"text": "what time is it there", "labels": [], "lang": "en", "note": "public example, benign"}
+{"text": "jag har läxor, hörs sen", "labels": [], "lang": "sv", "note": "public example, benign"}
+{"text": "my little brother is 8", "labels": [], "lang": "en", "note": "public example, benign"}
+{"text": "skicka en bild på din minecraft-värld", "labels": [], "lang": "sv", "note": "public example, benign"}
+{"text": "trade my pet for yours?", "labels": [], "lang": "en", "note": "public example, benign"}
+{"text": "lol that was so funny", "labels": [], "lang": "en", "note": "public example, benign"}
+{"text": "who's hosting the tournament", "labels": [], "lang": "en", "note": "public example, benign"}
+{"text": "i got robux from my grandma", "labels": [], "lang": "en", "note": "public example, benign"}
+{"text": "join vc", "labels": [], "lang": "en", "note": "public example, benign"}
+{"text": "can someone help with my homework", "labels": [], "lang": "en", "note": "public example, benign"}
+{"text": "my school starts at 8", "labels": [], "lang": "en", "note": "public example, benign"}
+{"text": "great job on the build", "labels": [], "lang": "en", "note": "public example, benign"}
+{"text": "är du med på raid ikväll?", "labels": [], "lang": "sv", "note": "public example, benign"}
+{"text": "brb dinner", "labels": [], "lang": "en", "note": "public example, benign"}
+{"text": "the boss fight is hard", "labels": [], "lang": "en", "note": "public example, benign"}
+{"text": "good morning everyone", "labels": [], "lang": "en", "note": "public example, benign"}
+{"text": "this song slaps", "labels": [], "lang": "en", "note": "public example, benign"}
+{"text": "jag älskar den här mappen", "labels": [], "lang": "sv", "note": "public example, benign"}
+{"text": "ok see you tomorrow", "labels": [], "lang": "en", "note": "public example, benign"}
+{"text": "who wants to trade cards", "labels": [], "lang": "en", "note": "public example, benign"}
+{"text": "i'm 12 btw", "labels": [], "lang": "en", "note": "public example, benign"}
+{"text": "add me on fortnite", "labels": [], "lang": "en", "note": "public example, benign"}
+{"text": "you're cracked at this game", "labels": [], "lang": "en", "note": "public example, benign"}

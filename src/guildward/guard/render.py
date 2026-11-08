@@ -195,6 +195,8 @@ register({
                    "sv": "Tack. Moderatorerna har fått veta, och bara de kan se vem som anmälde. "
                          "Om någon skrämmer dig, berätta också för en vuxen du litar på."},
     "g.already_reported": {"en": "You already reported this. The moderators have it.", "sv": "Du har redan anmält detta. Moderatorerna har det."},
+    "g.bot_missing": {"en": "Guildward was added to this server with checks only, so Guard can't see it. To use Guard, an admin adds the full bot: {url}",
+                      "sv": "Guildward lades till i servern med bara kollar, så Guard kan inte se den. För att använda Guard lägger en admin till hela botten: {url}"},
     "g.not_setup": {"en": "Guard isn't set up here yet. An admin can run `/guard setup`.",
                     "sv": "Guard är inte installerad här än. En admin kan köra `/guard setup`."},
     "g.status_set": {"en": "{name}: {action}.", "sv": "{name}: {action}."},
@@ -203,9 +205,9 @@ register({
                         "sv": "Det här raderar permanent allt Guard vet om servern: medlemmar, betyg, larm och anmälningar. "
                               "Det går inte att ångra. Guard fortsätter köras och börjar om från noll."},
     "g.erased": {"en": "All Guard data for this server is erased.", "sv": "All Guard-data för servern är raderad."},
-    "g.welcome": {"en": "👋 Thanks for adding **Guildward Guard**. An admin can run `/guard setup` to pick an alert channel. "
+    "g.welcome": {"en": "👋 Thanks for adding **Guildward** (Guard). An admin can run `/guard setup` to pick an alert channel. "
                         "Guard never stores message text.",
-                  "sv": "👋 Tack för att ni lade till **Guildward Guard**. En admin kan köra `/guard setup` för att välja larmkanal. "
+                  "sv": "👋 Tack för att ni lade till **Guildward** (Guard). En admin kan köra `/guard setup` för att välja larmkanal. "
                         "Guard sparar aldrig meddelandetext."},
     "g.fix_ok_verification": {"en": "Verification raised to Medium.", "sv": "Verifieringen höjd till Medel."},
     "g.fix_ok_content_filter": {"en": "Explicit media filter is on for all members.", "sv": "Filtret för explicit media är på för alla."},

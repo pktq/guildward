@@ -17,11 +17,21 @@ _LEET_SYMBOL = re.compile(r"[@$!](?=\w)")
 _NON_WORD = re.compile(r"[^\w\såäöæø+]+")
 _SPACES = re.compile(r"\s+")
 _REPEATS = re.compile(r"(.)\1{2,}")  # "heyyyy" -> "heyy"
+# NFKC leaves Cyrillic/Greek look-alikes alone ("ѕnар", "αge"). Lowercase only: it runs after casefold.
+_CONFUSABLES = str.maketrans(
+    "авсԁеёһніїјкӏмпорԛгѕтуүхԝь" "αβεηικνορτυχγμω",
+    "abcdeehhiijklmnopqrstyyxwb" "abenikvoptuxyuw",
+)
 
 
 def _fold(text: str) -> str:
     # NFKC turns fullwidth/mathematical letters (𝓭𝓶 𝓶𝓮) into plain ones; casefold handles ß etc.
-    return unicodedata.normalize("NFKC", text).casefold()
+    return unicodedata.normalize("NFKC", text).casefold().translate(_CONFUSABLES)
+
+
+def fold(text: str) -> str:
+    """Lowercased, Unicode-folded, repeats squeezed; punctuation, digits and spacing kept (for the model)."""
+    return _REPEATS.sub(r"", _fold(text))
 
 
 def normalize(text: str, *, leet: bool = True) -> str:

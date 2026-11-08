@@ -87,7 +87,7 @@
       reportTitle: "Safety report", reportFor: "Generated {d}", print: "Print or save as PDF", reportBack: "Back to overview",
       // owner
       ownerTitle: "Bot owner", system: "System", online: "Online", offline: "Offline", pocket: "Pocket app", guard: "Guard",
-      latency: "{n} ms", uptime: "Uptime", version: "Version", rules: "Rules", database: "Database", events: "Events per minute",
+      latency: "{n} ms", uptime: "Uptime", version: "Version", rules: "Rules", database: "Database", events: "Events per minute", model: "AI model", m_ready: "running", m_downloading: "downloading", m_loading: "loading", m_failed: "failed, rules only", m_off: "off, rules only", m_queue: "AI queue (kids / servers)", m_shed: "Server messages skipped by AI",
       totals: "Totals", t_guilds: "Servers", t_members: "Members", t_alerts_open: "Open alerts", t_alerts_7d: "Alerts (7 days)",
       t_flagged_7d: "Flagged (7 days)", t_network_flags: "Network flags", t_pocket_checks_7d: "Pocket checks (7 days)",
       pocketBreak: "Pocket checks by result, last 30 days", pk_server: "Server checks", pk_person: "Person checks", pk_message: "Message checks",
@@ -96,7 +96,24 @@
       quality: "Signal quality", col_signalq: "Signal", col_fired: "Fired (30 d)", col_fp: "False positives", col_fprate: "FP rate",
       networkTitle: "Safety Network", col_user: "Account", col_guilds: "Servers", col_reasons: "Reasons", col_first: "First flagged",
       clear: "Clear", cleared: "Network flag cleared.", noNetwork: "No accounts are flagged in the Safety Network.",
-      sortAsc: "sorted ascending", sortDesc: "sorted descending"
+      sortAsc: "sorted ascending", sortDesc: "sorted descending",
+      accTitle: "Accounts", accIntro: "Accounts that Guildward users checked or reported. A flag you confirm is shown to every user who checks the account.",
+      accAria: "Account status", st_review: "To review", st_flagged: "Flagged", st_confirmed: "Confirmed", st_cleared: "Cleared", st_all: "All",
+      fl_none: "No flag", fl_watch: "Watch", fl_flagged: "Flagged", fl_confirmed: "Confirmed", fl_cleared: "Cleared", fl_auto: "Auto: {f}",
+      acc_created: "Created", acc_seen: "Last seen", acc_deleted: "Deleted", acc_checks: "Checks",
+      acc_checkers: "{n} checked it, {r} rated it red", acc_reports: "Reports: {n} (weight {w})", acc_network: "In {n} Guard servers",
+      acc_noReports: "No reports", acc_links: "Links",
+      rs_age_pics: "Asked age/pics", rs_sexual: "Sexual", rs_threat: "Threats", rs_meet: "Wants to meet", rs_scam: "Scam", rs_hate: "Hate", rs_other: "Other",
+      lk_handle: "same off-platform handle", lk_payment: "same payment tag", lk_script: "same copy-paste script", lk_avatar: "same avatar", lk_name: "similar name",
+      lkTo: "{kind} as {name}",
+      a_confirm: "Confirm", a_clear: "Clear", a_watch: "Watch", a_reset: "Reset",
+      cAccConfirmTitle: "Confirm {name}?", cAccConfirmBody: "Every user who checks this account will see a strong warning. Only confirm when you are sure.",
+      cAccClearTitle: "Clear {name}?", cAccClearBody: "The account is marked safe and will not show a warning, even if more reports come in.",
+      cAccWatchTitle: "Watch {name}?", cAccWatchBody: "Users who check this account will see a mild caution. It stays in your review list.",
+      cAccResetTitle: "Reset {name}?", cAccResetBody: "Your decision is removed. The account goes back to its automatic flag.",
+      noAccounts: "No accounts in this list.", accDone: "Account updated.", viewAccounts: "Review accounts",
+      crowdTitle: "Crowd reports", cr_users: "Users", cr_accounts: "Accounts", cr_reports_7d: "Reports (7 days)", cr_review: "To review",
+      cr_flagged: "Flagged", cr_confirmed: "Confirmed", cr_watch_alerts_7d: "Watch alerts (7 days)", back: "Back to bot owner"
     },
     sv: {
       skip: "Hoppa till innehållet", brandSub: "Guard", nav: "Kontrollpanel", server: "Server",
@@ -172,7 +189,7 @@
       none: "Ingen", lvlFrom_yellow: "Gul och röd", lvlFrom_red: "Bara röd",
       reportTitle: "Säkerhetsrapport", reportFor: "Skapad {d}", print: "Skriv ut eller spara som PDF", reportBack: "Tillbaka till översikten",
       ownerTitle: "Botägare", system: "System", online: "Online", offline: "Offline", pocket: "Pocket-appen", guard: "Guard",
-      latency: "{n} ms", uptime: "Drifttid", version: "Version", rules: "Regler", database: "Databas", events: "Händelser per minut",
+      latency: "{n} ms", uptime: "Drifttid", version: "Version", rules: "Regler", database: "Databas", events: "Händelser per minut", model: "AI-modell", m_ready: "igång", m_downloading: "laddar ner", m_loading: "startar", m_failed: "fel, bara regler", m_off: "av, bara regler", m_queue: "AI-kö (barn / servrar)", m_shed: "Servermeddelanden AI hoppade över",
       totals: "Totalt", t_guilds: "Servrar", t_members: "Medlemmar", t_alerts_open: "Öppna larm", t_alerts_7d: "Larm (7 dagar)",
       t_flagged_7d: "Flaggade (7 dagar)", t_network_flags: "Nätverksflaggor", t_pocket_checks_7d: "Pocket-kontroller (7 dagar)",
       pocketBreak: "Pocket-kontroller efter resultat, senaste 30 dagarna", pk_server: "Serverkontroller", pk_person: "Personkontroller", pk_message: "Meddelandekontroller",
@@ -181,7 +198,24 @@
       quality: "Signalkvalitet", col_signalq: "Signal", col_fired: "Utlöst (30 d)", col_fp: "Falsklarm", col_fprate: "Andel falsklarm",
       networkTitle: "Säkerhetsnätverk", col_user: "Konto", col_guilds: "Servrar", col_reasons: "Skäl", col_first: "Först flaggad",
       clear: "Rensa", cleared: "Nätverksflaggan rensades.", noNetwork: "Inga konton är flaggade i säkerhetsnätverket.",
-      sortAsc: "sorterat stigande", sortDesc: "sorterat fallande"
+      sortAsc: "sorterat stigande", sortDesc: "sorterat fallande",
+      accTitle: "Konton", accIntro: "Konton som Guildward-användare har kollat eller rapporterat. En flagga du bekräftar visas för alla som kollar kontot.",
+      accAria: "Kontostatus", st_review: "Att granska", st_flagged: "Flaggade", st_confirmed: "Bekräftade", st_cleared: "Rensade", st_all: "Alla",
+      fl_none: "Ingen flagga", fl_watch: "Bevaka", fl_flagged: "Flaggad", fl_confirmed: "Bekräftad", fl_cleared: "Rensad", fl_auto: "Auto: {f}",
+      acc_created: "Skapat", acc_seen: "Senast sett", acc_deleted: "Raderat", acc_checks: "Kollar",
+      acc_checkers: "{n} kollade det, {r} gav rött", acc_reports: "Rapporter: {n} (vikt {w})", acc_network: "I {n} Guard-servrar",
+      acc_noReports: "Inga rapporter", acc_links: "Kopplingar",
+      rs_age_pics: "Frågade om ålder/bilder", rs_sexual: "Sexuellt", rs_threat: "Hot", rs_meet: "Vill träffas", rs_scam: "Bluff", rs_hate: "Hat", rs_other: "Annat",
+      lk_handle: "samma externa användarnamn", lk_payment: "samma betalnamn", lk_script: "samma copy-paste-manus", lk_avatar: "samma profilbild", lk_name: "liknande namn",
+      lkTo: "{kind} som {name}",
+      a_confirm: "Bekräfta", a_clear: "Rensa", a_watch: "Bevaka", a_reset: "Återställ",
+      cAccConfirmTitle: "Bekräfta {name}?", cAccConfirmBody: "Alla som kollar det här kontot får en tydlig varning. Bekräfta bara när du är säker.",
+      cAccClearTitle: "Rensa {name}?", cAccClearBody: "Kontot markeras som säkert och visar ingen varning, även om fler rapporter kommer in.",
+      cAccWatchTitle: "Bevaka {name}?", cAccWatchBody: "Användare som kollar kontot ser en mild varning. Det ligger kvar i din granskningslista.",
+      cAccResetTitle: "Återställ {name}?", cAccResetBody: "Ditt beslut tas bort. Kontot går tillbaka till sin automatiska flagga.",
+      noAccounts: "Inga konton i den här listan.", accDone: "Kontot uppdaterat.", viewAccounts: "Granska konton",
+      crowdTitle: "Rapporter från användare", cr_users: "Användare", cr_accounts: "Konton", cr_reports_7d: "Rapporter (7 dagar)", cr_review: "Att granska",
+      cr_flagged: "Flaggade", cr_confirmed: "Bekräftade", cr_watch_alerts_7d: "Bevakningslarm (7 dagar)", back: "Tillbaka till botägare"
     }
   };
 
@@ -443,6 +477,20 @@
       }));
     }
     if (p === "/api/owner/overview") return answer(fixture("owner-overview"));
+    if (p === "/api/owner/accounts") {
+      return answer(fixture("owner-accounts").then(function (d) {
+        var st = q.get("status") || "review";
+        return { counts: accCounts(d.accounts), accounts: d.accounts.filter(function (a) { return accIn(a, st); }) };
+      }));
+    }
+    if ((m = /^\/api\/owner\/accounts\/(\w+)$/.exec(p))) {
+      return answer(fixture("owner-accounts").then(function (d) {
+        var a = d.accounts.filter(function (x) { return x.id === m[1]; })[0];
+        if (!a) throw new ApiError(404, t("errNotFound"));
+        a.flag = { confirm: "confirmed", clear: "cleared", watch: "watch", reset: a.auto_flag }[body.action] || a.flag;
+        return { ok: true };
+      }));
+    }
     if ((m = /^\/api\/owner\/(network|guilds)\/(\w+)$/.exec(p))) {
       var key = m[1], target = m[2];
       return answer(fixture("owner-overview").then(function (o) {
@@ -671,7 +719,7 @@
       gid = p[1];
       key = p[2] || "overview";
       view = { overview: viewOverview, alerts: viewAlerts, members: viewMembers, member: viewMember, settings: viewSettings, report: viewReport }[key];
-    } else if (p[0] === "owner") { key = "owner"; view = state.me.owner ? viewOwner : null; }
+    } else if (p[0] === "owner") { key = "owner"; view = !state.me.owner ? null : p[1] === "accounts" ? viewOwnerAccounts : p[1] ? null : viewOwner; }
     else if (!p.length) {
       if (state.me.guilds.length) { location.replace(route("", state.me.guilds[0].id)); return; }
       if (state.me.owner) { location.replace("#/owner"); return; }
@@ -1169,6 +1217,70 @@
     });
   }
 
+  // ===================================================================== views: owner accounts
+  var ACC_STATUSES = ["review", "flagged", "confirmed", "cleared", "all"];
+  var ACC_REASONS = ["age_pics", "sexual", "threat", "meet", "scam", "hate", "other"];
+  var ACC_LINKS = ["handle", "payment", "script", "avatar", "name"];
+  var ACC_ACTIONS = { confirm: "confirmed", clear: "cleared", watch: "watch" };
+  function accIn(a, st) {
+    if (st === "all") return true;
+    if (st === "review") return (a.auto_flag === "watch" || a.auto_flag === "flagged") && a.flag !== "confirmed" && a.flag !== "cleared";
+    return a.flag === st;
+  }
+  function accCounts(list) {
+    var c = {};
+    ["review", "flagged", "confirmed", "cleared"].forEach(function (k) { c[k] = list.filter(function (a) { return accIn(a, k); }).length; });
+    return c;
+  }
+  function unixIso(sec) { return sec ? new Date(sec * 1000).toISOString() : null; }
+
+  function viewOwnerAccounts(ctx) {
+    var status = ACC_STATUSES.indexOf(ctx.query.get("status")) >= 0 ? ctx.query.get("status") : "review";
+    return api("GET", "/api/owner/accounts?status=" + status).then(function (d) {
+      var tabs = ACC_STATUSES.map(function (s) {
+        var n = s === "all" ? "" : html` <span class="tab-n num">${num((d.counts || {})[s] || 0)}</span>`;
+        return html`<a class="tab" href="#/owner/accounts${s === "review" ? "" : "?status=" + s}" ${s === status ? raw('aria-current="page"') : ""}>${t("st_" + s)}${n}</a>`;
+      });
+      return html`<header class="page-head"><div><h1>${t("accTitle")}</h1><p class="page-meta"><a href="#/owner">${t("back")}</a></p></div></header>
+        <p class="acct-intro">${t("accIntro")}</p>
+        <nav class="tabs" aria-label="${t("accAria")}">${tabs}</nav>
+        ${d.accounts.length ? html`<ul class="acct-list">${d.accounts.map(accountItem)}</ul>` : empty(t("noAccounts"))}`;
+    });
+  }
+
+  function accountItem(a) {
+    var flagTone = { confirmed: "chip-bad", flagged: "chip-bad", watch: "chip-warn", cleared: "chip-good", none: "" }[a.flag] || "";
+    var rs = ACC_REASONS.filter(function (k) { return a.reasons && a.reasons[k]; });
+    var acts = ["confirm", "clear", "watch", "reset"].filter(function (x) {
+      return x === "reset" ? a.flag !== a.auto_flag && a.flag !== "none" : ACC_ACTIONS[x] !== a.flag;
+    });
+    return html`<li class="acct" data-id="${a.id}">
+      <div class="acct-head">
+        <span class="who">${avatar({ name: a.name })}<span class="who-name"><b class="who-display">${a.name}</b><span class="sub mono">${a.id}</span></span></span>
+        <span class="acct-chips">
+          <span class="chip ${flagTone}">${t("fl_" + a.flag)}</span>
+          ${a.flag !== a.auto_flag && a.auto_flag !== "none" ? html`<span class="chip">${t("fl_auto", { f: t("fl_" + a.auto_flag) })}</span>` : ""}
+          ${levelPill(a.level, a.score)}
+          ${a.deleted ? html`<span class="chip">${t("acc_deleted")}</span>` : ""}
+        </span>
+      </div>
+      <dl class="acct-facts">
+        <div><dt>${t("acc_created")}</dt><dd><time datetime="${unixIso(a.created_at)}" title="${date(unixIso(a.created_at), true)}">${date(unixIso(a.created_at))}</time></dd></div>
+        <div><dt>${t("acc_seen")}</dt><dd>${timeEl(unixIso(a.last_seen))}</dd></div>
+        <div><dt>${t("acc_checks")}</dt><dd class="num">${t("acc_checkers", { n: num(a.checkers), r: num(a.red_checkers) })}</dd></div>
+        ${a.network ? html`<div><dt>${t("guard")}</dt><dd class="num">${t("acc_network", { n: num(a.network) })}</dd></div>` : ""}
+        <div class="acct-wide"><dt>${t("acc_reports", { n: num(a.reports), w: (a.report_score || 0).toFixed(1) })}</dt><dd>${rs.length ? html`<span class="chips acct-reasons">${rs.map(function (k) { return html`<span class="chip chip-warn">${t("rs_" + k)} <b class="num">${a.reasons[k]}</b></span>`; })}</span>` : t("acc_noReports")}</dd></div>
+      </dl>
+      ${a.links && a.links.length ? html`<ul class="acct-links" aria-label="${t("acc_links")}">${a.links.map(function (l) {
+        var f = l.other_flag && l.other_flag !== "none" ? " (" + t("fl_" + l.other_flag).toLowerCase() + ")" : "";
+        return html`<li>${icon("ext")}<span>${t("lkTo", { kind: ACC_LINKS.indexOf(l.kind) >= 0 ? t("lk_" + l.kind) : l.kind, name: l.other_name })}${f}</span></li>`;
+      })}</ul>` : ""}
+      <div class="acct-actions">${acts.map(function (x) {
+        return html`<button type="button" class="btn btn-sm ${x === "confirm" ? "btn-danger" : ""}" data-act="acct" data-action="${x}" data-id="${a.id}" data-name="${a.name}">${t("a_" + x)}</button>`;
+      })}</div>
+    </li>`;
+  }
+
   // ===================================================================== views: owner
   var ownerSort = { key: "fp_rate", dir: -1 };
 
@@ -1185,19 +1297,23 @@
       [t("pocket"), s.pocket_online, s.latency_ms && s.latency_ms.pocket],
       [t("guard"), s.guard_online, s.latency_ms && s.latency_ms.guard]
     ];
+    var m = s.model || { state: "off" };
+    var model = html`<div class="sys-tile ${m.state === "ready" ? "is-up" : "is-down"}" title="${m.detail || ""}"><span class="sys-label">${t("model")}</span><span class="sys-state">${icon(m.state === "ready" ? "lgreen" : m.state === "failed" || m.state === "off" ? "lred" : "lyellow")}${t("m_" + m.state)}</span>${m.batch_ms_p50 != null ? html`<span class="sys-sub num">${t("latency", { n: m.batch_ms_p50 })}</span>` : m.detail ? html`<span class="sys-sub">${m.detail}</span>` : ""}</div>`;
     var sys = html`<div class="sys">
       ${tiles.map(function (x) {
         return html`<div class="sys-tile ${x[1] ? "is-up" : "is-down"}"><span class="sys-label">${x[0]}</span><span class="sys-state">${icon(x[1] ? "lgreen" : "lred")}${x[1] ? t("online") : t("offline")}</span>${x[2] != null ? html`<span class="sys-sub num">${t("latency", { n: x[2] })}</span>` : ""}</div>`;
-      })}
+      })}${model}
       <dl class="sys-facts">
         <div><dt>${t("uptime")}</dt><dd class="num">${duration(s.uptime_s)}</dd></div>
         <div><dt>${t("version")}</dt><dd class="num">${s.version}</dd></div>
         <div><dt>${t("rules")}</dt><dd>${s.rules}</dd></div>
         <div><dt>${t("database")}</dt><dd class="num">${bytes(s.db_bytes)}</dd></div>
         <div><dt>${t("events")}</dt><dd class="num">${num(s.events_per_min)}</dd></div>
+        ${m.state === "ready" ? html`<div><dt>${t("m_queue")}</dt><dd class="num">${num(m.queue_kids)} / ${num(m.queue_guard)}</dd></div><div><dt>${t("m_shed")}</dt><dd class="num">${num(m.shed)}</dd></div>` : ""}
       </dl></div>`;
     var tk = ["guilds", "members", "alerts_open", "alerts_7d", "flagged_7d", "network_flags", "pocket_checks_7d"];
     var totals = html`<dl class="kpis kpis-owner">${tk.map(function (k) { return html`<div class="kpi ${k === "alerts_open" && o.totals[k] ? "kpi-warn" : ""}"><dt>${t("t_" + k)}</dt><dd class="num">${num(o.totals[k])}</dd></div>`; })}</dl>`;
+    var crowd = o.crowd ? html`<dl class="kpis kpis-owner">${["users", "accounts", "reports_7d", "review", "flagged", "confirmed", "watch_alerts_7d"].map(function (k) { return html`<div class="kpi ${k === "review" && o.crowd[k] ? "kpi-warn" : ""}"><dt>${t("cr_" + k)}</dt><dd class="num">${num(o.crowd[k])}</dd></div>`; })}</dl>` : "";
     var pocket = html`<div class="pocket">${["server", "person", "message"].map(function (k) {
       var c = o.pocket[k] || {}, tot = (c.green || 0) + (c.yellow || 0) + (c.red || 0);
       return html`<div class="pocket-row"><span class="pocket-label">${t("pk_" + k)}</span>
@@ -1236,6 +1352,7 @@
       <div class="grid grid-owner">
         ${panel(t("system"), sys, { id: "o-sys" })}
         ${panel(t("totals"), totals, { id: "o-tot" })}
+        ${o.crowd ? panel(t("crowdTitle"), crowd, { id: "o-crowd", cls: "panel-wide", extra: html`<a class="btn btn-sm" href="#/owner/accounts">${t("viewAccounts")}</a>` }) : ""}
         ${panel(t("activity"), html`<div class="charts">${sk.map(function (k) { return chart(t("s_" + k), o.series.days, o.series[k] || [], { type: k === "messages" ? "area" : "bar" }); })}</div>${chartTable(o.series.days, sk.map(function (k) { return [t("s_" + k), o.series[k] || []]; }))}`, { id: "o-act", cls: "panel-wide" })}
         ${panel(t("pocketBreak"), pocket, { id: "o-pocket", cls: "panel-wide" })}
         ${panel(t("guilds"), guilds, { id: "o-guilds", cls: "panel-wide" })}
@@ -1329,6 +1446,16 @@
         busy(btn, true);
         api("POST", "/api/owner/network/" + btn.getAttribute("data-uid"), { action: "clear" }).then(function () {
           toast(t("cleared")); state.focusOnRender = false; state.quiet = true; render();
+        }).catch(function (e) { busy(btn, false); fail(e); });
+      });
+    },
+    acct: function (btn) {
+      var action = btn.getAttribute("data-action"), name = btn.getAttribute("data-name"), K = action.charAt(0).toUpperCase() + action.slice(1);
+      confirmDialog(t("cAcc" + K + "Title", { name: name }), t("cAcc" + K + "Body"), t("a_" + action)).then(function (ok) {
+        if (!ok) return;
+        busy(btn, true);
+        api("POST", "/api/owner/accounts/" + btn.getAttribute("data-id"), { action: action }).then(function () {
+          toast(t("accDone")); state.focusOnRender = false; state.quiet = true; render();
         }).catch(function (e) { busy(btn, false); fail(e); });
       });
     },

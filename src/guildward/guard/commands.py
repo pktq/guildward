@@ -14,7 +14,7 @@ from discord.app_commands import locale_str
 
 from guildward.core.i18n import Lang, lang_for, t
 from guildward.guard import render
-from guildward.guard.bot import FIXES, member_info
+from guildward.guard.bot import FIXES, INSTALL_URL, member_info, needed_permissions
 
 if TYPE_CHECKING:
     from guildward.guard.bot import GuardBot
@@ -114,11 +114,27 @@ def _link_view(url: str, label: str) -> discord.ui.View:
     return view
 
 
+_SERVER_INSTALL = app_commands.AppInstallationType(guild=True, user=False)
+
+
+class GuardGroup(app_commands.Group):
+    async def interaction_check(self, i: discord.Interaction) -> bool:
+        bot = _bot(i)
+        if i.guild_id and bot.get_guild(i.guild_id) is None:
+            # Added commands-only (no bot user): Guard can't see this server until the full bot is added.
+            url = INSTALL_URL.format(id=bot.application_id, perms=needed_permissions().value)
+            await i.response.send_message(embed=render.notice("g.bot_missing", lang_for(i.locale), url=url),
+                                          ephemeral=True)
+            return False
+        return True
+
+
 def setup(bot: GuardBot) -> None:
     bot.add_dynamic_items(AlertButton, FixAllButton)
     tree = bot.tree
-    group = app_commands.Group(name="guard", description=locale_str("Guildward Guard: server safety", key="gcmd.guard"),
-                               guild_only=True, default_permissions=discord.Permissions(manage_guild=True))
+    group = GuardGroup(name="guard", description=locale_str("Guildward Guard: server safety", key="gcmd.guard"),
+                       guild_only=True, allowed_installs=_SERVER_INSTALL,
+                       default_permissions=discord.Permissions(manage_guild=True))
 
     async def ready(i: discord.Interaction) -> bool:
         if bot.store.guild(i.guild_id) is None and i.guild:
@@ -253,6 +269,7 @@ def setup(bot: GuardBot) -> None:
 
     @tree.context_menu(name=locale_str("Report to mods", key="gcmd.ctx_report"))
     @app_commands.guild_only()
+    @app_commands.allowed_installs(guilds=True, users=False)
     async def report_to_mods(i: discord.Interaction, message: discord.Message) -> None:
         lang = lang_for(i.locale)
         if bot.store.guild(i.guild_id) is None or not bot.store.settings(i.guild_id)["alert_channel_id"]:
@@ -270,6 +287,7 @@ def setup(bot: GuardBot) -> None:
 
     @tree.context_menu(name=locale_str("Guard report", key="gcmd.ctx_member"))
     @app_commands.guild_only()
+    @app_commands.allowed_installs(guilds=True, users=False)
     @app_commands.default_permissions(moderate_members=True)
     async def guard_report(i: discord.Interaction, member: discord.Member) -> None:
         await send_person(i, member)

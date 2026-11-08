@@ -162,10 +162,12 @@ def test_reports_count_once_per_reporter():
 
 def test_network_ban_flags_and_alerts_elsewhere():
     w = World()
+    w.store.update_settings(G, {"network_share": True})  # the Safety Network is opt-in per server
     _grooming(w)
     w.engine.on_mod_action(G, NEW.id, "ban", by=1, by_name="Mod")
     other = 222
     w.store.upsert_guild(other, name="Other", icon=None, owner_id=2, member_count=10)
+    w.store.update_settings(other, {"network_share": True})
     outs = w.engine.on_join(JoinEvent(other, NEW, int(time.time())))
     alert = w.store.alert(next(o.alert_id for o in outs if o.kind == "alert"))
     assert alert["kind"] == "network" and alert["level"] == "red"

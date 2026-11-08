@@ -37,6 +37,7 @@ class Kind(StrEnum):
     SERVER = "server"
     PERSON = "person"
     MESSAGE = "message"
+    LINK = "link"
 
 
 @dataclass(frozen=True, slots=True)

@@ -438,7 +438,8 @@ class Reports:
                                                                                             "message")}
         for r in s.q("SELECT metric, SUM(n) n FROM daily WHERE guild_id=0 AND metric LIKE 'pocket.%' AND day>=? "
                      "GROUP BY metric", last_days(30)[0]):
-            _, kind, level = r["metric"].split(".")
+            parts = r["metric"].split(".")  # also pocket.report, pocket.ai.red, ...: only kind.level counts here
+            kind, level = (parts[1], parts[2]) if len(parts) == 3 else ("", "")
             if kind in pocket and level in pocket[kind]:
                 pocket[kind][level] = r["n"]
         pocket_series = [0] * 30

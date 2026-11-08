@@ -10,7 +10,21 @@
       "guard": 39
     },
     "db_bytes": 18304000,
-    "events_per_min": 120
+    "events_per_min": 120,
+    "model": {
+      "state": "ready",
+      "detail": "",
+      "model": "Xenova/multilingual-e5-small",
+      "head": "guildward-private",
+      "workers": 2,
+      "texts": 48210,
+      "shed": 0,
+      "errors": 0,
+      "busy_notes": 0,
+      "queue_kids": 0,
+      "queue_guard": 1,
+      "batch_ms_p50": 9.4
+    }
   },
   "totals": {
     "guilds": 3,
@@ -20,6 +34,15 @@
     "flagged_7d": 50,
     "network_flags": 4,
     "pocket_checks_7d": 39
+  },
+  "crowd": {
+    "users": 812,
+    "accounts": 3400,
+    "reports_7d": 41,
+    "review": 3,
+    "flagged": 2,
+    "confirmed": 1,
+    "watch_alerts_7d": 17
   },
   "series": {
     "days": [

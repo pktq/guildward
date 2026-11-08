@@ -140,7 +140,11 @@ Fix ids: `verification`, `content_filter`, `automod_presets`, `automod_spam`, `a
 ```jsonc
 {
   "system": {"uptime_s": 5231, "version": "0.2.0", "rules": "private", "pocket_online": true, "guard_online": true,
-             "latency_ms": {"pocket": 41, "guard": 39}, "db_bytes": 1830400, "events_per_min": 120},
+             "latency_ms": {"pocket": 41, "guard": 39}, "db_bytes": 1830400, "events_per_min": 120,
+             // local message model: state off | downloading | loading | ready | failed (detail says why)
+             "model": {"state": "ready", "detail": "", "model": "Xenova/multilingual-e5-small", "head": "guildward-private",
+                       "workers": 2, "texts": 48210, "shed": 0, "errors": 0, "busy_notes": 0, "queue_kids": 0,
+                       "queue_guard": 1, "batch_ms_p50": 9.4}},
   "totals": {"guilds": 3, "members": 2200, "alerts_open": 9, "alerts_7d": 31, "flagged_7d": 50, "network_flags": 4, "pocket_checks_7d": 210},
   "series": {"days": ["… 30 …"], "pocket_checks": [], "alerts": [], "flagged": [], "messages": []},
   "pocket": {"server": {"green": 10, "yellow": 4, "red": 1}, "person": {"…": 0}, "message": {"…": 0}},   // last 30 days
@@ -153,3 +157,24 @@ Fix ids: `verification`, `content_filter`, `automod_presets`, `automod_spam`, `a
 
 `POST /api/owner/network/{uid}` `{"action": "clear"}` → `{"ok": true}`
 `POST /api/owner/guilds/{gid}` `{"action": "leave"}` → `{"ok": true}`
+
+`GET /api/owner/overview` also carries `"crowd": {"users": 812, "accounts": 3400, "reports_7d": 41, "review": 3, "flagged": 2, "confirmed": 1, "watch_alerts_7d": 17}` (shared flags from the pocket app).
+
+`GET /api/owner/accounts?status=review|flagged|confirmed|cleared|all` → shared flags for review. "review" = the automatic flag is watch/flagged and the owner hasn't decided.
+```jsonc
+{"counts": {"review": 3, "flagged": 2, "confirmed": 1, "cleared": 4},
+ "accounts": [{"id": "123", "name": "chill_gamer_19", "avatar": "https://cdn.discordapp.com/…" | null, "created_at": 1700000000,
+   "flag": "none|watch|flagged|confirmed|cleared",   // the owner's decision ("none" = automatic)
+   "auto_flag": "none|watch|flagged", "score": 72, "level": "red",
+   "checkers": 9, "red_checkers": 4, "reports": 5, "report_score": 3.4, "reasons": {"age_pics": 3, "threat": 1},
+   "network": 1,                                     // Guard servers that banned it for child safety
+   "links": [{"kind": "handle|payment|script|avatar|name", "other_id": "456", "other_name": "chill_gamer_20", "other_flag": "confirmed"}],
+   "last_seen": 1700500000, "deleted": false}]}
+```
+Reporter identities never leave the store (they are keyed hashes).
+
+`POST /api/owner/accounts/{uid}` `{"action": "confirm" | "clear" | "watch" | "reset"}` → `{"ok": true}`. `reset` removes the owner's decision so the automatic flag applies again. Confirm shows a strong warning to every kid who checks the account.
+
+## Pocket OAuth (server scan)
+
+`GET /pocket/callback?code=…&state=…`: Discord redirects here after a kid allows `/guildward scan` (scopes `identify guilds`). The state is a signed, single-use token naming the kid; the callback checks the Discord account matches, stores the refresh token, scans and DMs the result, and shows a short HTML page. Add `<DASHBOARD_URL>/pocket/callback` as a redirect in the Developer Portal.

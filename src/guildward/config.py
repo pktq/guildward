@@ -27,24 +27,27 @@ def _id(name: str) -> int | None:
 
 @dataclass(frozen=True, slots=True)
 class Settings:
-    token: str  # pocket app (kid-facing, user-install, no intents); may be empty if only Guard runs
+    token: str  # the one Guildward bot (kids' app + Guard)
     dev_guild_id: int | None
     log_level: str
-    guard_token: str = ""  # Guard (server-admin bot); empty = Guard off
     database: str = "data/guildward.db"
     dashboard_url: str = "http://localhost:8080"
     dashboard_host: str = "127.0.0.1"
     dashboard_port: int = 8080
     owner_ids: frozenset[int] = frozenset()
+    client_secret: str = ""  # pocket app OAuth (server scan); empty = scan off
+    home_invite: str = ""  # Guildward community server invite, so the bot can DM kids who share no server with it
+    anthropic_key: str = ""  # opt-in AI second opinion; empty = button hidden
+    safe_browsing_key: str = ""  # Google Safe Browsing for link checks; optional
+    model: bool = True  # local message model (intel/semantic.py); GUILDWARD_MODEL=off = rules only
 
     @classmethod
     def from_env(cls, env_file: Path = Path(".env"), *, need_token: bool = True) -> Settings:
         load_dotenv(env_file)
-        token = os.environ.get("DISCORD_TOKEN", "").strip()
-        guard = os.environ.get("GUARD_TOKEN", "").strip()
-        if need_token and not (token or guard):
-            raise SystemExit("DISCORD_TOKEN (and/or GUARD_TOKEN) is missing. Copy .env.example to .env and paste "
-                             "your bot token(s).")
+        # GUARD_TOKEN is from when Guard was a second app; accepted so older .env files keep working.
+        token = os.environ.get("DISCORD_TOKEN", "").strip() or os.environ.get("GUARD_TOKEN", "").strip()
+        if need_token and not token:
+            raise SystemExit("DISCORD_TOKEN is missing. Copy .env.example to .env and paste your bot token.")
         owners = os.environ.get("OWNER_IDS", "").replace(" ", "")
         if owners and not all(p.isdigit() for p in owners.split(",")):
             raise SystemExit("OWNER_IDS must be comma-separated numeric Discord user IDs.")
@@ -55,10 +58,14 @@ class Settings:
             token=token,
             dev_guild_id=_id("DEV_GUILD_ID"),
             log_level=os.environ.get("LOG_LEVEL", "INFO").upper(),
-            guard_token=guard,
             database=os.environ.get("DATABASE_PATH", "").strip() or "data/guildward.db",
             dashboard_url=(os.environ.get("DASHBOARD_URL", "").strip() or f"http://localhost:{port}").rstrip("/"),
             dashboard_host=os.environ.get("DASHBOARD_HOST", "").strip() or "127.0.0.1",
             dashboard_port=int(port),
             owner_ids=frozenset(int(p) for p in owners.split(",") if p),
+            client_secret=os.environ.get("DISCORD_CLIENT_SECRET", "").strip(),
+            home_invite=os.environ.get("HOME_INVITE", "").strip(),
+            anthropic_key=os.environ.get("ANTHROPIC_API_KEY", "").strip(),
+            safe_browsing_key=os.environ.get("SAFE_BROWSING_KEY", "").strip(),
+            model=os.environ.get("GUILDWARD_MODEL", "").strip().lower() not in ("off", "0", "false", "no"),
         )

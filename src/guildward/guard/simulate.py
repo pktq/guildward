@@ -35,8 +35,9 @@ def simulate(store: Store, seed: int = 7) -> str:
     engine = Engine(store)
     for gid, name, members in GUILDS:
         store.upsert_guild(gid, name=name, icon=None, owner_id=_sf(900, 1), member_count=members)
-    store.update_settings(GID, {"mode": "protect", "alert_channel_id": "4", "minor_role_ids": []})
-    store.update_settings(GUILDS[1][0], {"mode": "observe"})
+    store.update_settings(GID, {"mode": "protect", "alert_channel_id": "4", "minor_role_ids": [],
+                                "network_share": True})
+    store.update_settings(GUILDS[1][0], {"mode": "observe", "network_share": True})
     store.save_audit(GID, {"facts": {
         "member_count": 64, "verification_level": 1, "content_filter": 1, "mfa_level": 0, "nsfw_level": 0,
         "automod_triggers": [3], "nsfw_channels": 0, "everyone_mentions": True, "admin_humans": 2, "admin_bots": 1,
@@ -142,6 +143,42 @@ def simulate(store: Store, seed: int = 7) -> str:
             store.bump(gid, "joins", rnd.randint(0, 2), at=now() - d * DAY)
     for uid in {r["user_id"] for r in store.q("SELECT user_id FROM members WHERE guild_id=?", GID)}:
         engine.rescore(GID, uid)
+    _simulate_pocket(store, groomer, reported, rnd)
     alerts = store.val("SELECT COUNT(*) FROM alerts WHERE guild_id=?", GID)
     members = store.val("SELECT COUNT(*) FROM members WHERE guild_id=?", GID)
     return f"simulated {len(GUILDS)} servers; demo server has {members} members and {alerts} alerts (db: {store.path})"
+
+
+def _simulate_pocket(store: Store, groomer: MemberInfo, reported: MemberInfo, rnd: random.Random) -> None:
+    """Shared flags from kids using the pocket app: one confirmed groomer, his alt, a review case, a brigade."""
+    from guildward.pocket import Pocket
+
+    p = Pocket(store)
+    kids = [_sf(400 + i, 300 + i) for i in range(12)]
+    for k in kids:
+        p.touch_user(k, "en")
+    alt = MemberInfo(_sf(2, 210), "chill_gamer_20")
+    review = MemberInfo(_sf(40, 211), "free_skins_bot")
+    victim = MemberInfo(_sf(900, 212), "classmate_lily")
+    for m in (groomer, reported, alt, review, victim):
+        p.see_account(m.id, m.username, m.display, None)
+    p.record_marks(groomer.id, "add me on snap: chillgamer.19x its more private there", "pocket")
+    p.record_marks(alt.id, "my snap is chillgamer.19x hmu", "pocket")
+    for k in kids[:4]:
+        p.record_check(k, groomer.id, "message", "red")
+        p.report(k, groomer.id, rnd.choice(("age_pics", "age_pics", "threat")))
+    p.owner_action(groomer.id, "confirm", by=0)
+    for k in kids[4:7]:
+        p.record_check(k, alt.id, "message", "red")
+        p.report(k, alt.id, "age_pics")
+    for k in kids[7:10]:
+        p.record_check(k, review.id, "message", "yellow")
+        p.report(k, review.id, "scam")
+    for i in range(5):  # a brigade of day-old accounts against a classmate: counts for nothing
+        bully = _sf(1, 400 + i)
+        p.touch_user(bully, "en")
+        p.report(bully, victim.id, "hate")
+    for k in kids[:3]:
+        p.record_check(k, reported.id, "person", "yellow")
+    for m in (groomer, reported, alt, review, victim):
+        p.refresh(m.id)

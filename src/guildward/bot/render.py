@@ -131,8 +131,8 @@ register({
     "ui.score": {"en": "Risk **{score}/100**", "sv": "Risk **{score}/100**"},
     "ui.no_signals": {"en": "No signals either way.", "sv": "Inga signaler åt något håll."},
     "ui.footer": {
-        "en": "Guildward · Only you can see this · Nothing you check is saved",
-        "sv": "Guildward · Bara du ser detta · Inget du kollar sparas",
+        "en": "Guildward · Only you can see this · Message text is never saved",
+        "sv": "Guildward · Bara du ser detta · Meddelandetext sparas aldrig",
     },
     "ui.btn_report": {"en": "How to report", "sv": "Så anmäler du"},
     "ui.btn_bris": {"en": "Talk to Bris", "sv": "Prata med Bris"},

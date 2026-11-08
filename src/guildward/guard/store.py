@@ -9,6 +9,7 @@ Times are unix seconds (int). Discord IDs are ints.
 
 from __future__ import annotations
 
+import contextlib
 import json
 import sqlite3
 import time
@@ -95,7 +96,7 @@ DEFAULT_SETTINGS: dict[str, Any] = {
     "quarantine_new_accounts": False,
     "raid_protection": True,
     "warn_targets": True,
-    "network_share": True,
+    "network_share": False,  # opt-in, as PRIVACY.md promises
     "quote_in_alerts": True,
     "minor_role_ids": [],
     "retention_days": 90,
@@ -332,7 +333,7 @@ class Store:
         """Flags from other guilds that share with the network."""
         rows = self.q("SELECT n.*, g.settings FROM network n JOIN guilds g ON g.id=n.guild_id "
                       "WHERE n.user_id=? AND n.guild_id IS NOT ?", uid, exclude_guild)
-        return [r for r in rows if json.loads(r["settings"]).get("network_share", True)]
+        return [r for r in rows if json.loads(r["settings"]).get("network_share", False)]
 
     # --- alerts -----------------------------------------------------------------------------
     def add_alert(self, gid: int, *, kind: str, level: str, score: int, title: str, params: dict[str, Any],
@@ -418,6 +419,7 @@ class Store:
                 self.x("DELETE FROM reports WHERE guild_id=? AND at<?", gid, cutoff)
                 self.x("DELETE FROM alerts WHERE guild_id=? AND created_at<? AND status<>'open'", gid, cutoff)
                 self.x("DELETE FROM score_days WHERE guild_id=? AND day<?", gid, day_of(cutoff))
+                self._drop_marks(gid, cutoff)
                 self.x("DELETE FROM members WHERE guild_id=? AND left_at IS NOT NULL AND left_at<? "
                        "AND status NOT IN ('watch','actioned')", gid, cutoff)
         self.x("DELETE FROM daily WHERE day<?", day_of(t - 400 * 86_400))
@@ -431,6 +433,12 @@ class Store:
                                ("members", "guild_id"), ("daily", "guild_id"), ("network", "guild_id"),
                                ("feedback", "guild_id"), ("guilds", "id")):
                 self.x(f"DELETE FROM {table} WHERE {col}=?", gid)
+            self._drop_marks(gid, None)
+
+    def _drop_marks(self, gid: int, before: int | None) -> None:
+        """Hashed handles Guard shared from this server (pocket.py's table; absent if the pocket store never ran)."""
+        with contextlib.suppress(sqlite3.OperationalError):
+            self.x("DELETE FROM marks WHERE source=? AND at<?", f"guard:{gid}", before if before else now() + 1)
 
 
 def is_minor_row(row: sqlite3.Row | dict[str, Any]) -> bool:

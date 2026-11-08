@@ -12,6 +12,7 @@ Resolution order:
 A rule set is any module with:
     analyze_message(text: str) -> Iterable[Signal]       # codes "msg.*", translated in intel/message.py
     NAME_PATTERNS: Mapping[NameFlag, re.Pattern[str]]   # matched against normalized names
+    SEMANTIC_HEAD: Path (optional)                      # classifier head for intel/semantic.py; absent = rules only
 """
 
 from __future__ import annotations

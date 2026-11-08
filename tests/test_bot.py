@@ -69,11 +69,26 @@ def test_command_tree_is_user_installable_everywhere():
 
 
 async def _check_tree():
+    from guildward.guard import commands as guard_commands
+
     bot = GuildwardBot(Settings(token="x", dev_guild_id=None, log_level="INFO"))
+    guard_commands.setup(bot)
     commands.setup(bot)
-    cmds = {c.name: c for c in bot.tree.get_commands(type=None)}
-    assert set(cmds) == {"check", "Safety check", "Is this sketchy?"}
-    for c in cmds.values():
+    every = bot.tree.get_commands(type=None)
+    assert sorted(c.name for c in every) == sorted(["check", "help", "guildward", "Safety check", "Is this sketchy?",
+                                                    "Report to Guildward", "Report to Guildward", "guard",
+                                                    "Report to mods", "Guard report"])
+    menus = [c for c in every if isinstance(c, discord.app_commands.ContextMenu)]
+    assert len([c for c in menus if c.type is discord.AppCommandType.user]) <= 5  # Discord's per-app limits
+    assert len([c for c in menus if c.type is discord.AppCommandType.message]) <= 5
+    # One bot: Guard's server intents plus DMs to the bot; Guard commands only where admins added it.
+    assert bot.intents.message_content and bot.intents.members and bot.intents.dm_messages
+    guard_side = {"guard", "Report to mods", "Guard report"}
+    for c in every:
+        if c.name in guard_side:
+            assert c.allowed_installs.guild and not c.allowed_installs.user
+    cmds = [c for c in every if c.name not in guard_side]
+    for c in cmds:
         assert c.allowed_installs.user and c.allowed_installs.guild
         assert c.allowed_contexts.guild and c.allowed_contexts.dm_channel and c.allowed_contexts.private_channel
 

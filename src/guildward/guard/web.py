@@ -11,6 +11,7 @@ from __future__ import annotations
 import base64
 import hashlib
 import hmac
+import html
 import json
 import logging
 import os
@@ -24,6 +25,7 @@ from aiohttp import web
 from guildward import __version__
 from guildward.core.i18n import t
 from guildward.guard.store import Store, clean_settings
+from guildward.intel import semantic
 from guildward.intel.rules import is_private
 
 if TYPE_CHECKING:
@@ -91,8 +93,10 @@ def verify(secret: bytes, token: str) -> dict[str, Any] | None:
 
 class Dashboard:
     def __init__(self, store: Store, reports: Reports, *, base_url: str, host: str, port: int,
-                 owner_ids: frozenset[int], guard: GuardBot | None = None, pocket: Any = None) -> None:
+                 owner_ids: frozenset[int], guard: GuardBot | None = None, pocket: Any = None,
+                 crowd: Any = None) -> None:
         self.store, self.reports = store, reports
+        self.crowd = crowd  # pocket.Pocket: shared flags from every Guildward user
         self.base_url = base_url.rstrip("/")
         self.host, self.port = host, port
         self.owner_ids = owner_ids
@@ -134,6 +138,9 @@ class Dashboard:
         r.add_get("/api/owner/overview", self.owner_overview)
         r.add_post("/api/owner/network/{uid}", self.owner_network)
         r.add_post("/api/owner/guilds/{gid}", self.owner_guild)
+        r.add_get("/api/owner/accounts", self.owner_accounts)
+        r.add_post("/api/owner/accounts/{uid}", self.owner_account)
+        r.add_get("/pocket/callback", self.pocket_callback)
         r.add_get("/", self.index)
         if STATIC.is_dir():
             r.add_static("/", STATIC, show_index=False, follow_symlinks=False)
@@ -387,10 +394,46 @@ class Dashboard:
                 "guard_online": guard["guard_online"],
                 "latency_ms": {"pocket": round(self.pocket.latency * 1000) if pocket_ok else None,
                                "guard": guard["latency_ms"]},
-                "db_bytes": size, "events_per_min": guard["events_per_min"]}
+                "db_bytes": size, "events_per_min": guard["events_per_min"], "model": semantic.status()}
 
     async def owner_overview(self, request: web.Request) -> web.Response:
-        return web.json_response(self.reports.owner(request[LANG], self.system()))
+        out = self.reports.owner(request[LANG], self.system())
+        if self.crowd is not None:
+            out["crowd"] = self.crowd.stats()
+        return web.json_response(out)
+
+    async def owner_accounts(self, request: web.Request) -> web.Response:
+        if self.crowd is None:
+            return web.json_response({"counts": {}, "accounts": []})
+        return web.json_response(self.crowd.owner_accounts(request.query.get("status", "review")))
+
+    async def owner_account(self, request: web.Request) -> web.Response:
+        uid = self._int(request.match_info["uid"])
+        action = (await self._body(request)).get("action")
+        if self.crowd is None or uid is None or not self.crowd.owner_action(uid, str(action), self._who(request)[0]):
+            return self._err(400, "Unknown account or action.")
+        return web.json_response({"ok": True})
+
+    async def pocket_callback(self, request: web.Request) -> web.Response:
+        from guildward.bot import scan
+
+        lang = "en"
+        status = "failed"
+        code, state = request.query.get("code"), request.query.get("state")
+        if self.pocket is not None and code and state:
+            payload = verify(self.secret, state)
+            lang = payload.get("l", "en") if payload else "en"
+            try:
+                status = await scan.finish(self.pocket, code, state)
+            except Exception:
+                log.exception("server scan callback failed")
+        elif request.query.get("error"):
+            status = "expired"
+        text = html.escape(t(f"scan.page.{status}", lang))
+        return web.Response(content_type="text/html", text=(
+            "<!doctype html><meta charset=utf-8><meta name=viewport content='width=device-width,initial-scale=1'>"
+            "<title>Guildward</title><body style='font:18px system-ui;max-width:32rem;margin:15vh auto;padding:0 16px;"
+            f"color:#1f2328;background:#fff'><h1>Guildward</h1><p>{text}</p>"))
 
     async def owner_network(self, request: web.Request) -> web.Response:
         uid = self._int(request.match_info["uid"])

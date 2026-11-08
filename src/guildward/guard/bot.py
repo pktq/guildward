@@ -1,5 +1,6 @@
-"""Guildward Guard: the server-admin bot. A separate Discord application from the kid-facing pocket app,
-invited by server admins, with the GUILDS, GUILD_MEMBERS, MESSAGE_CONTENT and moderation intents.
+"""Guildward Guard: the server-admin side of the one Guildward bot (bot/app.py builds on this class).
+Active only in servers whose admins added the full bot; uses the GUILDS, GUILD_MEMBERS, MESSAGE_CONTENT
+and moderation intents there. Kids' DMs to the bot are handled by bot/dm.py.
 
 This file is the only place Guard meets discord.py: events -> engine events, engine outputs -> Discord
 actions, and the operations the dashboard and buttons call (act on a member, apply a fix).
@@ -22,6 +23,7 @@ from guildward.guard import render
 from guildward.guard.engine import Engine, JoinEvent, MemberInfo, MessageEvent, Out
 from guildward.guard.reports import Reports
 from guildward.guard.store import Store
+from guildward.intel import semantic
 from guildward.intel.audit import AM_MENTION, AM_PRESET, AM_SPAM, GuildFacts
 from guildward.intel.behavior import role_age
 
@@ -37,6 +39,7 @@ ACTION_PERM = {"timeout": "moderate_members", "kick": "kick_members", "ban": "ba
                "delete": "manage_messages", "quarantine": "manage_roles"}
 INSTALL_URL = ("https://discord.com/oauth2/authorize?client_id={id}&scope=bot+applications.commands"
                "&permissions={perms}&integration_type=0")
+SCAN_CHUNK = 64
 FIXES = ("verification", "content_filter", "automod_presets", "automod_mentions", "automod_spam", "everyone_mentions")
 
 
@@ -60,6 +63,7 @@ class GuardBot(discord.Client):
         intents = discord.Intents.none()
         intents.guilds = intents.members = intents.guild_messages = intents.message_content = True
         intents.moderation = intents.invites = intents.auto_moderation_execution = True
+        intents.dm_messages = True  # kids forward messages to the bot to check them
         super().__init__(intents=intents, chunk_guilds_at_startup=True)
         self.store = store
         self.engine = Engine(store)
@@ -233,7 +237,9 @@ class GuardBot(discord.Client):
             return
         if self.store.guild(msg.guild.id) is None:
             return
-        await self.execute(self.engine.on_message(self._message_event(msg)))
+        ev = self._message_event(msg)
+        (model,) = await semantic.guard_check([ev.content])  # off the event loop; shed under load
+        await self.execute(self.engine.on_message(dataclasses.replace(ev, model=model) if model else ev))
 
     def _message_event(self, msg: discord.Message, *, backfill: bool = False) -> MessageEvent:
         reply_to = None
@@ -453,19 +459,30 @@ class GuardBot(discord.Client):
             if not ch.permissions_for(g.me).read_message_history:
                 continue
             stats["channels"] += 1
+            chunk: list[MessageEvent] = []
             try:
                 async for msg in ch.history(limit=2000, after=after, oldest_first=True):
                     if msg.author.bot or not msg.content:
                         continue
-                    self.engine.on_message(self._message_event(msg, backfill=True))
+                    chunk.append(self._message_event(msg, backfill=True))
                     authors.add(msg.author.id)
                     stats["msgs"] += 1
+                    if len(chunk) >= SCAN_CHUNK:
+                        await self._backfill(chunk)
+                        chunk = []
             except discord.HTTPException:
-                continue
+                pass
+            await self._backfill(chunk)
         stats["flagged"] = sum(self.store.series(g.id, "flagged", 31)) - before_flagged
         stats["members"] = len(authors)
         return stats
 
+    async def _backfill(self, events: list[MessageEvent]) -> None:
+        """History in order; the model reads a chunk at a time at Guard priority (kids' checks go first)."""
+        models = await semantic.guard_check([e.content for e in events])
+        for ev, model in zip(events, models, strict=True):
+            self.engine.on_message(dataclasses.replace(ev, model=model) if model else ev)
+
     def system(self) -> dict[str, Any]:
         return {"guard_online": self.is_ready(), "latency_ms": round(self.latency * 1000) if self.is_ready() else None,
-                "events_per_min": self.engine.events_per_min()}
+                "events_per_min": self.engine.events_per_min(), "model": semantic.status()}

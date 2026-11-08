@@ -1,6 +1,6 @@
 """Run Guildward.
 
-    uv run guildward                 pocket app + Guard + dashboard (whichever tokens are set)
+    uv run guildward                 the bot (kids' app + Guard) and the dashboard
     uv run guildward --sync          same, and push slash/context commands to Discord first
     uv run guildward owner-link      print a one-time sign-in link to the owner dashboard
     uv run guildward simulate        fill the database with a simulated server (to try the dashboard)
@@ -13,6 +13,8 @@ import argparse
 import asyncio
 import contextlib
 import logging
+
+import discord
 
 from guildward.config import Settings
 
@@ -27,40 +29,36 @@ async def _run(settings: Settings, *, sync: bool, bots: bool) -> None:
     from guildward.guard.engine import Engine
     from guildward.guard.reports import Reports
     from guildward.guard.web import Dashboard
+    from guildward.pocket import Pocket
 
     store = _store(settings)
-    tasks, clients = [], []
-    pocket = guard = None
-    if bots and settings.token:
+    bot = None
+    if bots:
         from guildward.bot.app import GuildwardBot
 
-        pocket = GuildwardBot(settings, sync=sync)
-        pocket.store = store  # aggregate check counts only (kind + level per day), never IDs or content
-        clients.append(pocket)
-        tasks.append(pocket.start(settings.token))
-    if bots and settings.guard_token:
-        from guildward.guard.bot import GuardBot
-
-        guard = GuardBot(store, dashboard_url=settings.dashboard_url, dev_guild_id=settings.dev_guild_id, sync=sync)
-        clients.append(guard)
-        tasks.append(guard.start(settings.guard_token))
-    reports = guard.reports if guard else Reports(Engine(store))
-    dash = None
-    if guard or not bots:
-        dash = Dashboard(store, reports, base_url=settings.dashboard_url, host=settings.dashboard_host,
-                         port=settings.dashboard_port, owner_ids=settings.owner_ids, guard=guard, pocket=pocket)
-        await dash.start()
-        if not bots:
-            print("owner sign-in:", _owner_link(dash), flush=True)
-            tasks.append(asyncio.Event().wait())
+        bot = GuildwardBot(settings, store, sync=sync)
+    crowd = bot.pocket if bot else Pocket(store)
+    reports = bot.reports if bot else Reports(Engine(store))
+    dash = Dashboard(store, reports, base_url=settings.dashboard_url, host=settings.dashboard_host,
+                     port=settings.dashboard_port, owner_ids=settings.owner_ids, guard=bot, pocket=bot, crowd=crowd)
+    await dash.start()
     try:
-        await asyncio.gather(*tasks)
+        if bot is not None:
+            try:
+                await bot.start(settings.token)
+            except discord.PrivilegedIntentsRequired:
+                raise SystemExit(
+                    "Discord refused the login: turn on SERVER MEMBERS INTENT and MESSAGE CONTENT INTENT at "
+                    f"https://discord.com/developers/applications/{bot.application_id or ''}/bot , save, and run "
+                    "again. (Guard needs them; they only deliver data from servers that add the full bot.)") from None
+        else:
+            print("owner sign-in:", _owner_link(dash), flush=True)
+            await asyncio.Event().wait()
     finally:
-        for c in clients:
+        if bot is not None:
             with contextlib.suppress(Exception):
-                await c.close()
-        if dash:
-            await dash.stop()
+                await bot.close()
+        await dash.stop()
         store.close()
 
 

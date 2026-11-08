@@ -79,6 +79,7 @@ class MessageEvent:
     mentions: tuple[int, ...] = ()
     channel_name: str = ""
     backfill: bool = False  # history scan: record, never alert or act
+    model: tuple[Signal, ...] = ()  # what the local message model saw (intel/semantic.py); empty if shed/off
 
 
 @dataclass(frozen=True, slots=True)
@@ -124,6 +125,7 @@ class Engine:
         self.quotes: OrderedDict[int, str] = OrderedDict()
         self.events_seen = deque(maxlen=5000)
         self._last_spam: list[Signal] = []
+        self.pocket: Any = None  # pocket.Pocket, set by __main__ to share hashed handles with kids' checks
 
     def _gs(self, gid: int) -> _GuildState:
         return self._g.setdefault(gid, _GuildState())
@@ -210,7 +212,7 @@ class Engine:
                         spam_checked: bool = False) -> tuple[Verdict, bool, list[Signal]]:
         """Message signals adjusted for who sent it to whom. Returns (verdict, target_minor, raw signals)."""
         s = self.store
-        raw = list(analyze_message(ev.content)) + context_signals(ev.content)
+        raw = list(analyze_message(ev.content, ev.model)) + context_signals(ev.content)
         if spam_checked:
             raw += [x for x in self._last_spam if x]
         elif sp := self._spam_signal(ev):
@@ -285,6 +287,9 @@ class Engine:
                           channel_id=ev.channel_id, message_id=ev.message_id, at=ev.at)
         if v.level is not Level.GREEN:
             s.bump(gid, "flagged", at=ev.at)
+            if self.pocket is not None and s.settings(gid)["network_share"]:
+                # Hashed handles/scripts only: lets kids' forwarded DMs match a groomer flagged here.
+                self.pocket.record_marks(uid, ev.content, f"guard:{gid}")
         scored = self.rescore(gid, uid)
         if ev.backfill or scored is None:
             return []

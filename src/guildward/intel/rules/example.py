@@ -8,6 +8,7 @@ corpus) are in the private `guildward_private.rules` package. Keep this set obvi
 from __future__ import annotations
 
 import re
+from pathlib import Path
 from types import MappingProxyType
 
 from guildward.core.models import Signal
@@ -18,6 +19,10 @@ from guildward.intel.patterns import NameFlag
 def _rx(*parts: str) -> re.Pattern[str]:
     return re.compile(r"(?<![a-zåäö])(?:" + "|".join(parts) + r")(?![a-zåäö])")
 
+
+# Classifier head for the local message model (intel/semantic.py), trained on a few obvious public examples by
+# tools/train_example_head.py. The private set ships the real one.
+SEMANTIC_HEAD = Path(__file__).with_name("example_head.npz")
 
 NAME_PATTERNS: dict[NameFlag, re.Pattern[str]] = {
     NameFlag.ADULT: _rx(r"nsfw", r"18 ?\+", r"porn\w*", r"hentai", r"nudes?", r"horny", r"xxx"),

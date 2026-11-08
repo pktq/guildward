@@ -7,18 +7,49 @@ package in production, the small public example set otherwise. The user-facing s
 
 from __future__ import annotations
 
+import dataclasses
+from collections.abc import Iterable
+
 from guildward.core.i18n import register
 from guildward.core.models import Signal
+from guildward.intel.behavior import STAGE_OF
 from guildward.intel.rules import rules
 
 MESSAGE_BASE = 10
+MULTI_STAGE = 20
+SOFT_HINT = 20  # weights below this are hints: they feed memory, not the multi-stage bonus
 
 
-def analyze_message(text: str) -> tuple[Signal, ...]:
-    """Risk signals for one message. Empty tuple = nothing found."""
+def analyze_message(text: str, model: Iterable[Signal] = ()) -> tuple[Signal, ...]:
+    """Risk signals for one message. Empty tuple = nothing found.
+
+    `model` = what the local message model (intel/semantic.py) found in the same text, if it ran.
+    """
     if not text or not text.strip():
         return ()
-    return tuple(rules().analyze_message(text))
+    found = tuple(rules().analyze_message(text))
+    model = tuple(model)
+    return fuse(found, model) if model else found
+
+
+def fuse(found: Iterable[Signal], model: Iterable[Signal]) -> tuple[Signal, ...]:
+    """Rules ∪ model, strongest weight per category. A rule's params and severity always survive."""
+    best: dict[str, Signal] = {}
+    for s in found:
+        if s.code not in best or s.weight > best[s.code].weight:
+            best[s.code] = s
+    rule_codes = set(best)
+    for s in model:
+        cur = best.get(s.code)
+        if cur is None:
+            best[s.code] = s
+        elif s.weight > cur.weight:
+            best[s.code] = dataclasses.replace(cur, weight=s.weight)
+    if "msg.multi_stage" not in rule_codes:
+        stages = {STAGE_OF[s.code] for s in best.values() if s.code in STAGE_OF and s.weight >= SOFT_HINT}
+        if len(stages) >= 2:
+            best["msg.multi_stage"] = Signal("msg.multi_stage", MULTI_STAGE)
+    return tuple(sorted(best.values(), key=lambda s: (not s.severe, -s.weight)))
 
 
 register({

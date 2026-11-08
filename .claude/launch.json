@@ -18,13 +18,17 @@
       "runtimeExecutable": "uv",
       "runtimeArgs": [
         "run",
+        "--no-sync",
         "guildward",
         "dashboard"
       ],
-      "port": 8080,
+      "port": 8091,
       "env": {
         "DATABASE_PATH": "data/sim.db",
-        "DASHBOARD_PORT": "8080"
+        "DASHBOARD_PORT": "8091",
+        "DASHBOARD_URL": "http://localhost:8091",
+        "DISCORD_TOKEN": "",
+        "GUARD_TOKEN": ""
       }
     }
   ]
