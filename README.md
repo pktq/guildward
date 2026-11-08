@@ -1,158 +1,147 @@
+<div align="center">
+
+<img src="site/app/icon.svg" alt="Guildward" width="72" height="72">
+
 # Guildward
 
-A free, open-source Discord safety app for kids, parents and server admins. A kid checks a server, a person, a message or a link in two clicks and gets a plain answer: 🟢 / 🟡 / 🔴, why, and what to do. Message text is never stored, and no one reads anything nobody chose to share.
+**A worldwide sextortion and grooming guard for Discord.**
+Kids check a server, a person, a message or a link in two clicks. Server admins get a Guard that watches for grooming patterns.
 
-## The kids' app
+[![CI](https://github.com/pktq/guildward/actions/workflows/ci.yml/badge.svg)](https://github.com/pktq/guildward/actions/workflows/ci.yml)
+[![License: AGPL-3.0-or-later](https://img.shields.io/badge/license-AGPL--3.0--or--later-blue.svg)](LICENSE)
+![Python 3.12+](https://img.shields.io/badge/python-3.12%2B-3776AB.svg)
+![discord.py](https://img.shields.io/badge/discord.py-2.7-5865F2.svg)
 
-Kids install Guildward on their own account, so it works in DMs, group chats and any server. Every reply is visible only to them, in Swedish or English.
+</div>
 
-**Checks (one tap):**
+<!-- TODO: add screenshots of a check result and the Guard dashboard here (e.g. docs/img/*.png). -->
+
+## Why
+
+Sextortion is a global crime against kids. Organized groups run it as a script: a friendly profile, a picture sent first, one asked back, then a demand for money. The FBI, the UK National Crime Agency and police in Australia, Canada and New Zealand [warned about it together](https://www.fbi.gov/news/press-releases/international-law-enforcement-agencies-issue-joint-warning-about-global-financial-sextortion-crisis) as a global crisis.
+
+- The FBI counted more than **12,600 minor victims** in a year and a half, with more than 20 suicides linked to it ([FBI](https://www.fbi.gov/news/stories/the-financially-motivated-sextortion-threat)).
+- About **90%** of financial sextortion victims in NCMEC's reports are boys aged 14 to 17, and an average of **812** sextortion reports reach NCMEC every week ([Thorn & NCMEC, 2024](https://info.thorn.org/hubfs/Research/Thorn_TrendsInFinancialSextortion_June2024.pdf)).
+
+Guildward gives kids a plain answer (green, yellow or red, why, and what to do) before a conversation gets that far, and gives server admins early warning of the patterns behind it.
+
+## Add Guildward
+
+Guildward is a **hosted** product: you add the official bot to Discord from the website. There is nothing to host yourself.
+
+<!-- TODO: link the website's install section once the site is deployed. -->
+**[Add Guildward to your Discord account](https://discord.com/oauth2/authorize?client_id=1568659844003668059&integration_type=1&scope=applications.commands)**. Server installs (checks only, or full Guard) are offered on the website.
+
+This repository is public so anyone can read what the bot does. The detection rules and the message model's weights are private (see [What's open and what's private](#whats-open-and-whats-private)).
+
+## What it does
+
+### The kids' app
+
+Kids install Guildward on their own Discord account, so it works in DMs, group chats and any server. Every reply is visible only to them, in English or Swedish.
 
 | Where | What they get |
 |---|---|
-| `/check <invite or link>` | Server risk from what Discord shows without joining (age, 18+ flags, verification, size, who made the invite, red-flag names, the server's Guard grade if it uses Guard), or a link verdict: fake Discord/Steam/Roblox look-alikes, IP loggers, downloads, brand-new domains, shorteners expanded safely |
-| Right-click a user → **Apps → Safety check** | Account age, Discord's spammer flag, red-flag names, **shared flags from other Guildward users**, Guard child-safety bans, links to flagged accounts (same Snapchat, same payment tag, same copy-paste script) |
-| Right-click a message → **Apps → Is this sketchy?** | Grooming signs (age questions, moving to Snapchat, secrets, photo requests, gifts, meeting up, threats), links in it, the sender's shared flags, and **memory**: "3rd warning sign from this person in two weeks" |
-| **Forward** any message to Guildward's DM | The same check without opening any menu; several forwards are read together as one conversation |
-| **Report to Guildward** (user or message) | Anonymous report that feeds the shared flags |
-| Buttons under a result | **Save evidence** (user ID, account date, message link, sent to their DMs so it survives deletion), **I need help**, **Tell my trusted adult**, optional **Ask AI** second opinion |
-| `/help` | Step-by-step help for sextortion, picture requests, someone wanting to meet, scams, bullying; Bris, Polisen, ECPAT, Take It Down, Discord reporting |
+| `/check <invite or link>` | Server risk from what Discord shows without joining, or a link verdict (look-alike sites, IP loggers, downloads, brand-new domains, shorteners expanded safely) |
+| Right-click a user, **Apps > Safety check** | Account age, Discord's spammer flag, red-flag names, shared flags from other Guildward users, Guard child-safety bans, links to flagged accounts |
+| Right-click a message, **Apps > Is this sketchy?** | Grooming signs (age questions, moving to another app, secrets, photo requests, gifts, meeting up, threats), links, the sender's shared flags, and memory ("3rd warning sign from this person in two weeks") |
+| Forward a message to Guildward's DM | The same check without opening a menu |
+| **Report to Guildward** | Anonymous report that feeds the shared flags |
+| Buttons under a result | Save evidence, I need help, Tell my trusted adult, optional Ask AI second opinion |
+| `/help` | Step-by-step help for sextortion, picture requests, someone wanting to meet, scams and bullying, with local helplines: the kid picks their country (Sweden, US, UK, Australia, Canada, or services that work anywhere) |
 
-**Automatic (after one-time setup):**
-- **Watch alerts:** if an account the kid checked is later flagged, confirmed dangerous, or deleted, Guildward DMs them.
-- **Server scan** (`/guildward scan`, with the kid's OK on Discord's page): flags risky servers they're in, and every day the new ones they join.
-- **Weekly tip** (opt-in) and **trusted adult** (`/guildward adult`): the adult hears from Guildward only when the kid presses the button.
-- `/guildward settings`, `alerts` (make sure DMs work), `safety` (Discord's own settings, step by step), `forget` (erase everything about me).
+Also: watch alerts when a checked account is later flagged, an opt-in server scan, an opt-in weekly tip, and `forget` to erase everything about the user.
 
-**Shared flags** are the network that grows with users: an account is flagged only when several established users report it *and* something backs it up (red results, a Guard child-safety ban, or a strong link to a flagged account). Brand-new reporter accounts count for nothing, reports fade over 90 days, and only the operator (owner dashboard → Accounts) or a Guard ban can mark one "confirmed".
+### Guard (for server admins)
 
-The `web/wizard/` page helps a parent and kid lock Discord down together.
+Admins add the same bot to their server to switch on Guard. It reads messages in memory, stores only signal codes and IDs, and scores each member from profile, stated age, message patterns, who a message is aimed at, grooming stages per contact, reports and server structure. Out of that come:
 
-## Guard: server-admin mode
+- A **member score** with reasons, a rising/falling prediction, and a **server grade A to F**.
+- **Alerts** in a private mod channel (one growing alert per person and target) with buttons for timeout, kick, ban, delete, watch and false alarm.
+- **Protect mode** (optional) that deletes the worst messages aimed at minors and times out members who turn red. **Observe mode** only alerts.
+- A calm safety tip DM to an under-18 member who receives a red message.
+- A **server audit** with one-click recommended settings, and an **admin dashboard** and **owner dashboard** (API in [docs/GUARD_API.md](docs/GUARD_API.md)).
 
-Admins add the **same Guildward bot** to their server to switch on **Guard**, which watches the whole server. It reads every message in memory, stores only signal codes and IDs, and builds a profile of each member from many data vectors:
+### Roadmap
 
-| Vector | What Guard uses |
-|---|---|
-| Profile | account age, avatar, Discord's spammer flag, red-flag names, name changes |
-| Age | what members say about their own age ("im 13", "jag är 12"), age roles, admin-marked minor roles |
-| Messages | the grooming rules (age probes, isolation, secrecy, photo requests, gifts, meeting, threats), DM requests, invite links, cross-channel spam, mass mentions, AutoMod blocks |
-| Context | who a message is aimed at (reply, mention, the conversation), adult→minor vs kid→kid (peer chat is damped), new accounts, watch list |
-| Patterns | how many different people they probed or pulled to DMs, how many were minors, grooming **stages per contact** (trust → risk check → secrecy → isolation → sexual → meeting), deleted flagged messages |
-| People | member reports ("Report to mods"), moderation history, the **Safety Network** (child-safety bans in other Guard servers, opt-in) |
-| Server | join raids, invite used, structural audit (verification, media filter, AutoMod, @everyone, 2FA, NSFW channels next to kids, mod coverage, admin sprawl, Guard's permissions), mod response time |
+Not shipped yet: a guardian link with parent alerts, a parent app, and a cross-server "Safety Network" of child-safety bans. See [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md).
 
-Out of that come a **member score with reasons, a prediction** (rising/falling, escalation none/possible/likely) and a **server grade A–F**, plus:
+## Privacy
 
-- **Alerts** in a private mod channel: one growing alert per person+target instead of a stream, with buttons for timeout, kick, ban, delete, watch, resolved and false alarm (false alarms feed the owner's signal-quality table).
-- **Protect mode** (optional): deletes the worst messages aimed at minors, times out members who turn red, quarantines or times out raid accounts. **Observe mode** only alerts.
-- **Kid-facing safety tip**: a member under 18 who receives a red message gets a calm DM (you did nothing wrong, don't reply, tell an adult, Bris 116 111).
-- **Commands**: `/guard setup`, `audit` (with one-click "apply recommended settings"), `report @member`, `scan` (learn from recent history without alerting), `watch` / `trust` / `clear`, `dashboard`, `erase`; right-click a message → **Report to mods** (everyone), right-click a member → **Guard report** (mods).
-- **Server admin dashboard** (`web/dashboard`): health gauge, KPIs, 30-day charts, synthesised summary, recommendations with Fix buttons, audit checklist, alert queue, members table, full person reports (timeline, contacts with grooming stages, prediction), settings, printable report.
-- **Bot-owner dashboard**: system health, every server's grade, pocket-app usage by kind and level, signal false-positive rates, Safety Network flags.
+- **Text only, never images**, so Guildward can never hold abuse material.
+- **No message text is stored or logged.** Logs hold the check type and result level.
+- **Inference only.** Discord content is never used to train models.
+- **The kid sees everything** a parent would see. It is a tool kids use, not one aimed at them.
+- The message model runs on Guildward's own CPU. No outside API sees message text.
 
-### Try it without Discord
+Details, including exactly what is received and stored: [PRIVACY.md](PRIVACY.md) (draft, pending legal review).
 
-```bash
-uv run guildward simulate     # a simulated kids' server: a groomer, a reported member, a scam raid
-uv run guildward dashboard    # prints an owner sign-in link; open it
+## How it works
+
+Every check produces `Signal`s that are combined into a verdict with a **confidence level** that grows with the data behind it (outside view, crowd reports, admin audit, content audit). Word rules and a small local multilingual model ([multilingual-e5-small](https://huggingface.co/Xenova/multilingual-e5-small), 8-bit ONNX) both feed the score, with the usual context applied (who sent it to whom, kid-to-kid damping, memory, patterns). Kids' checks always queue ahead of Guard's server traffic.
+
+```
+src/guildward/
+  core/      models (Signal, Verdict, Confidence), i18n (en/sv), text normalisation
+  intel/     scoring with no Discord types; local message model; rules loader
+  bot/       Discord client, commands, adapters (discord.py -> facts), embeds
+  guard/     server-admin bot: store (SQLite), engine, reports, dashboard API, simulate
+site/        Next.js site: landing page, parents page, stats, dashboard
+web/         static lockdown wizard and the original dashboard (no build step)
+tools/       load tests and helper scripts
 ```
 
-### Set up Guard
+Full design: [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md). Dashboard API: [docs/GUARD_API.md](docs/GUARD_API.md).
 
-Guard is the same bot and token as the kids' app (see "Set up the Discord app" below).
+## What's open and what's private
 
-1. Developer Portal → your app → **Bot**: turn on the privileged intents **Server Members** and **Message Content** (Guard only uses them in servers that add the full bot).
-2. Set `OWNER_IDS` to your Discord user ID.
-3. `uv run guildward --sync`. The log prints three install links: kids' account install, server *checks only* (the bot reads nothing there), and *full Guard* with exactly the permissions it needs (no Administrator).
-4. In the server: `/guard setup channel:#mod-alerts mode:observe`, then `/guard scan`, then `/guard dashboard`. The Safety Network (sharing child-safety bans between servers) is off until an admin turns it on in the dashboard settings.
+Everything is open source except the **detection rules**: the exact message and name patterns, their weights, the message model's classifier weights, and the labeled training and test data. They live in a separate private repository so abusers cannot read them and phrase around them, and they run only on Guildward's server.
 
-The dashboard listens on `127.0.0.1:8080` by default. To let admins in from outside, put it behind HTTPS (for example Caddy) and set `DASHBOARD_URL` to the public address.
+- This repo ships a small **example rule set** (`src/guildward/intel/rules/example.py`) that catches only blatant cases, so tests, CI and local development work without the private set.
+- Secrets (bot token, database passwords, OAuth client secret) are in neither repo.
+- Production data lives only in the production database, never in git.
 
-## Where it's going
+## Development
 
-The final product has four ways in:
-
-1. **Kid's pocket tool** (this release): checks anything, anywhere, on demand.
-2. **Guardian link**: the kid connects their account with a parent present; a new server join triggers a score and, on yellow/red only, a parent alert.
-3. **Admin audit**: admins invite the bot for a structural and conversation-level safety audit, get live grooming alerts and earn a public "Audited" score.
-4. **Parent app**: web dashboard, then mobile, with alerts, contact checker, talk prompts and one-tap reports to Discord, ECPAT, Polisen and Bris.
-
-Scores always come with a **confidence level** that grows with the data behind them: outside view → crowd reports → admin audit → content audit. The code is built around that already: every check emits `Signal`s, and later layers add more signals and raise confidence without changing the bot or the embeds. See [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md).
-
-## Set up the Discord app
-
-1. [Developer Portal](https://discord.com/developers/applications) → **New Application** → name it *Guildward*.
-2. **Installation** → Installation Contexts: tick **User Install** and **Guild Install**. Install Link: *Discord Provided Link*. Scopes: `applications.commands` for User Install; `applications.commands` + `bot` for Guild Install (the startup log also prints exact links).
-3. **Bot** → **Reset Token** → copy it. For Guard, turn on **Server Members** and **Message Content** here too.
-4. Copy `.env.example` to `.env` and paste the token as `DISCORD_TOKEN`. For instant testing, set `DEV_GUILD_ID` to your test server's ID.
-5. Use the Install Link from step 2 to add the app to your own account.
-
-## The message model (runs locally)
-
-Word rules alone miss risky messages worded in ways nobody anticipated ("my car is outside ur school", "only u and me can see this chat"). So every message check also goes through a small **local AI model**: [multilingual-e5-small](https://huggingface.co/Xenova/multilingual-e5-small) (8-bit ONNX, ~118 MB, English + Swedish and ~90 more languages) turns the text into an embedding, and a small classifier turns that into a probability per warning sign. Rules and model are combined (strongest signal per category wins), and the usual context still applies (who sent it to whom, kid-to-kid damping, memory, patterns).
-
-- **It runs on Guildward's own CPU.** No GPU, no outside API: message text never leaves the server and is never stored. The only download is the model itself, once, from Hugging Face, checked against a pinned SHA-256 (`data/models/`).
-- **Kids' checks always come first.** Guard's server messages queue behind them and may be skipped by the model under heavy load (the rules still run on them); a kid's check never is. If a kid's check has to wait more than a few seconds, they see their place in line, then the full result in the same message. Only if the model actually breaks (60 s ceiling) do they get the rules-only result, clearly marked, with a **Check again** button.
-- **Sizing**: with 2 worker threads, 200 simultaneous checks finish with p95 ≈ 0.3 s on a desktop CPU (`tools/loadtest_semantic.py`). The model adds ~500 MB of RAM (≈260 MB of that is the tokenizer).
-- If the model can't be downloaded or loaded, the bot keeps running on rules only and the owner dashboard says why. `GUILDWARD_MODEL=off` turns it off.
-- The classifier's weights are private like the rules (see below); this repo ships a tiny example head trained on a few obvious lines (`intel/rules/example_head.jsonl`).
-- The optional **Ask AI** button (Claude, opt-in per message) is separate and unchanged.
-
-## Run
+Requires Python 3.12+, [uv](https://docs.astral.sh/uv/), and Node.js for the site. Contributors run the bot locally against their own test Discord application; this is for development, not for hosting Guildward.
 
 ```bash
 uv sync
-uv run guildward --sync   # first run, or after changing commands
-uv run guildward          # normal start
+cp .env.example .env     # set DISCORD_TOKEN (and DEV_GUILD_ID for instant command updates)
+uv run guildward --sync  # first run, or after changing commands
+uv run guildward         # start the bot and the dashboard API
 ```
 
-Global commands can take a while to appear in Discord the first time; the `DEV_GUILD_ID` copy shows up immediately.
+`.env.example` explains each setting, including the privileged intents (Server Members, Message Content) Guard needs; the startup log prints the exact install links for your test app.
 
-## Test
+Try Guard without Discord:
+
+```bash
+uv run guildward simulate     # fill the database with a simulated server (a groomer, a reported member, a scam raid)
+uv run guildward dashboard    # run only the dashboard API, no Discord connection
+```
+
+Tests and lint (the same as CI):
 
 ```bash
 uv run pytest
 uv run ruff check src tests
 ```
 
-Public tests run on the example rules and a fake model. The private repo holds the labeled corpus, the model's ~5,000-row training set and a separately written ~650-row held-out benchmark (rules only vs rules + model, per category), and runs this public suite against the real rules too.
+The public tests run on the example rules and a fake model. `GUILDWARD_MODEL=off` runs without the local model.
+
+The site (Next.js, App Router) lives in `site/`; see [site/README.md](site/README.md):
 
 ```bash
-uv run --no-sync python tools/loadtest_semantic.py --workers 2 --guard 400   # real model, 200 kids' checks
+cd site
+cp .env.example .env.local
+npm install
+npm run dev     # http://localhost:3000
+npm run build
 ```
 
-## Layout
+## Contributing, security, license
 
-```
-src/guildward/
-  core/      models (Signal, Verdict, Confidence), i18n (en/sv), text normalisation, snowflake ages
-  intel/     server.py, person.py, message.py: scoring, no Discord types
-             semantic.py: local message model (download, encoder, classifier head, priority queue)
-  intel/rules/  rule loader (private set or public example, incl. the model's classifier head)
-  bot/       app.py (client), commands.py (3 checks), adapters.py (discord.py -> facts), render.py (embeds)
-  guard/     server-admin bot: store.py (SQLite), engine.py (events -> observations/alerts/actions),
-             reports.py (person/server/owner reports), bot.py + commands.py (Discord), web.py (dashboard API),
-             simulate.py (demo server); intel/behavior.py + intel/audit.py hold its scoring
-web/dashboard/  admin + owner dashboard SPA (no build step, no external requests); API in docs/GUARD_API.md
-web/wizard/  static lockdown wizard (no build step, no trackers)
-PRIVACY.md   draft privacy policy (needs legal review before launch)
-```
-
-## What's open and what's private
-
-Everything is open source except the **detection rules**: the exact message and name patterns, their weights, the message model's classifier weights, and the labeled training and test data. Those live in a separate private repo, `guildward-private`, so abusers can't read them and phrase around them. The rules run only on Guildward's server, so they never reach users either.
-
-- This repo ships a small **example rule set** (`intel/rules/example.py`) that catches only blatant cases, so CI, tests and self-hosting work without the private one.
-- Set `GUILDWARD_PRIVATE=<path to guildward-private/src>` and the bot loads the private set instead. It logs which one it loaded at startup.
-- **Secrets** (bot token, later database passwords and the OAuth client secret) are in neither repo. They live in `.env` locally (git-ignored) and in the server's environment in production.
-- **Data** (later: Safety Network flags, parent links) lives only in the production database, never in git.
-
-## Principles
-
-- **Text only, never images**, so Guildward can never hold abuse material.
-- **Inference only**: Discord content is never used to train models (Discord Developer Policy).
-- **No message text stored or logged.** Logs hold the check type and result level, nothing else.
-- **The kid sees everything** a parent would see. It's a tool kids use, not one aimed at them.
-
-License: AGPL-3.0-or-later.
+- Contributions are welcome: read [CONTRIBUTING.md](CONTRIBUTING.md) and the [Code of Conduct](CODE_OF_CONDUCT.md).
+- Found a vulnerability? Do not open an issue; follow [SECURITY.md](SECURITY.md).
+- Licensed under [AGPL-3.0-or-later](LICENSE).

@@ -1,0 +1,25 @@
+name: Feature request
+description: Suggest an improvement
+labels: [enhancement]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Guildward stores no message text and no images, and the kid always sees what a parent would see. Ideas that need to break those principles will not be accepted.
+        Detection rule patterns are private; please do not propose specific phrases.
+  - type: textarea
+    id: problem
+    attributes:
+      label: What problem does this solve, and for whom?
+    validations:
+      required: true
+  - type: textarea
+    id: idea
+    attributes:
+      label: What would you like to see?
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives you considered

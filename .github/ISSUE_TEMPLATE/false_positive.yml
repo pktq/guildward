@@ -1,0 +1,54 @@
+name: False positive / missed detection
+description: A check or Guard alert flagged something harmless, or missed something risky
+labels: [detection]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        **Do not paste real messages from children, usernames, user or server IDs, invite links or screenshots.** This is a public repository.
+        Describe the pattern in your own words or use an invented example with the same shape. Detection rules are private, so we may not answer with the exact reason; the report still helps us tune them.
+  - type: dropdown
+    id: kind
+    attributes:
+      label: What went wrong?
+      options:
+        - "False positive (flagged something harmless)"
+        - "Missed detection (did not flag something risky)"
+        - "Wrong explanation or wrong language"
+    validations:
+      required: true
+  - type: dropdown
+    id: where
+    attributes:
+      label: Which check?
+      options:
+        - "Message check (\"Is this sketchy?\" or forwarded)"
+        - "Person check (\"Safety check\")"
+        - "Link or server check (\"/check\")"
+        - "Guard alert or score"
+        - "Guard server audit"
+    validations:
+      required: true
+  - type: textarea
+    id: example
+    attributes:
+      label: Invented example or description of the pattern
+      description: Same shape as the real case, with nothing identifying.
+    validations:
+      required: true
+  - type: textarea
+    id: result
+    attributes:
+      label: What did Guildward say, and what should it have said?
+      description: The level (green, yellow, red) and the reasons shown.
+  - type: input
+    id: lang
+    attributes:
+      label: Language of the conversation
+  - type: checkboxes
+    id: privacy
+    attributes:
+      label: Privacy
+      options:
+        - label: I removed all real names, IDs, links and real children's messages from this report.
+          required: true
