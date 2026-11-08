@@ -1,0 +1,386 @@
+{
+  "alerts": [
+    {
+      "id": 110,
+      "kind": "message",
+      "level": "red",
+      "score": 91,
+      "title": "Possible grooming: move to a private platform",
+      "summary": "Sam (@skyblock_sam) asked a 12-year-old member to add them on Snapchat in #survival-chat.",
+      "quote": "add me on snap its easier there, dont tell the mods lol",
+      "user": {
+        "id": "9001",
+        "name": "Sam (@skyblock_sam)",
+        "avatar": null,
+        "minor": false
+      },
+      "target": {
+        "id": "9010",
+        "name": "Milo (@milo_mines)",
+        "avatar": null,
+        "minor": true
+      },
+      "signals": [
+        {
+          "code": "msg.platform_move",
+          "weight": 35,
+          "severe": true,
+          "text": "Asked to continue on Snapchat",
+          "at": "2026-11-07T13:39:00Z"
+        },
+        {
+          "code": "msg.secrecy",
+          "weight": 25,
+          "severe": false,
+          "text": "Asked them not to tell the moderators",
+          "at": "2026-11-07T13:39:00Z"
+        },
+        {
+          "code": "member.new_account",
+          "weight": 15,
+          "severe": false,
+          "text": "Account is 3 days old",
+          "at": null
+        }
+      ],
+      "jump_url": "https://discord.com/channels/10/301/88120",
+      "status": "open",
+      "created_at": "2026-11-07T13:40:00Z",
+      "resolved_by": null,
+      "action": null
+    },
+    {
+      "id": 109,
+      "kind": "member",
+      "level": "red",
+      "score": 88,
+      "title": "Account is asking many minors their age",
+      "summary": "Sam (@skyblock_sam) asked 4 different members their age within 2 days; 3 of them are under 18.",
+      "quote": null,
+      "user": {
+        "id": "9001",
+        "name": "Sam (@skyblock_sam)",
+        "avatar": null,
+        "minor": false
+      },
+      "target": null,
+      "signals": [
+        {
+          "code": "member.age_probe_many",
+          "weight": 30,
+          "severe": false,
+          "text": "Asked 4 different people their age",
+          "at": "2026-11-07T12:20:00Z"
+        },
+        {
+          "code": "member.many_minor_targets",
+          "weight": 25,
+          "severe": false,
+          "text": "3 of the people contacted are under 18",
+          "at": "2026-11-07T12:20:00Z"
+        },
+        {
+          "code": "member.no_avatar",
+          "weight": 5,
+          "severe": false,
+          "text": "No profile picture",
+          "at": null
+        }
+      ],
+      "jump_url": null,
+      "status": "open",
+      "created_at": "2026-11-07T12:20:00Z",
+      "resolved_by": null,
+      "action": null
+    },
+    {
+      "id": 108,
+      "kind": "report",
+      "level": "red",
+      "score": 74,
+      "title": "Member reported for private messages to a minor",
+      "summary": "Two members reported Dave (@redstone_dave) for asking a 13-year-old for photos in DMs.",
+      "quote": null,
+      "user": {
+        "id": "9002",
+        "name": "Dave (@redstone_dave)",
+        "avatar": null,
+        "minor": false
+      },
+      "target": {
+        "id": "9011",
+        "name": "Ella (@ella.exe)",
+        "avatar": null,
+        "minor": true
+      },
+      "signals": [
+        {
+          "code": "member.reported",
+          "weight": 30,
+          "severe": false,
+          "text": "Reported by 2 members",
+          "at": "2026-11-07T08:20:00Z"
+        },
+        {
+          "code": "member.adult_minor_dm",
+          "weight": 25,
+          "severe": false,
+          "text": "Adult (34) messaging a member under 18",
+          "at": "2026-11-07T08:20:00Z"
+        },
+        {
+          "code": "msg.photo_request",
+          "weight": 20,
+          "severe": false,
+          "text": "Photo request mentioned in the report",
+          "at": "2026-11-07T08:20:00Z"
+        }
+      ],
+      "jump_url": null,
+      "status": "open",
+      "created_at": "2026-11-07T08:20:00Z",
+      "resolved_by": null,
+      "action": null
+    },
+    {
+      "id": 107,
+      "kind": "network",
+      "level": "red",
+      "score": 67,
+      "title": "Safety Network match",
+      "summary": "Kai (@kai.builds) was banned for child safety on another Guard server 11 days ago.",
+      "quote": null,
+      "user": {
+        "id": "9003",
+        "name": "Kai (@kai.builds)",
+        "avatar": null,
+        "minor": false
+      },
+      "target": null,
+      "signals": [
+        {
+          "code": "member.network",
+          "weight": 45,
+          "severe": true,
+          "text": "Banned for child safety on another Guard server",
+          "at": "2026-10-27T14:20:00Z"
+        },
+        {
+          "code": "member.new_account",
+          "weight": 10,
+          "severe": false,
+          "text": "Account is 19 days old",
+          "at": null
+        }
+      ],
+      "jump_url": null,
+      "status": "open",
+      "created_at": "2026-11-06T08:20:00Z",
+      "resolved_by": null,
+      "action": null
+    },
+    {
+      "id": 106,
+      "kind": "raid",
+      "level": "yellow",
+      "score": 62,
+      "title": "Join burst: 13 accounts in 2 minutes",
+      "summary": "13 accounts joined between 11:06 and 11:08 UTC; 9 have no profile picture and were created today.",
+      "quote": null,
+      "user": null,
+      "target": null,
+      "signals": [
+        {
+          "code": "raid.join_burst",
+          "weight": 40,
+          "severe": false,
+          "text": "13 joins in 2 minutes (normal: 2 per day)",
+          "at": "2026-11-05T11:08:00Z"
+        },
+        {
+          "code": "raid.fresh_accounts",
+          "weight": 15,
+          "severe": false,
+          "text": "9 accounts created the same day",
+          "at": "2026-11-05T11:08:00Z"
+        }
+      ],
+      "jump_url": null,
+      "status": "open",
+      "created_at": "2026-11-05T11:10:00Z",
+      "resolved_by": null,
+      "action": null
+    },
+    {
+      "id": 105,
+      "kind": "message",
+      "level": "yellow",
+      "score": 48,
+      "title": "Personal information request",
+      "summary": "Theo (@theo_tnt) asked a member which school they go to in #general.",
+      "quote": "wait which school do u go to??",
+      "user": {
+        "id": "9021",
+        "name": "Theo (@theo_tnt)",
+        "avatar": null,
+        "minor": false
+      },
+      "target": {
+        "id": "9032",
+        "name": "Freja (@frejacraft)",
+        "avatar": null,
+        "minor": true
+      },
+      "signals": [
+        {
+          "code": "msg.personal_info",
+          "weight": 30,
+          "severe": false,
+          "text": "Asked which school someone goes to",
+          "at": "2026-11-06T10:20:00Z"
+        },
+        {
+          "code": "msg.to_minor",
+          "weight": 15,
+          "severe": false,
+          "text": "Sent to a member under 18",
+          "at": "2026-11-06T10:20:00Z"
+        }
+      ],
+      "jump_url": "https://discord.com/channels/10/300/87554",
+      "status": "open",
+      "created_at": "2026-11-06T10:20:00Z",
+      "resolved_by": null,
+      "action": null
+    },
+    {
+      "id": 104,
+      "kind": "join",
+      "level": "yellow",
+      "score": 40,
+      "title": "Risky new account joined",
+      "summary": "Grimm (@grimm.redux) joined with a 27-day-old account and asked two members their age in the first hour.",
+      "quote": null,
+      "user": {
+        "id": "9022",
+        "name": "Grimm (@grimm.redux)",
+        "avatar": null,
+        "minor": false
+      },
+      "target": null,
+      "signals": [
+        {
+          "code": "msg.age_probe",
+          "weight": 20,
+          "severe": false,
+          "text": "Asked 2 members their age",
+          "at": "2026-11-06T05:20:00Z"
+        },
+        {
+          "code": "member.new_account",
+          "weight": 10,
+          "severe": false,
+          "text": "Account is 27 days old",
+          "at": null
+        }
+      ],
+      "jump_url": null,
+      "status": "open",
+      "created_at": "2026-11-06T05:20:00Z",
+      "resolved_by": null,
+      "action": null
+    },
+    {
+      "id": 103,
+      "kind": "message",
+      "level": "yellow",
+      "score": 41,
+      "title": "Repeated invite links",
+      "summary": "Lena (@lenacrafts) posted an invite to an unknown server 6 times in #trading.",
+      "quote": null,
+      "user": {
+        "id": "9020",
+        "name": "Lena (@lenacrafts)",
+        "avatar": null,
+        "minor": true
+      },
+      "target": null,
+      "signals": [
+        {
+          "code": "msg.invite_spam",
+          "weight": 25,
+          "severe": false,
+          "text": "Posted the same invite 6 times",
+          "at": "2026-11-04T14:20:00Z"
+        }
+      ],
+      "jump_url": "https://discord.com/channels/10/305/86001",
+      "status": "resolved",
+      "created_at": "2026-11-04T14:20:00Z",
+      "resolved_by": "Mira (@mod_mira)",
+      "action": "delete"
+    },
+    {
+      "id": 102,
+      "kind": "message",
+      "level": "yellow",
+      "score": 36,
+      "title": "Age question",
+      "summary": "Hugo (@hugo_hops) asked \"how old is your world\" in #builds.",
+      "quote": null,
+      "user": {
+        "id": "9033",
+        "name": "Hugo (@hugo_hops)",
+        "avatar": null,
+        "minor": false
+      },
+      "target": null,
+      "signals": [
+        {
+          "code": "msg.age_probe",
+          "weight": 20,
+          "severe": false,
+          "text": "Age question",
+          "at": "2026-11-03T14:20:00Z"
+        }
+      ],
+      "jump_url": "https://discord.com/channels/10/302/85420",
+      "status": "false_positive",
+      "created_at": "2026-11-03T14:20:00Z",
+      "resolved_by": "Mira (@mod_mira)",
+      "action": "false_positive"
+    },
+    {
+      "id": 101,
+      "kind": "raid",
+      "level": "yellow",
+      "score": 55,
+      "title": "Join burst: 6 accounts in 3 minutes",
+      "summary": "6 accounts joined within 3 minutes and posted the same \"free nitro\" link.",
+      "quote": null,
+      "user": null,
+      "target": null,
+      "signals": [
+        {
+          "code": "raid.join_burst",
+          "weight": 35,
+          "severe": false,
+          "text": "6 joins in 3 minutes",
+          "at": "2026-10-29T14:20:00Z"
+        },
+        {
+          "code": "msg.scam_link",
+          "weight": 20,
+          "severe": false,
+          "text": "Same link posted by every account",
+          "at": "2026-10-29T14:20:00Z"
+        }
+      ],
+      "jump_url": null,
+      "status": "resolved",
+      "created_at": "2026-10-29T14:20:00Z",
+      "resolved_by": "Jonas (@jonas_admin)",
+      "action": "kick"
+    }
+  ]
+}

@@ -256,6 +256,12 @@ async def _api_flow():
     dash = Dashboard(store, reports, base_url="http://localhost", host="", port=0, owner_ids=frozenset({42}))
     async with TestClient(TestServer(dash.app())) as client:
         assert (await client.get("/api/me")).status == 401
+        pub = await client.get("/api/public/stats")  # no sign-in, counts only
+        stats = await pub.json()
+        assert pub.status == 200 and stats["servers"] >= 1 and stats["guard"]["messages"] > 0
+        assert stats["pocket"]["checks"] > 0 and len(stats["series"]["days"]) == 90
+        assert all(len(v) == 90 for v in stats["series"].values())
+        assert str(GID) not in await pub.text()  # no server IDs
         link = dash.link(user_id=7, name="Admin", avatar=None, guild_id=GID, owner=False, lang="en")
         token = link.split("t=", 1)[1]
         r = await client.get(f"/auth?t={token}", allow_redirects=False)

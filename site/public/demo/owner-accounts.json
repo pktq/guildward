@@ -1,0 +1,180 @@
+{
+  "counts": {
+    "review": 3,
+    "flagged": 2,
+    "confirmed": 1,
+    "cleared": 4
+  },
+  "accounts": [
+    {
+      "id": "1101",
+      "name": "chill_gamer_19",
+      "avatar": null,
+      "created_at": 1790457600,
+      "flag": "none",
+      "auto_flag": "flagged",
+      "score": 72,
+      "level": "red",
+      "checkers": 9,
+      "red_checkers": 4,
+      "reports": 5,
+      "report_score": 3.4,
+      "reasons": {
+        "age_pics": 3,
+        "threat": 1,
+        "other": 1
+      },
+      "network": 1,
+      "links": [
+        {
+          "kind": "handle",
+          "other_id": "1102",
+          "other_name": "chill_gamer_20",
+          "other_flag": "confirmed"
+        }
+      ],
+      "last_seen": 1793982000,
+      "deleted": false
+    },
+    {
+      "id": "1103",
+      "name": "Mia.Lovely2012",
+      "avatar": null,
+      "created_at": 1792963200,
+      "flag": "none",
+      "auto_flag": "watch",
+      "score": 48,
+      "level": "yellow",
+      "checkers": 5,
+      "red_checkers": 1,
+      "reports": 2,
+      "report_score": 1.1,
+      "reasons": {
+        "sexual": 1,
+        "meet": 1
+      },
+      "network": 0,
+      "links": [
+        {
+          "kind": "avatar",
+          "other_id": "1104",
+          "other_name": "mia_l0vely",
+          "other_flag": "none"
+        }
+      ],
+      "last_seen": 1793892000,
+      "deleted": false
+    },
+    {
+      "id": "1105",
+      "name": "robux_gift_bot",
+      "avatar": null,
+      "created_at": 1792272000,
+      "flag": "flagged",
+      "auto_flag": "flagged",
+      "score": 66,
+      "level": "red",
+      "checkers": 14,
+      "red_checkers": 6,
+      "reports": 9,
+      "report_score": 6.0,
+      "reasons": {
+        "scam": 8,
+        "other": 1
+      },
+      "network": 2,
+      "links": [
+        {
+          "kind": "script",
+          "other_id": "1106",
+          "other_name": "free.robux.now",
+          "other_flag": "flagged"
+        },
+        {
+          "kind": "payment",
+          "other_id": "1107",
+          "other_name": "gift4u_7",
+          "other_flag": "none"
+        }
+      ],
+      "last_seen": 1793992800,
+      "deleted": false
+    },
+    {
+      "id": "1102",
+      "name": "chill_gamer_20",
+      "avatar": null,
+      "created_at": 1786224000,
+      "flag": "confirmed",
+      "auto_flag": "flagged",
+      "score": 91,
+      "level": "red",
+      "checkers": 22,
+      "red_checkers": 15,
+      "reports": 12,
+      "report_score": 9.7,
+      "reasons": {
+        "age_pics": 6,
+        "meet": 4,
+        "threat": 2
+      },
+      "network": 3,
+      "links": [
+        {
+          "kind": "handle",
+          "other_id": "1101",
+          "other_name": "chill_gamer_19",
+          "other_flag": "none"
+        },
+        {
+          "kind": "name",
+          "other_id": "1108",
+          "other_name": "chill_gamer_21",
+          "other_flag": "watch"
+        }
+      ],
+      "last_seen": 1793827200,
+      "deleted": false
+    },
+    {
+      "id": "1109",
+      "name": "Sofia (art)",
+      "avatar": null,
+      "created_at": 1759440000,
+      "flag": "cleared",
+      "auto_flag": "watch",
+      "score": 31,
+      "level": "yellow",
+      "checkers": 7,
+      "red_checkers": 0,
+      "reports": 1,
+      "report_score": 0.3,
+      "reasons": {
+        "other": 1
+      },
+      "network": 0,
+      "links": [],
+      "last_seen": 1793280000,
+      "deleted": false
+    },
+    {
+      "id": "1110",
+      "name": "tomte_bob",
+      "avatar": null,
+      "created_at": 1733520000,
+      "flag": "cleared",
+      "auto_flag": "none",
+      "score": 8,
+      "level": "green",
+      "checkers": 3,
+      "red_checkers": 0,
+      "reports": 0,
+      "report_score": 0.0,
+      "reasons": {},
+      "network": 0,
+      "links": [],
+      "last_seen": 1793676000,
+      "deleted": false
+    }
+  ]
+}

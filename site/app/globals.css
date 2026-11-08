@@ -1,0 +1,18 @@
+@import "tailwindcss";
+
+/* Kept neutral on purpose: this root wraps both the marketing pages (.gw-site) and the dashboard (.gw-dash),
+   which carry their own styles. */
+@theme inline {
+  --font-sans: var(--gw-font-text), system-ui, sans-serif;
+  --font-display: var(--gw-font-display), var(--gw-font-text), system-ui, sans-serif;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  min-height: 100svh;
+}

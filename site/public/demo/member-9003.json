@@ -1,0 +1,203 @@
+{
+  "member": {
+    "id": "9003",
+    "name": "Kai (@kai.builds)",
+    "avatar": null,
+    "score": 67,
+    "level": "red",
+    "status": "none",
+    "joined_at": "2026-11-06T08:20:00Z",
+    "account_age_days": 19,
+    "self_age": null,
+    "minor": false,
+    "flags": [
+      "network",
+      "new_account"
+    ],
+    "trend": 5,
+    "last_seen": "2026-11-07T05:20:00Z",
+    "top_signal": "Banned for child safety on another Guard server",
+    "username": "kai.builds",
+    "account_created": "2026-10-19T14:20:00Z",
+    "left_at": null,
+    "invite_code": "public",
+    "roles": [
+      "Member"
+    ]
+  },
+  "verdict": {
+    "score": 67,
+    "level": "red",
+    "confidence": "Medium: based on a Safety Network match; little activity here yet.",
+    "signals": [
+      {
+        "code": "member.network",
+        "weight": 45,
+        "severe": true,
+        "text": "Banned for child safety on another Guard server",
+        "at": "2026-10-27T14:20:00Z"
+      },
+      {
+        "code": "member.new_account",
+        "weight": 10,
+        "severe": false,
+        "text": "Account is 19 days old",
+        "at": null
+      },
+      {
+        "code": "member.quiet",
+        "weight": 0,
+        "severe": false,
+        "text": "Only 6 messages so far",
+        "at": null
+      }
+    ]
+  },
+  "summary": [
+    "Joined yesterday through the public invite.",
+    "Banned for child safety on 1 other Guard server 11 days ago.",
+    "Has sent 6 messages here, none flagged yet."
+  ],
+  "prediction": {
+    "trajectory": "stable",
+    "escalation": "possible",
+    "text": "No concerning messages yet, but members banned elsewhere often return under a new pattern. Watch or quarantine."
+  },
+  "stats": {
+    "messages": 6,
+    "flagged": 0,
+    "distinct_targets": 2,
+    "minor_targets": 1,
+    "reports": 0,
+    "mod_actions": 0,
+    "network_flags": 1
+  },
+  "contacts": [
+    {
+      "user": {
+        "id": "9012",
+        "name": "Noah (@noahplays11)",
+        "avatar": null,
+        "minor": true
+      },
+      "messages": 3,
+      "stages": [],
+      "level": "green",
+      "last_at": "2026-11-07T05:20:00Z"
+    }
+  ],
+  "timeline": [
+    {
+      "at": "2026-11-06T08:20:00Z",
+      "kind": "alert",
+      "text": "Safety Network match posted in #mod-alerts",
+      "level": "red",
+      "jump_url": null
+    },
+    {
+      "at": "2026-11-06T08:20:00Z",
+      "kind": "join",
+      "text": "Joined through the public invite",
+      "level": null,
+      "jump_url": null
+    }
+  ],
+  "series": {
+    "days": [
+      "2026-10-09",
+      "2026-10-10",
+      "2026-10-11",
+      "2026-10-12",
+      "2026-10-13",
+      "2026-10-14",
+      "2026-10-15",
+      "2026-10-16",
+      "2026-10-17",
+      "2026-10-18",
+      "2026-10-19",
+      "2026-10-20",
+      "2026-10-21",
+      "2026-10-22",
+      "2026-10-23",
+      "2026-10-24",
+      "2026-10-25",
+      "2026-10-26",
+      "2026-10-27",
+      "2026-10-28",
+      "2026-10-29",
+      "2026-10-30",
+      "2026-10-31",
+      "2026-11-01",
+      "2026-11-02",
+      "2026-11-03",
+      "2026-11-04",
+      "2026-11-05",
+      "2026-11-06",
+      "2026-11-07"
+    ],
+    "messages": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      4,
+      2
+    ],
+    "flagged": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ]
+  }
+}

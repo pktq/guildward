@@ -1,7 +1,7 @@
 # Guard dashboard API (v1)
 
 Served by the Guard process (aiohttp, same event loop as the bots) at `DASHBOARD_URL` (default `http://localhost:8080`).
-The dashboard SPA is `web/dashboard/` served at `/`. Hash routes:
+The dashboard is the Next.js site in `site/` (`/dashboard/...`, proxying `/api/*` here); the legacy SPA `web/dashboard/` is still served at `/`. Hash routes:
 
 - `#/g/<gid>` overview · `#/g/<gid>/alerts` · `#/g/<gid>/members` · `#/g/<gid>/member/<uid>` · `#/g/<gid>/settings` · `#/g/<gid>/report` (printable)
 - `#/owner` bot-owner dashboard (only when `/api/me` says `owner: true`)
@@ -132,6 +132,20 @@ Fix ids: `verification`, `content_filter`, `automod_presets`, `automod_spam`, `a
   "retention_days": 90,
   "lang": "en"                    // en | sv: language of alerts posted in Discord
 }
+```
+
+## Public endpoint (no sign-in)
+
+`GET /api/public/stats`: deployment-wide counts for the public site's stats page. No names, IDs or text; rebuilt at most every 5 minutes (`Cache-Control: public, max-age=300`, CORS `*`). Totals cover what `daily` keeps (400 days).
+```jsonc
+{"generated_at": "…", "since": "…",            // first day with data, or null
+ "servers": 3, "members": 2200,
+ "guard": {"messages": 0, "flagged": 0, "alerts": 0, "red_alerts": 0, "resolved": 0, "actions": 0, "raids": 0,
+           "reports": 0, "kids_warned": 0, "network_flags": 0},
+ "pocket": {"users": 0, "checks": 0, "by_kind": {"server": {"green": 0, "yellow": 0, "red": 0}, "person": {}, "message": {}},
+            "scans": 0, "watch_alerts": 0, "reports": 0, "flagged_accounts": 0},
+ "signals": [{"code": "msg.age_probe", "label": "Asked someone's age", "n": 40}],   // top 8, English labels
+ "series": {"days": ["… 90 …"], "messages": [], "flagged": [], "alerts": [], "pocket_checks": []}}
 ```
 
 ## Owner endpoints (403 unless owner)

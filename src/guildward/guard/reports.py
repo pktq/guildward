@@ -475,6 +475,50 @@ class Reports:
             "network": network,
         }
 
+    # --- public -----------------------------------------------------------------------------
+    def public(self, crowd: dict[str, int] | None = None) -> dict[str, Any]:
+        """Deployment-wide totals for the public stats page: counts only, no names, IDs or text.
+        Totals cover what `daily` keeps (400 days)."""
+        s = self.store
+        total = lambda m: s.val("SELECT SUM(n) FROM daily WHERE guild_id<>0 AND metric=?", m)  # noqa: E731
+        guilds = s.active_guilds()
+        checks = {k: {"green": 0, "yellow": 0, "red": 0} for k in ("server", "person", "message")}
+        for r in s.q("SELECT metric, SUM(n) n FROM daily WHERE guild_id=0 AND metric LIKE 'pocket.%' GROUP BY metric"):
+            parts = r["metric"].split(".")
+            if len(parts) == 3 and parts[1] in checks and parts[2] in checks[parts[1]]:
+                checks[parts[1]][parts[2]] = r["n"]
+        pocket_series = [0] * 90
+        for metric in (f"pocket.{k}.{lv}" for k in checks for lv in ("green", "yellow", "red")):
+            pocket_series = [a + b for a, b in zip(pocket_series, s.series(0, metric, 90), strict=True)]
+        g0 = lambda m: s.val("SELECT SUM(n) FROM daily WHERE guild_id=0 AND metric=?", m)  # noqa: E731
+        first = s.val("SELECT MIN(day) FROM daily", default=None)
+        signals = [{"code": r["code"], "label": t(f"label.{r['code']}", "en", app="another app"), "n": r["n"]}
+                   for r in s.q("SELECT code, COUNT(*) n FROM observations GROUP BY code ORDER BY n DESC LIMIT 8")]
+        return {
+            "generated_at": iso(now()),
+            "since": f"{first}T00:00:00Z" if first else None,
+            "servers": len(guilds),
+            "members": sum(g["member_count"] or 0 for g in guilds),
+            "guard": {
+                "messages": total("messages"), "flagged": total("flagged"), "alerts": total("alerts"),
+                "red_alerts": s.val("SELECT COUNT(*) FROM alerts WHERE level='red'"),
+                "resolved": s.val("SELECT COUNT(*) FROM alerts WHERE status='resolved'"),
+                "actions": total("actions"), "raids": total("raids"), "reports": total("reports"),
+                "kids_warned": total("warned"),
+                "network_flags": s.val("SELECT COUNT(DISTINCT user_id) FROM network"),
+            },
+            "pocket": {
+                "users": (crowd or {}).get("users", 0),
+                "checks": sum(sum(v.values()) for v in checks.values()), "by_kind": checks,
+                "scans": g0("pocket.scan"), "watch_alerts": g0("pocket.watch_alert"), "reports": g0("pocket.report"),
+                "flagged_accounts": (crowd or {}).get("flagged", 0) + (crowd or {}).get("confirmed", 0),
+            },
+            "signals": signals,
+            "series": {"days": last_days(90), "messages": s.series(None, "messages", 90),
+                       "flagged": s.series(None, "flagged", 90), "alerts": s.series(None, "alerts", 90),
+                       "pocket_checks": pocket_series},
+        }
+
 
 _L = {  # short labels for timelines and the owner's signal-quality table
     "msg.age_probe": ("Asked someone's age", "Frågade någon om ålder"),

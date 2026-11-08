@@ -1,0 +1,238 @@
+{
+  "member": {
+    "id": "9010",
+    "name": "Milo (@milo_mines)",
+    "avatar": null,
+    "score": 9,
+    "level": "green",
+    "status": "none",
+    "joined_at": "2026-06-20T14:20:00Z",
+    "account_age_days": 300,
+    "self_age": 12,
+    "minor": true,
+    "flags": [
+      "minor"
+    ],
+    "trend": 3,
+    "last_seen": "2026-11-07T13:20:00Z",
+    "top_signal": null,
+    "username": "milo_mines",
+    "account_created": "2026-01-11T14:20:00Z",
+    "left_at": null,
+    "invite_code": null,
+    "roles": [
+      "Member",
+      "Under 13"
+    ]
+  },
+  "verdict": {
+    "score": 9,
+    "level": "green",
+    "confidence": "High: 5 months of normal chat history.",
+    "signals": [
+      {
+        "code": "member.targeted",
+        "weight": 12,
+        "severe": false,
+        "text": "Being contacted by a red member",
+        "at": "2026-11-07T13:39:00Z"
+      },
+      {
+        "code": "member.minor_role",
+        "weight": 0,
+        "severe": false,
+        "text": "Has the Under 13 role",
+        "at": null
+      },
+      {
+        "code": "member.long_member",
+        "weight": -6,
+        "severe": false,
+        "text": "Member for 5 months",
+        "at": null
+      }
+    ]
+  },
+  "summary": [
+    "Milo is 12 and has been a member for 5 months with no problems.",
+    "In the last 2 days Sam (@skyblock_sam) sent him 31 messages, including a request to move to Snapchat.",
+    "Guard sent Milo a safety tip by DM after the red message."
+  ],
+  "prediction": {
+    "trajectory": "stable",
+    "escalation": "none",
+    "text": "Milo's own behaviour is normal. The risk is the contact, not him."
+  },
+  "stats": {
+    "messages": 420,
+    "flagged": 0,
+    "distinct_targets": 14,
+    "minor_targets": 9,
+    "reports": 0,
+    "mod_actions": 0,
+    "network_flags": 0
+  },
+  "contacts": [
+    {
+      "user": {
+        "id": "9001",
+        "name": "Sam (@skyblock_sam)",
+        "avatar": null,
+        "minor": false
+      },
+      "messages": 31,
+      "stages": [
+        "Trust building",
+        "Risk check",
+        "Isolation"
+      ],
+      "level": "red",
+      "last_at": "2026-11-07T13:39:00Z"
+    },
+    {
+      "user": {
+        "id": "9012",
+        "name": "Noah (@noahplays11)",
+        "avatar": null,
+        "minor": true
+      },
+      "messages": 55,
+      "stages": [],
+      "level": "green",
+      "last_at": "2026-11-07T11:20:00Z"
+    },
+    {
+      "user": {
+        "id": "9032",
+        "name": "Freja (@frejacraft)",
+        "avatar": null,
+        "minor": true
+      },
+      "messages": 38,
+      "stages": [],
+      "level": "green",
+      "last_at": "2026-11-06T14:20:00Z"
+    }
+  ],
+  "timeline": [
+    {
+      "at": "2026-11-07T13:41:00Z",
+      "kind": "action",
+      "text": "Guard sent a safety tip by DM",
+      "level": null,
+      "jump_url": null
+    },
+    {
+      "at": "2026-11-07T13:39:00Z",
+      "kind": "signal",
+      "text": "Received a Snapchat request from a red member",
+      "level": "red",
+      "jump_url": "https://discord.com/channels/10/301/88120"
+    },
+    {
+      "at": "2026-06-20T14:20:00Z",
+      "kind": "join",
+      "text": "Joined the server",
+      "level": null,
+      "jump_url": null
+    }
+  ],
+  "series": {
+    "days": [
+      "2026-10-09",
+      "2026-10-10",
+      "2026-10-11",
+      "2026-10-12",
+      "2026-10-13",
+      "2026-10-14",
+      "2026-10-15",
+      "2026-10-16",
+      "2026-10-17",
+      "2026-10-18",
+      "2026-10-19",
+      "2026-10-20",
+      "2026-10-21",
+      "2026-10-22",
+      "2026-10-23",
+      "2026-10-24",
+      "2026-10-25",
+      "2026-10-26",
+      "2026-10-27",
+      "2026-10-28",
+      "2026-10-29",
+      "2026-10-30",
+      "2026-10-31",
+      "2026-11-01",
+      "2026-11-02",
+      "2026-11-03",
+      "2026-11-04",
+      "2026-11-05",
+      "2026-11-06",
+      "2026-11-07"
+    ],
+    "messages": [
+      13,
+      16,
+      14,
+      12,
+      12,
+      11,
+      12,
+      12,
+      12,
+      16,
+      12,
+      11,
+      14,
+      17,
+      15,
+      12,
+      13,
+      13,
+      11,
+      12,
+      14,
+      15,
+      13,
+      15,
+      15,
+      13,
+      12,
+      16,
+      17,
+      15
+    ],
+    "flagged": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ]
+  }
+}

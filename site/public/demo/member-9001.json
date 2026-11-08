@@ -1,0 +1,333 @@
+{
+  "member": {
+    "id": "9001",
+    "name": "Sam (@skyblock_sam)",
+    "avatar": null,
+    "score": 88,
+    "level": "red",
+    "status": "none",
+    "joined_at": "2026-11-04T12:20:00Z",
+    "account_age_days": 3,
+    "self_age": 15,
+    "minor": false,
+    "flags": [
+      "new_account",
+      "no_avatar",
+      "escalating"
+    ],
+    "trend": 41,
+    "last_seen": "2026-11-07T13:42:00Z",
+    "top_signal": "Tried to move 3 people to Snapchat",
+    "username": "skyblock_sam",
+    "account_created": "2026-11-04T09:20:00Z",
+    "left_at": null,
+    "invite_code": "bH7kQ2",
+    "roles": [
+      "Member"
+    ]
+  },
+  "verdict": {
+    "score": 88,
+    "level": "red",
+    "confidence": "High: 140 messages and 11 contacts observed over 3 days.",
+    "signals": [
+      {
+        "code": "msg.platform_move",
+        "weight": 35,
+        "severe": true,
+        "text": "Tried to move 3 people to Snapchat",
+        "at": "2026-11-07T13:39:00Z"
+      },
+      {
+        "code": "member.age_probe_many",
+        "weight": 30,
+        "severe": false,
+        "text": "Asked 4 different people their age",
+        "at": "2026-11-07T12:20:00Z"
+      },
+      {
+        "code": "member.many_minor_targets",
+        "weight": 25,
+        "severe": false,
+        "text": "Most contacts are under 18 (4 of 11)",
+        "at": "2026-11-07T12:20:00Z"
+      },
+      {
+        "code": "msg.secrecy",
+        "weight": 20,
+        "severe": false,
+        "text": "Asked a member to keep the chat secret",
+        "at": "2026-11-07T13:39:00Z"
+      },
+      {
+        "code": "member.new_account",
+        "weight": 15,
+        "severe": false,
+        "text": "Account is 3 days old",
+        "at": null
+      },
+      {
+        "code": "member.no_avatar",
+        "weight": 5,
+        "severe": false,
+        "text": "No profile picture",
+        "at": null
+      },
+      {
+        "code": "member.claims_minor",
+        "weight": -5,
+        "severe": false,
+        "text": "Says they are 15",
+        "at": "2026-11-04T18:20:00Z"
+      }
+    ]
+  },
+  "summary": [
+    "Account is 3 days old and joined through invite bH7kQ2.",
+    "Asked 4 different members their age, 3 of them under 18.",
+    "Tried to move Milo (12), Ella (13) and Noah (11) to Snapchat.",
+    "Says they are 15, but writing style and hours active match an adult pattern.",
+    "Not seen on any other Guard server."
+  ],
+  "prediction": {
+    "trajectory": "rising",
+    "escalation": "likely",
+    "text": "Contact with one minor moved through 3 grooming stages in 2 days. Without action, a move to a private platform is likely within 24 hours."
+  },
+  "stats": {
+    "messages": 140,
+    "flagged": 9,
+    "distinct_targets": 11,
+    "minor_targets": 4,
+    "reports": 0,
+    "mod_actions": 0,
+    "network_flags": 0
+  },
+  "contacts": [
+    {
+      "user": {
+        "id": "9010",
+        "name": "Milo (@milo_mines)",
+        "avatar": null,
+        "minor": true
+      },
+      "messages": 31,
+      "stages": [
+        "Trust building",
+        "Risk check",
+        "Isolation"
+      ],
+      "level": "red",
+      "last_at": "2026-11-07T13:39:00Z"
+    },
+    {
+      "user": {
+        "id": "9011",
+        "name": "Ella (@ella.exe)",
+        "avatar": null,
+        "minor": true
+      },
+      "messages": 14,
+      "stages": [
+        "Trust building",
+        "Risk check"
+      ],
+      "level": "yellow",
+      "last_at": "2026-11-07T09:20:00Z"
+    },
+    {
+      "user": {
+        "id": "9012",
+        "name": "Noah (@noahplays11)",
+        "avatar": null,
+        "minor": true
+      },
+      "messages": 9,
+      "stages": [
+        "Trust building"
+      ],
+      "level": "yellow",
+      "last_at": "2026-11-06T12:20:00Z"
+    },
+    {
+      "user": {
+        "id": "9013",
+        "name": "Liv (@liv_lantern)",
+        "avatar": null,
+        "minor": true
+      },
+      "messages": 4,
+      "stages": [],
+      "level": "green",
+      "last_at": "2026-11-06T06:20:00Z"
+    },
+    {
+      "user": {
+        "id": "9033",
+        "name": "Hugo (@hugo_hops)",
+        "avatar": null,
+        "minor": false
+      },
+      "messages": 6,
+      "stages": [],
+      "level": "green",
+      "last_at": "2026-11-05T14:20:00Z"
+    }
+  ],
+  "timeline": [
+    {
+      "at": "2026-11-07T13:39:00Z",
+      "kind": "signal",
+      "text": "Asked Milo (12) to add them on Snapchat and not tell the mods",
+      "level": "red",
+      "jump_url": "https://discord.com/channels/10/301/88120"
+    },
+    {
+      "at": "2026-11-07T13:40:00Z",
+      "kind": "alert",
+      "text": "Red alert posted in #mod-alerts",
+      "level": "red",
+      "jump_url": null
+    },
+    {
+      "at": "2026-11-07T12:20:00Z",
+      "kind": "alert",
+      "text": "Alert: asking many minors their age",
+      "level": "red",
+      "jump_url": null
+    },
+    {
+      "at": "2026-11-07T09:20:00Z",
+      "kind": "signal",
+      "text": "Asked Ella (13) if her parents check her phone",
+      "level": "yellow",
+      "jump_url": "https://discord.com/channels/10/301/88002"
+    },
+    {
+      "at": "2026-11-06T12:20:00Z",
+      "kind": "signal",
+      "text": "Asked Noah (11) how old he is",
+      "level": "yellow",
+      "jump_url": "https://discord.com/channels/10/300/87610"
+    },
+    {
+      "at": "2026-11-05T18:20:00Z",
+      "kind": "name_change",
+      "text": "Changed display name from \"sammy\" to \"Sam\"",
+      "level": null,
+      "jump_url": null
+    },
+    {
+      "at": "2026-11-04T18:20:00Z",
+      "kind": "signal",
+      "text": "Said they are 15 years old",
+      "level": "green",
+      "jump_url": "https://discord.com/channels/10/300/87012"
+    },
+    {
+      "at": "2026-11-04T12:20:00Z",
+      "kind": "join",
+      "text": "Joined through invite bH7kQ2 (account 3 days old)",
+      "level": null,
+      "jump_url": null
+    }
+  ],
+  "series": {
+    "days": [
+      "2026-10-09",
+      "2026-10-10",
+      "2026-10-11",
+      "2026-10-12",
+      "2026-10-13",
+      "2026-10-14",
+      "2026-10-15",
+      "2026-10-16",
+      "2026-10-17",
+      "2026-10-18",
+      "2026-10-19",
+      "2026-10-20",
+      "2026-10-21",
+      "2026-10-22",
+      "2026-10-23",
+      "2026-10-24",
+      "2026-10-25",
+      "2026-10-26",
+      "2026-10-27",
+      "2026-10-28",
+      "2026-10-29",
+      "2026-10-30",
+      "2026-10-31",
+      "2026-11-01",
+      "2026-11-02",
+      "2026-11-03",
+      "2026-11-04",
+      "2026-11-05",
+      "2026-11-06",
+      "2026-11-07"
+    ],
+    "messages": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      22,
+      41,
+      46,
+      31
+    ],
+    "flagged": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      1,
+      3,
+      3,
+      2
+    ]
+  }
+}

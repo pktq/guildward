@@ -1,0 +1,282 @@
+{
+  "member": {
+    "id": "9002",
+    "name": "Dave (@redstone_dave)",
+    "avatar": null,
+    "score": 71,
+    "level": "red",
+    "status": "watch",
+    "joined_at": "2026-04-09T14:20:00Z",
+    "account_age_days": 1460,
+    "self_age": 34,
+    "minor": false,
+    "flags": [
+      "reported",
+      "adult_contacting_minors",
+      "watch"
+    ],
+    "trend": 12,
+    "last_seen": "2026-11-07T09:20:00Z",
+    "top_signal": "Reported by 2 members for private messages to a minor",
+    "username": "redstone_dave",
+    "account_created": "2022-11-08T14:20:00Z",
+    "left_at": null,
+    "invite_code": null,
+    "roles": [
+      "Member",
+      "Builder"
+    ]
+  },
+  "verdict": {
+    "score": 71,
+    "level": "red",
+    "confidence": "Medium: based on 2 reports and 7 months of chat history.",
+    "signals": [
+      {
+        "code": "member.reported",
+        "weight": 30,
+        "severe": false,
+        "text": "Reported by 2 members for private messages to a minor",
+        "at": "2026-11-07T08:20:00Z"
+      },
+      {
+        "code": "member.adult_minor_dm",
+        "weight": 25,
+        "severe": false,
+        "text": "Adult (says 34) in frequent contact with members under 18",
+        "at": "2026-11-07T08:20:00Z"
+      },
+      {
+        "code": "msg.photo_request",
+        "weight": 20,
+        "severe": false,
+        "text": "A photo request was mentioned in a report",
+        "at": "2026-11-07T08:20:00Z"
+      },
+      {
+        "code": "member.old_account",
+        "weight": -8,
+        "severe": false,
+        "text": "Account is 4 years old",
+        "at": null
+      },
+      {
+        "code": "member.long_member",
+        "weight": -6,
+        "severe": false,
+        "text": "Member for 7 months with no earlier problems",
+        "at": null
+      }
+    ]
+  },
+  "summary": [
+    "Member for 7 months with no problems until this week.",
+    "Two different members reported him on Friday for DMs to a 13-year-old.",
+    "Says he is 34; 5 of his 7 regular contacts are under 18.",
+    "Moderators put him on the watch list 6 hours ago."
+  ],
+  "prediction": {
+    "trajectory": "rising",
+    "escalation": "possible",
+    "text": "Reports and contact with minors both rose this week. Guard cannot see DMs, so the reports are the strongest evidence."
+  },
+  "stats": {
+    "messages": 1820,
+    "flagged": 3,
+    "distinct_targets": 7,
+    "minor_targets": 5,
+    "reports": 2,
+    "mod_actions": 1,
+    "network_flags": 0
+  },
+  "contacts": [
+    {
+      "user": {
+        "id": "9011",
+        "name": "Ella (@ella.exe)",
+        "avatar": null,
+        "minor": true
+      },
+      "messages": 64,
+      "stages": [
+        "Trust building",
+        "Isolation"
+      ],
+      "level": "red",
+      "last_at": "2026-11-07T07:20:00Z"
+    },
+    {
+      "user": {
+        "id": "9013",
+        "name": "Liv (@liv_lantern)",
+        "avatar": null,
+        "minor": true
+      },
+      "messages": 40,
+      "stages": [
+        "Trust building"
+      ],
+      "level": "yellow",
+      "last_at": "2026-11-06T14:20:00Z"
+    },
+    {
+      "user": {
+        "id": "9031",
+        "name": "Oskar (@oskar.mc)",
+        "avatar": null,
+        "minor": true
+      },
+      "messages": 22,
+      "stages": [],
+      "level": "green",
+      "last_at": "2026-11-05T14:20:00Z"
+    },
+    {
+      "user": {
+        "id": "7001",
+        "name": "Mira (@mod_mira)",
+        "avatar": null,
+        "minor": false
+      },
+      "messages": 18,
+      "stages": [],
+      "level": "green",
+      "last_at": "2026-11-04T14:20:00Z"
+    }
+  ],
+  "timeline": [
+    {
+      "at": "2026-11-07T08:20:00Z",
+      "kind": "action",
+      "text": "Mira (@mod_mira) added him to the watch list",
+      "level": null,
+      "jump_url": null
+    },
+    {
+      "at": "2026-11-07T08:20:00Z",
+      "kind": "report",
+      "text": "Reported by Liv (@liv_lantern): \"asks for pics in dms\"",
+      "level": "red",
+      "jump_url": null
+    },
+    {
+      "at": "2026-11-07T05:20:00Z",
+      "kind": "report",
+      "text": "Reported by Ella (@ella.exe)",
+      "level": "red",
+      "jump_url": null
+    },
+    {
+      "at": "2026-11-06T14:20:00Z",
+      "kind": "signal",
+      "text": "Offered Liv (14) free Minecoins",
+      "level": "yellow",
+      "jump_url": "https://discord.com/channels/10/300/87700"
+    },
+    {
+      "at": "2026-04-09T14:20:00Z",
+      "kind": "join",
+      "text": "Joined the server",
+      "level": null,
+      "jump_url": null
+    }
+  ],
+  "series": {
+    "days": [
+      "2026-10-09",
+      "2026-10-10",
+      "2026-10-11",
+      "2026-10-12",
+      "2026-10-13",
+      "2026-10-14",
+      "2026-10-15",
+      "2026-10-16",
+      "2026-10-17",
+      "2026-10-18",
+      "2026-10-19",
+      "2026-10-20",
+      "2026-10-21",
+      "2026-10-22",
+      "2026-10-23",
+      "2026-10-24",
+      "2026-10-25",
+      "2026-10-26",
+      "2026-10-27",
+      "2026-10-28",
+      "2026-10-29",
+      "2026-10-30",
+      "2026-10-31",
+      "2026-11-01",
+      "2026-11-02",
+      "2026-11-03",
+      "2026-11-04",
+      "2026-11-05",
+      "2026-11-06",
+      "2026-11-07"
+    ],
+    "messages": [
+      59,
+      58,
+      61,
+      57,
+      60,
+      57,
+      58,
+      63,
+      59,
+      58,
+      62,
+      58,
+      60,
+      60,
+      63,
+      60,
+      57,
+      58,
+      60,
+      60,
+      61,
+      59,
+      58,
+      63,
+      60,
+      63,
+      61,
+      59,
+      95,
+      40
+    ],
+    "flagged": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      2,
+      1
+    ]
+  }
+}

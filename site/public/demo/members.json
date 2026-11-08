@@ -1,0 +1,453 @@
+{
+  "members": [
+    {
+      "id": "9001",
+      "name": "Sam (@skyblock_sam)",
+      "avatar": null,
+      "score": 88,
+      "level": "red",
+      "status": "none",
+      "joined_at": "2026-11-04T12:20:00Z",
+      "account_age_days": 3,
+      "self_age": 15,
+      "minor": false,
+      "flags": [
+        "new_account",
+        "no_avatar",
+        "escalating"
+      ],
+      "trend": 41,
+      "last_seen": "2026-11-07T13:42:00Z",
+      "top_signal": "Tried to move 3 people to Snapchat"
+    },
+    {
+      "id": "9002",
+      "name": "Dave (@redstone_dave)",
+      "avatar": null,
+      "score": 71,
+      "level": "red",
+      "status": "watch",
+      "joined_at": "2026-04-09T14:20:00Z",
+      "account_age_days": 1460,
+      "self_age": 34,
+      "minor": false,
+      "flags": [
+        "reported",
+        "adult_contacting_minors",
+        "watch"
+      ],
+      "trend": 12,
+      "last_seen": "2026-11-07T09:20:00Z",
+      "top_signal": "Reported by 2 members for private messages to a minor"
+    },
+    {
+      "id": "9003",
+      "name": "Kai (@kai.builds)",
+      "avatar": null,
+      "score": 67,
+      "level": "red",
+      "status": "none",
+      "joined_at": "2026-11-06T08:20:00Z",
+      "account_age_days": 19,
+      "self_age": null,
+      "minor": false,
+      "flags": [
+        "network",
+        "new_account"
+      ],
+      "trend": 5,
+      "last_seen": "2026-11-07T05:20:00Z",
+      "top_signal": "Banned for child safety on another Guard server"
+    },
+    {
+      "id": "9101",
+      "name": "free nitro 4821 (@fr33n1tro4821)",
+      "avatar": null,
+      "score": 58,
+      "level": "yellow",
+      "status": "actioned",
+      "joined_at": "2026-11-05T11:08:00Z",
+      "account_age_days": 0,
+      "self_age": null,
+      "minor": false,
+      "flags": [
+        "raid",
+        "new_account",
+        "no_avatar"
+      ],
+      "trend": 0,
+      "last_seen": "2026-11-05T11:20:00Z",
+      "top_signal": "Joined in a burst of 13 accounts within 2 minutes"
+    },
+    {
+      "id": "9102",
+      "name": "giveaway bot (@giveaway_b0t_77)",
+      "avatar": null,
+      "score": 56,
+      "level": "yellow",
+      "status": "actioned",
+      "joined_at": "2026-11-05T11:09:00Z",
+      "account_age_days": 0,
+      "self_age": null,
+      "minor": false,
+      "flags": [
+        "raid",
+        "new_account",
+        "no_avatar"
+      ],
+      "trend": 0,
+      "last_seen": "2026-11-05T11:20:00Z",
+      "top_signal": "Joined in a burst of 13 accounts within 2 minutes"
+    },
+    {
+      "id": "9103",
+      "name": "x (@qz_83kd)",
+      "avatar": null,
+      "score": 54,
+      "level": "yellow",
+      "status": "actioned",
+      "joined_at": "2026-11-05T11:10:00Z",
+      "account_age_days": 0,
+      "self_age": null,
+      "minor": false,
+      "flags": [
+        "raid",
+        "new_account",
+        "no_avatar"
+      ],
+      "trend": 0,
+      "last_seen": "2026-11-05T11:20:00Z",
+      "top_signal": "Joined in a burst of 13 accounts within 2 minutes"
+    },
+    {
+      "id": "9104",
+      "name": "Steam Gift (@steamgift.support)",
+      "avatar": null,
+      "score": 52,
+      "level": "yellow",
+      "status": "none",
+      "joined_at": "2026-11-05T11:11:00Z",
+      "account_age_days": 0,
+      "self_age": null,
+      "minor": false,
+      "flags": [
+        "raid",
+        "new_account",
+        "no_avatar",
+        "quarantined"
+      ],
+      "trend": 0,
+      "last_seen": "2026-11-05T11:20:00Z",
+      "top_signal": "Joined in a burst of 13 accounts within 2 minutes"
+    },
+    {
+      "id": "9105",
+      "name": "⁣ (@zz_9fj2)",
+      "avatar": null,
+      "score": 50,
+      "level": "yellow",
+      "status": "none",
+      "joined_at": "2026-11-05T11:12:00Z",
+      "account_age_days": 0,
+      "self_age": null,
+      "minor": false,
+      "flags": [
+        "raid",
+        "new_account",
+        "no_avatar",
+        "quarantined"
+      ],
+      "trend": 0,
+      "last_seen": "2026-11-05T11:20:00Z",
+      "top_signal": "Joined in a burst of 13 accounts within 2 minutes"
+    },
+    {
+      "id": "9020",
+      "name": "Lena (@lenacrafts)",
+      "avatar": null,
+      "score": 46,
+      "level": "yellow",
+      "status": "none",
+      "joined_at": "2026-09-27T14:20:00Z",
+      "account_age_days": 310,
+      "self_age": 16,
+      "minor": true,
+      "flags": [
+        "minor",
+        "escalating"
+      ],
+      "trend": 14,
+      "last_seen": "2026-11-07T12:20:00Z",
+      "top_signal": "Posted an invite to an unknown server 6 times"
+    },
+    {
+      "id": "9021",
+      "name": "Theo (@theo_tnt)",
+      "avatar": null,
+      "score": 39,
+      "level": "yellow",
+      "status": "watch",
+      "joined_at": "2026-08-11T14:20:00Z",
+      "account_age_days": 640,
+      "self_age": null,
+      "minor": false,
+      "flags": [
+        "watch"
+      ],
+      "trend": -6,
+      "last_seen": "2026-11-06T14:20:00Z",
+      "top_signal": "Asked a member which school they go to"
+    },
+    {
+      "id": "9022",
+      "name": "Grimm (@grimm.redux)",
+      "avatar": null,
+      "score": 36,
+      "level": "yellow",
+      "status": "none",
+      "joined_at": "2026-10-29T14:20:00Z",
+      "account_age_days": 27,
+      "self_age": null,
+      "minor": false,
+      "flags": [
+        "new_account"
+      ],
+      "trend": 9,
+      "last_seen": "2026-11-07T07:20:00Z",
+      "top_signal": "Asked 2 members for their age"
+    },
+    {
+      "id": "9036",
+      "name": "<img src=x onerror=alert(1)> (@xss_test)",
+      "avatar": null,
+      "score": 22,
+      "level": "green",
+      "status": "none",
+      "joined_at": "2026-11-05T14:20:00Z",
+      "account_age_days": 11,
+      "self_age": null,
+      "minor": false,
+      "flags": [
+        "new_account",
+        "no_avatar"
+      ],
+      "trend": 4,
+      "last_seen": "2026-11-07T04:20:00Z",
+      "top_signal": "Display name contains markup"
+    },
+    {
+      "id": "9035",
+      "name": "Ben (@ben_bedrock)",
+      "avatar": null,
+      "score": 18,
+      "level": "green",
+      "status": "left",
+      "joined_at": "2026-08-29T14:20:00Z",
+      "account_age_days": 410,
+      "self_age": null,
+      "minor": false,
+      "flags": [],
+      "trend": -4,
+      "last_seen": "2026-11-01T14:20:00Z",
+      "top_signal": "Left the server after a warning"
+    },
+    {
+      "id": "9030",
+      "name": "Ava (@ava_builds)",
+      "avatar": null,
+      "score": 12,
+      "level": "green",
+      "status": "none",
+      "joined_at": "2026-11-02T14:20:00Z",
+      "account_age_days": 4,
+      "self_age": 10,
+      "minor": true,
+      "flags": [
+        "new_account",
+        "minor"
+      ],
+      "trend": 0,
+      "last_seen": "2026-11-07T06:20:00Z",
+      "top_signal": "New account"
+    },
+    {
+      "id": "9010",
+      "name": "Milo (@milo_mines)",
+      "avatar": null,
+      "score": 9,
+      "level": "green",
+      "status": "none",
+      "joined_at": "2026-06-20T14:20:00Z",
+      "account_age_days": 300,
+      "self_age": 12,
+      "minor": true,
+      "flags": [
+        "minor"
+      ],
+      "trend": 3,
+      "last_seen": "2026-11-07T13:20:00Z",
+      "top_signal": null
+    },
+    {
+      "id": "9033",
+      "name": "Hugo (@hugo_hops)",
+      "avatar": null,
+      "score": 7,
+      "level": "green",
+      "status": "none",
+      "joined_at": "2026-10-26T14:20:00Z",
+      "account_age_days": 60,
+      "self_age": null,
+      "minor": false,
+      "flags": [],
+      "trend": 0,
+      "last_seen": "2026-11-07T09:20:00Z",
+      "top_signal": null
+    },
+    {
+      "id": "9011",
+      "name": "Ella (@ella.exe)",
+      "avatar": null,
+      "score": 6,
+      "level": "green",
+      "status": "none",
+      "joined_at": "2026-09-04T14:20:00Z",
+      "account_age_days": 220,
+      "self_age": 13,
+      "minor": true,
+      "flags": [
+        "minor"
+      ],
+      "trend": 2,
+      "last_seen": "2026-11-07T10:20:00Z",
+      "top_signal": null
+    },
+    {
+      "id": "9012",
+      "name": "Noah (@noahplays11)",
+      "avatar": null,
+      "score": 5,
+      "level": "green",
+      "status": "none",
+      "joined_at": "2026-10-08T14:20:00Z",
+      "account_age_days": 180,
+      "self_age": 11,
+      "minor": true,
+      "flags": [
+        "minor"
+      ],
+      "trend": 1,
+      "last_seen": "2026-11-07T11:20:00Z",
+      "top_signal": null
+    },
+    {
+      "id": "9013",
+      "name": "Liv (@liv_lantern)",
+      "avatar": null,
+      "score": 4,
+      "level": "green",
+      "status": "none",
+      "joined_at": "2026-01-09T14:20:00Z",
+      "account_age_days": 700,
+      "self_age": 14,
+      "minor": true,
+      "flags": [
+        "minor"
+      ],
+      "trend": 0,
+      "last_seen": "2026-11-07T08:20:00Z",
+      "top_signal": null
+    },
+    {
+      "id": "9031",
+      "name": "Oskar (@oskar.mc)",
+      "avatar": null,
+      "score": 3,
+      "level": "green",
+      "status": "none",
+      "joined_at": "2025-10-03T14:20:00Z",
+      "account_age_days": 900,
+      "self_age": null,
+      "minor": true,
+      "flags": [
+        "minor"
+      ],
+      "trend": 0,
+      "last_seen": "2026-11-05T14:20:00Z",
+      "top_signal": null
+    },
+    {
+      "id": "9032",
+      "name": "Freja (@frejacraft)",
+      "avatar": null,
+      "score": 2,
+      "level": "green",
+      "status": "none",
+      "joined_at": "2026-06-10T14:20:00Z",
+      "account_age_days": 500,
+      "self_age": 12,
+      "minor": true,
+      "flags": [
+        "minor"
+      ],
+      "trend": -1,
+      "last_seen": "2026-11-07T03:20:00Z",
+      "top_signal": null
+    },
+    {
+      "id": "9034",
+      "name": "Maja (@maja.mooshroom)",
+      "avatar": null,
+      "score": 1,
+      "level": "green",
+      "status": "none",
+      "joined_at": "2025-06-15T14:20:00Z",
+      "account_age_days": 1200,
+      "self_age": 15,
+      "minor": true,
+      "flags": [
+        "minor"
+      ],
+      "trend": 0,
+      "last_seen": "2026-11-04T14:20:00Z",
+      "top_signal": null
+    },
+    {
+      "id": "7001",
+      "name": "Mira (@mod_mira)",
+      "avatar": null,
+      "score": 0,
+      "level": "green",
+      "status": "trusted",
+      "joined_at": "2025-03-07T14:20:00Z",
+      "account_age_days": 2100,
+      "self_age": 27,
+      "minor": false,
+      "flags": [
+        "trusted"
+      ],
+      "trend": 0,
+      "last_seen": "2026-11-07T14:08:00Z",
+      "top_signal": null
+    },
+    {
+      "id": "7002",
+      "name": "Jonas (@jonas_admin)",
+      "avatar": null,
+      "score": 0,
+      "level": "green",
+      "status": "trusted",
+      "joined_at": "2024-11-17T14:20:00Z",
+      "account_age_days": 2800,
+      "self_age": null,
+      "minor": false,
+      "flags": [
+        "trusted"
+      ],
+      "trend": 0,
+      "last_seen": "2026-11-07T13:20:00Z",
+      "top_signal": null
+    }
+  ],
+  "total": 812
+}

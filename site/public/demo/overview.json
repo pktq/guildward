@@ -1,0 +1,835 @@
+{
+  "guild": {
+    "id": "10",
+    "name": "Blockhaven Minecraft Kids",
+    "icon": null,
+    "member_count": 812,
+    "guard_since": "2026-09-14T10:00:00Z",
+    "mode": "protect",
+    "alert_channel": "#mod-alerts"
+  },
+  "health": {
+    "score": 41,
+    "level": "yellow",
+    "grade": "C",
+    "confidence": "Based on a full safety audit, including moderation and chat patterns.",
+    "signals": [
+      {
+        "code": "server.red_members",
+        "weight": 15,
+        "severe": false,
+        "text": "3 members are red right now",
+        "at": "2026-11-07T13:40:00Z"
+      },
+      {
+        "code": "server.verification_low",
+        "weight": 12,
+        "severe": false,
+        "text": "Verification level is Low: anyone with a verified email can talk",
+        "at": null
+      },
+      {
+        "code": "server.content_filter_off",
+        "weight": 10,
+        "severe": false,
+        "text": "Explicit media filter is off for members without roles",
+        "at": null
+      },
+      {
+        "code": "server.recent_raid",
+        "weight": 8,
+        "severe": false,
+        "text": "A raid of 13 accounts happened 2 days ago",
+        "at": "2026-11-05T11:20:00Z"
+      },
+      {
+        "code": "server.minors_many",
+        "weight": 6,
+        "severe": false,
+        "text": "An estimated 28% of members are under 18",
+        "at": null
+      },
+      {
+        "code": "server.fast_response",
+        "weight": -6,
+        "severe": false,
+        "text": "Moderators handle alerts quickly (median 12 min)",
+        "at": null
+      },
+      {
+        "code": "server.automod_presets",
+        "weight": -4,
+        "severe": false,
+        "text": "AutoMod keyword presets are on",
+        "at": null
+      }
+    ]
+  },
+  "summary": [
+    "812 members, an estimated 230 are under 18.",
+    "3 members are red: one 3-day-old account is contacting several minors and pushing them to Snapchat.",
+    "A raid of 13 new accounts hit on Thursday; 3 were kicked and 2 are still quarantined.",
+    "Flagged messages are up 2.4× versus the previous week, almost all from 4 accounts.",
+    "Moderators handled the last 4 alerts with a median response of 12 minutes."
+  ],
+  "recommendations": [
+    {
+      "severity": "high",
+      "text": "Review Sam (@skyblock_sam) now: contact with a 12-year-old is escalating.",
+      "fix": null
+    },
+    {
+      "severity": "high",
+      "text": "Turn on the explicit media filter for all members.",
+      "fix": "content_filter"
+    },
+    {
+      "severity": "high",
+      "text": "Raise the verification level to Medium so brand-new accounts must wait 5 minutes.",
+      "fix": "verification"
+    },
+    {
+      "severity": "medium",
+      "text": "Turn on AutoMod spam protection to stop raid link floods.",
+      "fix": "automod_spam"
+    },
+    {
+      "severity": "medium",
+      "text": "Stop regular members from pinging @everyone.",
+      "fix": "everyone_mentions"
+    },
+    {
+      "severity": "low",
+      "text": "Give Guard the Moderate Members permission so it can time out risky accounts.",
+      "fix": null
+    }
+  ],
+  "kpis": {
+    "members": 812,
+    "minors_est": 230,
+    "at_risk": 11,
+    "red": 3,
+    "open_alerts": 7,
+    "flagged_7d": 21,
+    "messages_7d": 2476,
+    "joins_7d": 28,
+    "actions_7d": 4,
+    "median_response_min": 12
+  },
+  "series": {
+    "days": [
+      "2026-10-09",
+      "2026-10-10",
+      "2026-10-11",
+      "2026-10-12",
+      "2026-10-13",
+      "2026-10-14",
+      "2026-10-15",
+      "2026-10-16",
+      "2026-10-17",
+      "2026-10-18",
+      "2026-10-19",
+      "2026-10-20",
+      "2026-10-21",
+      "2026-10-22",
+      "2026-10-23",
+      "2026-10-24",
+      "2026-10-25",
+      "2026-10-26",
+      "2026-10-27",
+      "2026-10-28",
+      "2026-10-29",
+      "2026-10-30",
+      "2026-10-31",
+      "2026-11-01",
+      "2026-11-02",
+      "2026-11-03",
+      "2026-11-04",
+      "2026-11-05",
+      "2026-11-06",
+      "2026-11-07"
+    ],
+    "messages": [
+      280,
+      429,
+      385,
+      306,
+      325,
+      287,
+      286,
+      330,
+      406,
+      371,
+      278,
+      284,
+      244,
+      294,
+      267,
+      350,
+      343,
+      250,
+      280,
+      287,
+      273,
+      291,
+      388,
+      421,
+      311,
+      285,
+      329,
+      446,
+      269,
+      415
+    ],
+    "flagged": [
+      0,
+      2,
+      0,
+      2,
+      2,
+      1,
+      0,
+      0,
+      0,
+      2,
+      0,
+      1,
+      1,
+      0,
+      2,
+      0,
+      2,
+      1,
+      2,
+      0,
+      0,
+      2,
+      2,
+      0,
+      1,
+      0,
+      4,
+      7,
+      6,
+      3
+    ],
+    "joins": [
+      3,
+      1,
+      2,
+      4,
+      3,
+      2,
+      2,
+      2,
+      3,
+      2,
+      2,
+      2,
+      1,
+      1,
+      4,
+      1,
+      1,
+      3,
+      2,
+      3,
+      2,
+      2,
+      4,
+      2,
+      2,
+      3,
+      3,
+      13,
+      3,
+      2
+    ],
+    "alerts": [
+      0,
+      0,
+      0,
+      1,
+      1,
+      0,
+      0,
+      1,
+      1,
+      0,
+      0,
+      0,
+      1,
+      1,
+      1,
+      1,
+      0,
+      0,
+      0,
+      1,
+      0,
+      0,
+      0,
+      1,
+      1,
+      0,
+      1,
+      3,
+      3,
+      2
+    ]
+  },
+  "top_risks": [
+    {
+      "id": "9001",
+      "name": "Sam (@skyblock_sam)",
+      "avatar": null,
+      "score": 88,
+      "level": "red",
+      "status": "none",
+      "joined_at": "2026-11-04T12:20:00Z",
+      "account_age_days": 3,
+      "self_age": 15,
+      "minor": false,
+      "flags": [
+        "new_account",
+        "no_avatar",
+        "escalating"
+      ],
+      "trend": 41,
+      "last_seen": "2026-11-07T13:42:00Z",
+      "top_signal": "Tried to move 3 people to Snapchat"
+    },
+    {
+      "id": "9002",
+      "name": "Dave (@redstone_dave)",
+      "avatar": null,
+      "score": 71,
+      "level": "red",
+      "status": "watch",
+      "joined_at": "2026-04-09T14:20:00Z",
+      "account_age_days": 1460,
+      "self_age": 34,
+      "minor": false,
+      "flags": [
+        "reported",
+        "adult_contacting_minors",
+        "watch"
+      ],
+      "trend": 12,
+      "last_seen": "2026-11-07T09:20:00Z",
+      "top_signal": "Reported by 2 members for private messages to a minor"
+    },
+    {
+      "id": "9003",
+      "name": "Kai (@kai.builds)",
+      "avatar": null,
+      "score": 67,
+      "level": "red",
+      "status": "none",
+      "joined_at": "2026-11-06T08:20:00Z",
+      "account_age_days": 19,
+      "self_age": null,
+      "minor": false,
+      "flags": [
+        "network",
+        "new_account"
+      ],
+      "trend": 5,
+      "last_seen": "2026-11-07T05:20:00Z",
+      "top_signal": "Banned for child safety on another Guard server"
+    },
+    {
+      "id": "9101",
+      "name": "free nitro 4821 (@fr33n1tro4821)",
+      "avatar": null,
+      "score": 58,
+      "level": "yellow",
+      "status": "actioned",
+      "joined_at": "2026-11-05T11:08:00Z",
+      "account_age_days": 0,
+      "self_age": null,
+      "minor": false,
+      "flags": [
+        "raid",
+        "new_account",
+        "no_avatar"
+      ],
+      "trend": 0,
+      "last_seen": "2026-11-05T11:20:00Z",
+      "top_signal": "Joined in a burst of 13 accounts within 2 minutes"
+    },
+    {
+      "id": "9102",
+      "name": "giveaway bot (@giveaway_b0t_77)",
+      "avatar": null,
+      "score": 56,
+      "level": "yellow",
+      "status": "actioned",
+      "joined_at": "2026-11-05T11:09:00Z",
+      "account_age_days": 0,
+      "self_age": null,
+      "minor": false,
+      "flags": [
+        "raid",
+        "new_account",
+        "no_avatar"
+      ],
+      "trend": 0,
+      "last_seen": "2026-11-05T11:20:00Z",
+      "top_signal": "Joined in a burst of 13 accounts within 2 minutes"
+    },
+    {
+      "id": "9103",
+      "name": "x (@qz_83kd)",
+      "avatar": null,
+      "score": 54,
+      "level": "yellow",
+      "status": "actioned",
+      "joined_at": "2026-11-05T11:10:00Z",
+      "account_age_days": 0,
+      "self_age": null,
+      "minor": false,
+      "flags": [
+        "raid",
+        "new_account",
+        "no_avatar"
+      ],
+      "trend": 0,
+      "last_seen": "2026-11-05T11:20:00Z",
+      "top_signal": "Joined in a burst of 13 accounts within 2 minutes"
+    },
+    {
+      "id": "9104",
+      "name": "Steam Gift (@steamgift.support)",
+      "avatar": null,
+      "score": 52,
+      "level": "yellow",
+      "status": "none",
+      "joined_at": "2026-11-05T11:11:00Z",
+      "account_age_days": 0,
+      "self_age": null,
+      "minor": false,
+      "flags": [
+        "raid",
+        "new_account",
+        "no_avatar",
+        "quarantined"
+      ],
+      "trend": 0,
+      "last_seen": "2026-11-05T11:20:00Z",
+      "top_signal": "Joined in a burst of 13 accounts within 2 minutes"
+    },
+    {
+      "id": "9105",
+      "name": "⁣ (@zz_9fj2)",
+      "avatar": null,
+      "score": 50,
+      "level": "yellow",
+      "status": "none",
+      "joined_at": "2026-11-05T11:12:00Z",
+      "account_age_days": 0,
+      "self_age": null,
+      "minor": false,
+      "flags": [
+        "raid",
+        "new_account",
+        "no_avatar",
+        "quarantined"
+      ],
+      "trend": 0,
+      "last_seen": "2026-11-05T11:20:00Z",
+      "top_signal": "Joined in a burst of 13 accounts within 2 minutes"
+    }
+  ],
+  "recent_alerts": [
+    {
+      "id": 110,
+      "kind": "message",
+      "level": "red",
+      "score": 91,
+      "title": "Possible grooming: move to a private platform",
+      "summary": "Sam (@skyblock_sam) asked a 12-year-old member to add them on Snapchat in #survival-chat.",
+      "quote": "add me on snap its easier there, dont tell the mods lol",
+      "user": {
+        "id": "9001",
+        "name": "Sam (@skyblock_sam)",
+        "avatar": null,
+        "minor": false
+      },
+      "target": {
+        "id": "9010",
+        "name": "Milo (@milo_mines)",
+        "avatar": null,
+        "minor": true
+      },
+      "signals": [
+        {
+          "code": "msg.platform_move",
+          "weight": 35,
+          "severe": true,
+          "text": "Asked to continue on Snapchat",
+          "at": "2026-11-07T13:39:00Z"
+        },
+        {
+          "code": "msg.secrecy",
+          "weight": 25,
+          "severe": false,
+          "text": "Asked them not to tell the moderators",
+          "at": "2026-11-07T13:39:00Z"
+        },
+        {
+          "code": "member.new_account",
+          "weight": 15,
+          "severe": false,
+          "text": "Account is 3 days old",
+          "at": null
+        }
+      ],
+      "jump_url": "https://discord.com/channels/10/301/88120",
+      "status": "open",
+      "created_at": "2026-11-07T13:40:00Z",
+      "resolved_by": null,
+      "action": null
+    },
+    {
+      "id": 109,
+      "kind": "member",
+      "level": "red",
+      "score": 88,
+      "title": "Account is asking many minors their age",
+      "summary": "Sam (@skyblock_sam) asked 4 different members their age within 2 days; 3 of them are under 18.",
+      "quote": null,
+      "user": {
+        "id": "9001",
+        "name": "Sam (@skyblock_sam)",
+        "avatar": null,
+        "minor": false
+      },
+      "target": null,
+      "signals": [
+        {
+          "code": "member.age_probe_many",
+          "weight": 30,
+          "severe": false,
+          "text": "Asked 4 different people their age",
+          "at": "2026-11-07T12:20:00Z"
+        },
+        {
+          "code": "member.many_minor_targets",
+          "weight": 25,
+          "severe": false,
+          "text": "3 of the people contacted are under 18",
+          "at": "2026-11-07T12:20:00Z"
+        },
+        {
+          "code": "member.no_avatar",
+          "weight": 5,
+          "severe": false,
+          "text": "No profile picture",
+          "at": null
+        }
+      ],
+      "jump_url": null,
+      "status": "open",
+      "created_at": "2026-11-07T12:20:00Z",
+      "resolved_by": null,
+      "action": null
+    },
+    {
+      "id": 108,
+      "kind": "report",
+      "level": "red",
+      "score": 74,
+      "title": "Member reported for private messages to a minor",
+      "summary": "Two members reported Dave (@redstone_dave) for asking a 13-year-old for photos in DMs.",
+      "quote": null,
+      "user": {
+        "id": "9002",
+        "name": "Dave (@redstone_dave)",
+        "avatar": null,
+        "minor": false
+      },
+      "target": {
+        "id": "9011",
+        "name": "Ella (@ella.exe)",
+        "avatar": null,
+        "minor": true
+      },
+      "signals": [
+        {
+          "code": "member.reported",
+          "weight": 30,
+          "severe": false,
+          "text": "Reported by 2 members",
+          "at": "2026-11-07T08:20:00Z"
+        },
+        {
+          "code": "member.adult_minor_dm",
+          "weight": 25,
+          "severe": false,
+          "text": "Adult (34) messaging a member under 18",
+          "at": "2026-11-07T08:20:00Z"
+        },
+        {
+          "code": "msg.photo_request",
+          "weight": 20,
+          "severe": false,
+          "text": "Photo request mentioned in the report",
+          "at": "2026-11-07T08:20:00Z"
+        }
+      ],
+      "jump_url": null,
+      "status": "open",
+      "created_at": "2026-11-07T08:20:00Z",
+      "resolved_by": null,
+      "action": null
+    },
+    {
+      "id": 107,
+      "kind": "network",
+      "level": "red",
+      "score": 67,
+      "title": "Safety Network match",
+      "summary": "Kai (@kai.builds) was banned for child safety on another Guard server 11 days ago.",
+      "quote": null,
+      "user": {
+        "id": "9003",
+        "name": "Kai (@kai.builds)",
+        "avatar": null,
+        "minor": false
+      },
+      "target": null,
+      "signals": [
+        {
+          "code": "member.network",
+          "weight": 45,
+          "severe": true,
+          "text": "Banned for child safety on another Guard server",
+          "at": "2026-10-27T14:20:00Z"
+        },
+        {
+          "code": "member.new_account",
+          "weight": 10,
+          "severe": false,
+          "text": "Account is 19 days old",
+          "at": null
+        }
+      ],
+      "jump_url": null,
+      "status": "open",
+      "created_at": "2026-11-06T08:20:00Z",
+      "resolved_by": null,
+      "action": null
+    },
+    {
+      "id": 106,
+      "kind": "raid",
+      "level": "yellow",
+      "score": 62,
+      "title": "Join burst: 13 accounts in 2 minutes",
+      "summary": "13 accounts joined between 11:06 and 11:08 UTC; 9 have no profile picture and were created today.",
+      "quote": null,
+      "user": null,
+      "target": null,
+      "signals": [
+        {
+          "code": "raid.join_burst",
+          "weight": 40,
+          "severe": false,
+          "text": "13 joins in 2 minutes (normal: 2 per day)",
+          "at": "2026-11-05T11:08:00Z"
+        },
+        {
+          "code": "raid.fresh_accounts",
+          "weight": 15,
+          "severe": false,
+          "text": "9 accounts created the same day",
+          "at": "2026-11-05T11:08:00Z"
+        }
+      ],
+      "jump_url": null,
+      "status": "open",
+      "created_at": "2026-11-05T11:10:00Z",
+      "resolved_by": null,
+      "action": null
+    },
+    {
+      "id": 105,
+      "kind": "message",
+      "level": "yellow",
+      "score": 48,
+      "title": "Personal information request",
+      "summary": "Theo (@theo_tnt) asked a member which school they go to in #general.",
+      "quote": "wait which school do u go to??",
+      "user": {
+        "id": "9021",
+        "name": "Theo (@theo_tnt)",
+        "avatar": null,
+        "minor": false
+      },
+      "target": {
+        "id": "9032",
+        "name": "Freja (@frejacraft)",
+        "avatar": null,
+        "minor": true
+      },
+      "signals": [
+        {
+          "code": "msg.personal_info",
+          "weight": 30,
+          "severe": false,
+          "text": "Asked which school someone goes to",
+          "at": "2026-11-06T10:20:00Z"
+        },
+        {
+          "code": "msg.to_minor",
+          "weight": 15,
+          "severe": false,
+          "text": "Sent to a member under 18",
+          "at": "2026-11-06T10:20:00Z"
+        }
+      ],
+      "jump_url": "https://discord.com/channels/10/300/87554",
+      "status": "open",
+      "created_at": "2026-11-06T10:20:00Z",
+      "resolved_by": null,
+      "action": null
+    },
+    {
+      "id": 104,
+      "kind": "join",
+      "level": "yellow",
+      "score": 40,
+      "title": "Risky new account joined",
+      "summary": "Grimm (@grimm.redux) joined with a 27-day-old account and asked two members their age in the first hour.",
+      "quote": null,
+      "user": {
+        "id": "9022",
+        "name": "Grimm (@grimm.redux)",
+        "avatar": null,
+        "minor": false
+      },
+      "target": null,
+      "signals": [
+        {
+          "code": "msg.age_probe",
+          "weight": 20,
+          "severe": false,
+          "text": "Asked 2 members their age",
+          "at": "2026-11-06T05:20:00Z"
+        },
+        {
+          "code": "member.new_account",
+          "weight": 10,
+          "severe": false,
+          "text": "Account is 27 days old",
+          "at": null
+        }
+      ],
+      "jump_url": null,
+      "status": "open",
+      "created_at": "2026-11-06T05:20:00Z",
+      "resolved_by": null,
+      "action": null
+    },
+    {
+      "id": 103,
+      "kind": "message",
+      "level": "yellow",
+      "score": 41,
+      "title": "Repeated invite links",
+      "summary": "Lena (@lenacrafts) posted an invite to an unknown server 6 times in #trading.",
+      "quote": null,
+      "user": {
+        "id": "9020",
+        "name": "Lena (@lenacrafts)",
+        "avatar": null,
+        "minor": true
+      },
+      "target": null,
+      "signals": [
+        {
+          "code": "msg.invite_spam",
+          "weight": 25,
+          "severe": false,
+          "text": "Posted the same invite 6 times",
+          "at": "2026-11-04T14:20:00Z"
+        }
+      ],
+      "jump_url": "https://discord.com/channels/10/305/86001",
+      "status": "resolved",
+      "created_at": "2026-11-04T14:20:00Z",
+      "resolved_by": "Mira (@mod_mira)",
+      "action": "delete"
+    }
+  ],
+  "audit": [
+    {
+      "id": "verification",
+      "ok": false,
+      "severity": "high",
+      "label": "Verification level",
+      "detail": "Low: anyone with a verified email can talk.",
+      "fix": "verification"
+    },
+    {
+      "id": "content_filter",
+      "ok": false,
+      "severity": "high",
+      "label": "Explicit media filter",
+      "detail": "Only scans members without roles.",
+      "fix": "content_filter"
+    },
+    {
+      "id": "automod_presets",
+      "ok": true,
+      "severity": "medium",
+      "label": "AutoMod keyword presets",
+      "detail": "Slurs and sexual content presets are on.",
+      "fix": null
+    },
+    {
+      "id": "automod_spam",
+      "ok": false,
+      "severity": "medium",
+      "label": "AutoMod spam filter",
+      "detail": "Off: repeated links are not blocked.",
+      "fix": "automod_spam"
+    },
+    {
+      "id": "automod_mentions",
+      "ok": true,
+      "severity": "medium",
+      "label": "Mention spam limit",
+      "detail": "Blocks messages with more than 8 mentions.",
+      "fix": null
+    },
+    {
+      "id": "everyone_mentions",
+      "ok": false,
+      "severity": "medium",
+      "label": "@everyone pings",
+      "detail": "Every member can ping @everyone and @here.",
+      "fix": "everyone_mentions"
+    },
+    {
+      "id": "alert_channel",
+      "ok": true,
+      "severity": "low",
+      "label": "Alert channel",
+      "detail": "Alerts go to #mod-alerts.",
+      "fix": null
+    },
+    {
+      "id": "role_position",
+      "ok": true,
+      "severity": "low",
+      "label": "Guard role position",
+      "detail": "Guard's role is above member roles.",
+      "fix": null
+    }
+  ],
+  "permissions_missing": [
+    "Moderate Members"
+  ]
+}

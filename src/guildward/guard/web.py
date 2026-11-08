@@ -38,6 +38,7 @@ STATIC = Path(__file__).resolve().parents[3] / "web" / "dashboard"
 COOKIE = "gw_session"
 LINK_TTL = 600
 SESSION_TTL = 12 * 3600
+PUBLIC_TTL = 300  # seconds the public stats are cached
 SESSION = web.RequestKey("session", object)
 LANG = web.RequestKey("lang", str)
 GUILDS = web.RequestKey("guilds", set)
@@ -104,6 +105,7 @@ class Dashboard:
         self.secret = secret_for(store)
         self.started = time.time()
         self._runner: web.AppRunner | None = None
+        self._public: tuple[float, dict[str, Any]] | None = None
         if guard is not None:
             guard.sign_link = self.sign_link
 
@@ -126,6 +128,7 @@ class Dashboard:
         r.add_get("/auth", self.auth)
         r.add_post("/api/logout", self.logout)
         r.add_get("/api/me", self.me)
+        r.add_get("/api/public/stats", self.public_stats)
         r.add_get("/api/guilds/{gid}/overview", self.overview)
         r.add_post("/api/guilds/{gid}/fix", self.fix)
         r.add_get("/api/guilds/{gid}/alerts", self.alerts)
@@ -175,7 +178,7 @@ class Dashboard:
 
     @web.middleware
     async def _auth(self, request: web.Request, handler: Any) -> web.StreamResponse:
-        if not request.path.startswith("/api/"):
+        if not request.path.startswith("/api/") or request.path.startswith("/api/public/"):
             return await handler(request)
         if request.method in ("POST", "PUT", "DELETE") and request.headers.get("X-Guildward") != "1":
             return self._err(403, "Missing X-Guildward header.")
@@ -401,6 +404,13 @@ class Dashboard:
         if self.crowd is not None:
             out["crowd"] = self.crowd.stats()
         return web.json_response(out)
+
+    async def public_stats(self, request: web.Request) -> web.Response:
+        """No sign-in: aggregate counts for the public site's stats page, rebuilt at most every 5 minutes."""
+        if self._public is None or time.time() - self._public[0] > PUBLIC_TTL:
+            self._public = (time.time(), self.reports.public(self.crowd.stats() if self.crowd is not None else None))
+        return web.json_response(self._public[1], headers={"Cache-Control": f"public, max-age={PUBLIC_TTL}",
+                                                           "Access-Control-Allow-Origin": "*"})
 
     async def owner_accounts(self, request: web.Request) -> web.Response:
         if self.crowd is None:

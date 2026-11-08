@@ -1,0 +1,377 @@
+{
+  "system": {
+    "uptime_s": 431220,
+    "version": "0.2.0",
+    "rules": "private",
+    "pocket_online": true,
+    "guard_online": true,
+    "latency_ms": {
+      "pocket": 41,
+      "guard": 39
+    },
+    "db_bytes": 18304000,
+    "events_per_min": 120,
+    "model": {
+      "state": "ready",
+      "detail": "",
+      "model": "Xenova/multilingual-e5-small",
+      "head": "guildward-private",
+      "workers": 2,
+      "texts": 48210,
+      "shed": 0,
+      "errors": 0,
+      "busy_notes": 0,
+      "queue_kids": 0,
+      "queue_guard": 1,
+      "batch_ms_p50": 9.4
+    }
+  },
+  "totals": {
+    "guilds": 3,
+    "members": 2214,
+    "alerts_open": 9,
+    "alerts_7d": 31,
+    "flagged_7d": 50,
+    "network_flags": 4,
+    "pocket_checks_7d": 39
+  },
+  "crowd": {
+    "users": 812,
+    "accounts": 3400,
+    "reports_7d": 41,
+    "review": 3,
+    "flagged": 2,
+    "confirmed": 1,
+    "watch_alerts_7d": 17
+  },
+  "series": {
+    "days": [
+      "2026-10-09",
+      "2026-10-10",
+      "2026-10-11",
+      "2026-10-12",
+      "2026-10-13",
+      "2026-10-14",
+      "2026-10-15",
+      "2026-10-16",
+      "2026-10-17",
+      "2026-10-18",
+      "2026-10-19",
+      "2026-10-20",
+      "2026-10-21",
+      "2026-10-22",
+      "2026-10-23",
+      "2026-10-24",
+      "2026-10-25",
+      "2026-10-26",
+      "2026-10-27",
+      "2026-10-28",
+      "2026-10-29",
+      "2026-10-30",
+      "2026-10-31",
+      "2026-11-01",
+      "2026-11-02",
+      "2026-11-03",
+      "2026-11-04",
+      "2026-11-05",
+      "2026-11-06",
+      "2026-11-07"
+    ],
+    "pocket_checks": [
+      3,
+      10,
+      11,
+      9,
+      9,
+      9,
+      9,
+      4,
+      10,
+      9,
+      3,
+      6,
+      4,
+      6,
+      10,
+      5,
+      4,
+      8,
+      3,
+      4,
+      3,
+      5,
+      11,
+      4,
+      8,
+      3,
+      4,
+      6,
+      9,
+      5
+    ],
+    "alerts": [
+      1,
+      0,
+      0,
+      2,
+      1,
+      0,
+      0,
+      1,
+      1,
+      0,
+      0,
+      0,
+      1,
+      1,
+      1,
+      1,
+      1,
+      0,
+      1,
+      1,
+      0,
+      1,
+      0,
+      2,
+      1,
+      0,
+      2,
+      3,
+      3,
+      3
+    ],
+    "flagged": [
+      0,
+      3,
+      0,
+      3,
+      3,
+      2,
+      1,
+      1,
+      1,
+      3,
+      1,
+      2,
+      3,
+      1,
+      3,
+      2,
+      3,
+      1,
+      2,
+      1,
+      2,
+      3,
+      3,
+      1,
+      3,
+      1,
+      5,
+      7,
+      7,
+      3
+    ],
+    "messages": [
+      838,
+      1049,
+      935,
+      892,
+      877,
+      910,
+      786,
+      952,
+      994,
+      892,
+      808,
+      883,
+      795,
+      916,
+      812,
+      961,
+      928,
+      772,
+      881,
+      905,
+      875,
+      812,
+      928,
+      964,
+      843,
+      792,
+      867,
+      1065,
+      806,
+      1036
+    ]
+  },
+  "pocket": {
+    "server": {
+      "green": 10,
+      "yellow": 4,
+      "red": 1
+    },
+    "person": {
+      "green": 112,
+      "yellow": 31,
+      "red": 9
+    },
+    "message": {
+      "green": 61,
+      "yellow": 14,
+      "red": 6
+    }
+  },
+  "guilds": [
+    {
+      "id": "10",
+      "name": "Blockhaven Minecraft Kids",
+      "icon": null,
+      "members": 812,
+      "mode": "protect",
+      "score": 41,
+      "level": "yellow",
+      "open_alerts": 7,
+      "alerts_7d": 12,
+      "joined_at": "2026-09-14T10:00:00Z"
+    },
+    {
+      "id": "11",
+      "name": "Pixel Pals Art Club",
+      "icon": null,
+      "members": 1150,
+      "mode": "observe",
+      "score": 22,
+      "level": "green",
+      "open_alerts": 1,
+      "alerts_7d": 6,
+      "joined_at": "2026-08-02T18:30:00Z"
+    },
+    {
+      "id": "12",
+      "name": "Speedrun Juniors SE",
+      "icon": null,
+      "members": 252,
+      "mode": "observe",
+      "score": 68,
+      "level": "red",
+      "open_alerts": 1,
+      "alerts_7d": 13,
+      "joined_at": "2026-10-28T09:15:00Z"
+    }
+  ],
+  "signal_quality": [
+    {
+      "code": "msg.age_probe",
+      "label": "Age question",
+      "fired_30d": 40,
+      "false_positive": 6,
+      "fp_rate": 0.15
+    },
+    {
+      "code": "msg.platform_move",
+      "label": "Move to another app",
+      "fired_30d": 18,
+      "false_positive": 1,
+      "fp_rate": 0.056
+    },
+    {
+      "code": "msg.personal_info",
+      "label": "Personal information request",
+      "fired_30d": 23,
+      "false_positive": 7,
+      "fp_rate": 0.304
+    },
+    {
+      "code": "msg.photo_request",
+      "label": "Photo request",
+      "fired_30d": 9,
+      "false_positive": 0,
+      "fp_rate": 0.0
+    },
+    {
+      "code": "msg.secrecy",
+      "label": "Secrecy request",
+      "fired_30d": 11,
+      "false_positive": 2,
+      "fp_rate": 0.182
+    },
+    {
+      "code": "msg.invite_spam",
+      "label": "Repeated invite links",
+      "fired_30d": 30,
+      "false_positive": 12,
+      "fp_rate": 0.4
+    },
+    {
+      "code": "member.age_probe_many",
+      "label": "Asks many people their age",
+      "fired_30d": 5,
+      "false_positive": 0,
+      "fp_rate": 0.0
+    },
+    {
+      "code": "raid.join_burst",
+      "label": "Join burst",
+      "fired_30d": 4,
+      "false_positive": 1,
+      "fp_rate": 0.25
+    }
+  ],
+  "network": [
+    {
+      "user": {
+        "id": "9003",
+        "name": "Kai (@kai.builds)",
+        "avatar": null,
+        "minor": false
+      },
+      "guilds": 2,
+      "reasons": [
+        "Banned for child safety"
+      ],
+      "first_at": "2026-10-27T14:20:00Z"
+    },
+    {
+      "user": {
+        "id": "9201",
+        "name": "nightowl (@n1ghtowl_22)",
+        "avatar": null,
+        "minor": false
+      },
+      "guilds": 1,
+      "reasons": [
+        "Banned for child safety",
+        "Asked for photos"
+      ],
+      "first_at": "2026-10-19T14:20:00Z"
+    },
+    {
+      "user": {
+        "id": "9202",
+        "name": "Leo (@leo.trades)",
+        "avatar": null,
+        "minor": false
+      },
+      "guilds": 1,
+      "reasons": [
+        "Moved minors to Telegram"
+      ],
+      "first_at": "2026-10-13T14:20:00Z"
+    },
+    {
+      "user": {
+        "id": "9203",
+        "name": "Ghost (@gh0st_mc)",
+        "avatar": null,
+        "minor": false
+      },
+      "guilds": 2,
+      "reasons": [
+        "Banned for child safety"
+      ],
+      "first_at": "2026-09-28T14:20:00Z"
+    }
+  ]
+}

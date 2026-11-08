@@ -365,6 +365,7 @@ class GuardBot(discord.Client):
         lang = "sv" if str(getattr(m, "locale", "") or g.preferred_locale).startswith("sv") else self.lang(gid)
         with contextlib.suppress(discord.HTTPException):
             await m.send(embed=render.warn_embed(g.name, lang))
+            self.store.bump(gid, "warned")
 
     async def act(self, gid: int, uid: int | None, action: str, *, by_id: int | None, by_name: str | None,
                   alert_id: int | None = None, channel_id: int | None = None, message_id: int | None = None,
