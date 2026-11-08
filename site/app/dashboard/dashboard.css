@@ -94,7 +94,7 @@
 }
 .gw-dash.signed-out .app { grid-template-columns: minmax(0, 1fr); }
 .gw-dash.signed-out .side { display: none; }
-.gw-dash.signed-out .main { max-width: none; }
+.gw-dash.signed-out .main { max-width: none; padding: 0; }
 .gw-dash .brand { display: flex; align-items: center; gap: .55rem; padding: .25rem .5rem; }
 .gw-dash .brand-mark { width: 1.6rem; height: 1.6rem; color: var(--accent); stroke-width: 1.6; fill: var(--accent-soft); }
 .gw-dash .brand-text { font-size: .95rem; white-space: nowrap; }
@@ -547,14 +547,31 @@
 
 /* ------------------------------------------------------------------ states */.gw-dash .state-box { max-width: 34rem; padding: 3rem 0; }
 .gw-dash .state-box p { color: var(--ink-2); margin: .5rem 0 1rem; }
-.gw-dash .signin { max-width: 26rem; margin: 14vh auto 0; padding: 0 1rem; text-align: center; display: flex; flex-direction: column; align-items: center; gap: .9rem; }
-.gw-dash .signin-mark { width: 3rem; height: 3rem; color: var(--accent); fill: var(--accent-soft); stroke-width: 1.4; }
-.gw-dash .signin p { color: var(--ink-2); }
-.gw-dash .signin code { color: var(--ink); white-space: nowrap; }
-.gw-dash .signin .seg { margin-top: 1rem; }
-.gw-dash .signin .btn-discord { min-height: 44px; padding-inline: 1.25rem; font-size: .9375rem; }
-.gw-dash .signin .signin-who { font-size: .875rem; color: var(--muted); margin-top: -.35rem; }
-.gw-dash .signin .signin-alt { font-size: .875rem; color: var(--muted); }
+.gw-dash .signin { min-height: 100vh; display: grid; grid-template-rows: auto 1fr; }
+.gw-dash .signin-top { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: 1.1rem 1.5rem; }
+.gw-dash .signin-top .brand { color: var(--ink); text-decoration: none; padding: 0; order: 0; }
+.gw-dash .signin-center { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1.25rem; padding: 1.5rem 1rem 12vh; }
+.gw-dash .signin-card {
+  width: min(100%, 25rem); padding: 2.25rem 2rem 2rem; text-align: center; display: flex; flex-direction: column; align-items: center; gap: .85rem;
+  background: var(--surface); border: 1px solid var(--line); border-radius: 14px; box-shadow: var(--shadow);
+}
+.gw-dash .signin-mark { margin-bottom: .25rem; }
+.gw-dash .signin-card p { color: var(--ink-2); }
+.gw-dash .signin-card .signin-who { font-size: .9rem; color: var(--muted); max-width: 19rem; margin-bottom: .6rem; }
+.gw-dash .signin-card code { color: var(--ink); white-space: nowrap; }
+.gw-dash .btn-discord {
+  width: 100%; min-height: 46px; gap: .6rem; font-size: .9375rem; color: #fff; background: #5865f2; border-color: #5865f2;
+}
+.gw-dash .btn-discord:hover { background: #4752c4; border-color: #4752c4; }
+.gw-dash .btn-discord svg { width: 1.3rem; height: 1.3rem; fill: currentColor; }
+.gw-dash .signin-card .signin-or { align-self: stretch; display: flex; align-items: center; gap: .75rem; font-size: .8rem; color: var(--muted); }
+.gw-dash .signin-or::before, .gw-dash .signin-or::after { content: ""; flex: 1; border-top: 1px solid var(--line); }
+.gw-dash .signin-card .signin-alt { font-size: .875rem; color: var(--muted); }
+.gw-dash .signin-demo { font-size: .875rem; }
+@media (max-width: 480px) {
+  .gw-dash .signin-top { padding: 1rem; }
+  .gw-dash .signin-card { padding: 1.75rem 1.25rem 1.5rem; }
+}
 .gw-dash .skeleton { display: flex; flex-direction: column; gap: 1rem; }
 .gw-dash .sk { border-radius: var(--radius); background: var(--surface); border: 1px solid var(--line); position: relative; overflow: hidden; }
 .gw-dash .sk::after { content: ""; position: absolute; inset: 0; background: linear-gradient(90deg, transparent, var(--surface-2), transparent); transform: translateX(-100%); animation: gw-sk 1.4s ease-in-out infinite; }

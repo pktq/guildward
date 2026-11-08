@@ -12,6 +12,7 @@ import { langStore, navLang, noopSubscribe, prefersLight, subscribeLight, themeS
 import type { Me } from "@/lib/dashboard/types";
 import { DashContext, makeFmt, useDash } from "./context";
 import type { Dash } from "./context";
+import { ShieldMark } from "@/components/site/ShieldMark";
 import { Avatar, ErrorView, Icon } from "./ui";
 
 type Toast = { id: number; msg: string; kind?: "error"; out?: boolean };
@@ -172,6 +173,9 @@ function LangSeg({ lang, setLang }: { lang: Lang; setLang: (l: Lang) => void }) 
   );
 }
 
+// Discord's own mark, as Discord asks sign-in buttons to show it.
+const DISCORD_PATH = "M20.317 4.37a19.79 19.79 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.865-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.74 19.74 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.462-.63.873-1.295 1.226-1.994a.076.076 0 0 0-.042-.106 13.1 13.1 0 0 1-1.872-.892.077.077 0 0 1-.008-.128c.126-.094.252-.192.372-.291a.074.074 0 0 1 .078-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.009c.12.1.246.198.373.292a.077.077 0 0 1-.007.128 12.3 12.3 0 0 1-1.873.891.077.077 0 0 0-.041.107c.36.698.772 1.363 1.225 1.993a.076.076 0 0 0 .084.029 19.84 19.84 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.331c-1.183 0-2.157-1.086-2.157-2.42 0-1.333.956-2.418 2.157-2.418 1.21 0 2.176 1.095 2.157 2.419 0 1.333-.956 2.419-2.157 2.419zm7.975 0c-1.183 0-2.157-1.086-2.157-2.42 0-1.333.955-2.418 2.157-2.418 1.21 0 2.176 1.095 2.157 2.419 0 1.333-.946 2.419-2.157 2.419z";
+
 function SignIn({ demo, lang, setLang }: { demo: Demo; lang: Lang; setLang: (l: Lang) => void }) {
   const t = (k: string, v?: Record<string, string>) => translate(lang, k, v);
   const pathname = usePathname();
@@ -180,17 +184,31 @@ function SignIn({ demo, lang, setLang }: { demo: Demo; lang: Lang; setLang: (l: 
   const q = params.toString();
   const next = pathname.startsWith("/dashboard") ? pathname + (q ? "?" + q : "") : "/dashboard";
   const discordHref = demo ? "/dashboard/g/10?demo" : `/auth/discord?next=${encodeURIComponent(next)}`;
-  const [before, after] = t("signinOr", { cmd: "\u0000" }).split("\u0000");
+  const [before, after] = t("signinOr", { cmd: " " }).split(" ");
   return (
     <div className="signin">
-      <Icon name="shield" className="signin-mark" />
-      <h1>{t("signinTitle")}</h1>
-      {/* A full navigation, not <Link>: the API answers with a redirect to discord.com. */}
-      <a className="btn btn-primary btn-discord" href={discordHref}>{t("signinDiscord")}</a>
-      <p className="signin-who">{t("signinWho")}</p>
-      <p className="signin-alt">{before}<code>/guard dashboard</code>{after}</p>
-      {!demo && <p className="signin-demo"><Link href="/dashboard/g/10?demo">{t("signinDemo")}</Link></p>}
-      <LangSeg lang={lang} setLang={setLang} />
+      <header className="signin-top">
+        <Link href="/" className="brand">
+          <ShieldMark size={26} />
+          <span className="brand-text"><b>Guildward</b> <span>{t("brandSub")}</span></span>
+        </Link>
+        <LangSeg lang={lang} setLang={setLang} />
+      </header>
+      <div className="signin-center">
+        <section className="signin-card" aria-labelledby="signin-title">
+          <ShieldMark size={44} className="signin-mark" />
+          <h1 id="signin-title">{t("signinTitle")}</h1>
+          <p className="signin-who">{t("signinWho")}</p>
+          {/* A full navigation, not <Link>: the API answers with a redirect to discord.com. */}
+          <a className="btn btn-discord" href={discordHref}>
+            <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d={DISCORD_PATH} /></svg>
+            {t("signinDiscord")}
+          </a>
+          <p className="signin-or"><span>{t("signinOrWord")}</span></p>
+          <p className="signin-alt">{before}<code>/guard dashboard</code>{after}</p>
+        </section>
+        {!demo && <Link className="signin-demo" href="/dashboard/g/10?demo">{t("signinDemo")}</Link>}
+      </div>
     </div>
   );
 }
