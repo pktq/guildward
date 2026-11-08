@@ -33,6 +33,7 @@ class GuildFacts:
     mods: int = 0  # humans who can kick/ban/timeout/manage messages
     has_rules_channel: bool = False
     guard_missing: tuple[str, ...] = ()
+    alert_channel_public: bool = False  # Guard's alert channel is visible to @everyone
     minors_est: int = 0
 
 
@@ -53,6 +54,7 @@ def audit_guild(f: GuildFacts) -> list[Check]:
     kids = f.minors_est > 0
     checks = [
         Check("guard_permissions", not f.guard_missing, "high", None, {"perms": ", ".join(f.guard_missing)}),
+        Check("alert_channel", not f.alert_channel_public, "high", None),
         Check("verification", f.verification_level >= 2, "high" if f.verification_level == 0 else "medium",
               "verification"),
         Check("content_filter", f.content_filter == 2, "high" if f.content_filter == 0 else "medium",
@@ -99,6 +101,12 @@ register({
          ("Guard is missing permissions: {perms}.", "Guard saknar behörigheter: {perms}."),
          ("Give Guard's role the missing permissions so it can act on alerts.",
           "Ge Guards roll de saknade behörigheterna så att den kan agera på larm.")),
+    **_c("alert_channel", ("Private alert channel", "Privat larmkanal"),
+         ("Only moderators can see Guard's alerts.", "Bara moderatorer kan se Guards larm."),
+         ("Everyone can see the alert channel, so Guard isn't posting alerts there (they name kids).",
+          "Alla kan se larmkanalen, så Guard postar inga larm där (de nämner barn)."),
+         ("Hide the alert channel from @everyone, or run /guard setup with a private channel.",
+          "Dölj larmkanalen för @everyone, eller kör /guard setup med en privat kanal.")),
     **_c("verification", ("Verification level", "Verifieringsnivå"),
          ("New members must wait or verify before they can talk.", "Nya medlemmar måste vänta eller verifiera sig innan de kan skriva."),
          ("New accounts can talk right away. Throwaway accounts get in easily.",

@@ -180,6 +180,10 @@ register({
     },
     "g.cant_post": {"en": "Guard can't post in {channel}. Give it View Channel, Send Messages and Embed Links there.",
                     "sv": "Guard kan inte skriva i {channel}. Ge den Visa kanal, Skicka meddelanden och Bädda in länkar där."},
+    "g.channel_public": {"en": "Everyone can see {channel}. Alerts name kids and quote messages, so pick a channel "
+                               "only moderators can see.",
+                         "sv": "Alla kan se {channel}. Varningar nämner barn och citerar meddelanden, så välj en kanal "
+                               "som bara moderatorer kan se."},
     "g.dash_link": {"en": "Your private dashboard link (works once, for 10 minutes). Don't share it.",
                     "sv": "Din privata länk till instrumentpanelen (fungerar en gång, i 10 minuter). Dela den inte."},
     "g.dash_off": {"en": "The dashboard isn't running on this Guard instance.", "sv": "Instrumentpanelen körs inte på den här Guard-instansen."},

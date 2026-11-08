@@ -13,6 +13,7 @@ import contextlib
 import dataclasses
 import logging
 import time
+import zlib
 from datetime import timedelta
 from typing import Any
 
@@ -55,6 +56,15 @@ def member_info(m: discord.Member | discord.User, minor_roles: set[int] | frozen
         avatar=m.display_avatar.url if m.avatar else None, has_avatar=m.avatar is not None, is_bot=m.bot,
         spammer=m.public_flags.spammer, role_age=age, roles=tuple(r.name for r in roles),
     )
+
+
+def webhook_persona(msg: discord.Message) -> MemberInfo:
+    """Test persona for a webhook message: one member per webhook name.
+
+    Stable id per name; its timestamp is the webhook's, so personas look like new accounts."""
+    name = msg.author.name
+    return MemberInfo(id=(msg.webhook_id >> 22 << 22) | (zlib.crc32(name.encode()) & 0x3FFFFF), username=name,
+                      has_avatar=msg.author.avatar is not None)
 
 
 class GuardBot(discord.Client):
@@ -183,6 +193,8 @@ class GuardBot(discord.Client):
             mods=sum(1 for m in humans if (p := m.guild_permissions).kick_members or p.ban_members
                      or p.moderate_members or p.manage_messages or p.administrator),
             has_rules_channel=g.rules_channel is not None, guard_missing=tuple(self.missing(g)),
+            alert_channel_public=bool((ch := g.get_channel(self.store.settings(g.id)["alert_channel_id"] or 0))
+                                      and ch.permissions_for(g.default_role).view_channel),
         )
         raw = dataclasses.asdict(facts)
         raw["automod_triggers"] = sorted(facts.automod_triggers)
@@ -233,13 +245,20 @@ class GuardBot(discord.Client):
             self._invites.setdefault(inv.guild.id, {})[inv.code] = (inv.uses or 0, inviter)
 
     async def on_message(self, msg: discord.Message) -> None:
-        if msg.guild is None or msg.author.bot or not isinstance(msg.author, discord.Member) or not msg.content:
+        if msg.guild is None or not msg.content:
+            return
+        if not self._test_webhook(msg) and (msg.author.bot or not isinstance(msg.author, discord.Member)):
             return
         if self.store.guild(msg.guild.id) is None:
             return
         ev = self._message_event(msg)
         (model,) = await semantic.guard_check([ev.content])  # off the event loop; shed under load
         await self.execute(self.engine.on_message(dataclasses.replace(ev, model=model) if model else ev))
+
+    def _test_webhook(self, msg: discord.Message) -> bool:
+        """Dev server only: plain webhook messages play members, so one person can test Guard (tools/testdrive.py)."""
+        return bool(msg.webhook_id and msg.guild and msg.guild.id == self._dev_guild
+                    and msg.interaction_metadata is None)
 
     def _message_event(self, msg: discord.Message, *, backfill: bool = False) -> MessageEvent:
         reply_to = None
@@ -249,7 +268,8 @@ class GuardBot(discord.Client):
         author = msg.author if isinstance(msg.author, discord.Member) else msg.guild.get_member(msg.author.id)
         return MessageEvent(
             guild_id=msg.guild.id, channel_id=msg.channel.id, message_id=msg.id,
-            author=member_info(author or msg.author, self.minor_roles(msg.guild.id)), content=msg.content,
+            author=webhook_persona(msg) if self._test_webhook(msg)
+            else member_info(author or msg.author, self.minor_roles(msg.guild.id)), content=msg.content,
             at=int(msg.created_at.timestamp()), reply_to=reply_to,
             mentions=tuple(u.id for u in msg.mentions if not u.bot), channel_name=getattr(msg.channel, "name", ""),
             backfill=backfill,
@@ -299,6 +319,9 @@ class GuardBot(discord.Client):
         channel = g.get_channel(settings["alert_channel_id"]) if g and settings["alert_channel_id"] else None
         if not isinstance(channel, discord.TextChannel | discord.Thread):
             return
+        if channel.permissions_for(g.default_role).view_channel:
+            log.warning("guard: alert channel %s in %s is public; alert %s kept off Discord", channel.id, gid, aid)
+            return  # alerts name kids and quote messages; still on the dashboard
         lang = settings["lang"]
         a = self.reports.alert_dict(row, lang)
         embed = render.alert_embed(a, lang, dashboard_url=self.dashboard_member_url(gid, row["user_id"]),
@@ -462,10 +485,10 @@ class GuardBot(discord.Client):
             chunk: list[MessageEvent] = []
             try:
                 async for msg in ch.history(limit=2000, after=after, oldest_first=True):
-                    if msg.author.bot or not msg.content:
+                    if not msg.content or (msg.author.bot and not self._test_webhook(msg)):
                         continue
-                    chunk.append(self._message_event(msg, backfill=True))
-                    authors.add(msg.author.id)
+                    chunk.append(ev := self._message_event(msg, backfill=True))
+                    authors.add(ev.author.id)
                     stats["msgs"] += 1
                     if len(chunk) >= SCAN_CHUNK:
                         await self._backfill(chunk)

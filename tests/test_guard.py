@@ -204,10 +204,10 @@ def test_prediction_from_stage_order():
 def test_structural_audit():
     weak = GuildFacts(member_count=500, verification_level=0, content_filter=0, mfa_level=0, nsfw_level=0,
                       nsfw_channels=2, everyone_mentions=True, admin_humans=9, mods=1, minors_est=40,
-                      guard_missing=("Ban Members",))
+                      guard_missing=("Ban Members",), alert_channel_public=True)
     failed = {c.id for c in audit_guild(weak) if not c.ok}
     assert {"verification", "content_filter", "automod_presets", "nsfw_channels", "mod_coverage", "admin_sprawl",
-            "guard_permissions", "everyone_mentions"} <= failed
+            "guard_permissions", "everyone_mentions", "alert_channel"} <= failed
     strong = GuildFacts(member_count=100, verification_level=2, content_filter=2, mfa_level=1, nsfw_level=0,
                         automod_triggers=frozenset({AM_PRESET, 3, 5}), mods=3, has_rules_channel=True)
     assert all(c.ok for c in audit_guild(strong))
@@ -335,3 +335,15 @@ def test_scam_broadcast_is_one_untargeted_alert():
     assert [o.kind for o in outs].count("alert") == 1
     a = w.reports.alerts(G, "en")[0]
     assert a["target"] is None and "behave.spam" in {s["code"] for s in a["signals"]}
+
+
+def test_webhook_persona():
+    from types import SimpleNamespace as NS
+
+    from guildward.guard.bot import webhook_persona
+
+    hook = sf(2)
+    mia = webhook_persona(NS(webhook_id=hook, author=NS(name="Mia", avatar=None)))
+    sky = webhook_persona(NS(webhook_id=hook, author=NS(name="skyler.vibes", avatar=None)))
+    assert mia == webhook_persona(NS(webhook_id=hook, author=NS(name="Mia", avatar=None))) and mia.username == "Mia"
+    assert sky.id != mia.id and sky.id >> 22 == hook >> 22  # new account, like the webhook

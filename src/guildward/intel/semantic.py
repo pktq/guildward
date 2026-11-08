@@ -34,6 +34,7 @@ from typing import Any
 
 from guildward.core.models import Signal
 from guildward.core.text import fold, normalize
+from guildward.intel.behavior import age_disclosure
 
 log = logging.getLogger(__name__)
 
@@ -206,6 +207,8 @@ def to_signals(probs: Sequence[float], head: Head, text: str) -> tuple[Signal, .
             continue
         if weight <= 0:
             continue
+        if code == "msg.age_probe" and "?" not in text and age_disclosure(text) is not None:
+            continue  # "hi im 13" states the sender's own age; the model mistakes it for asking
         params: dict[str, str | int] = {}
         if code == "msg.isolation":
             app = _app_in(text)

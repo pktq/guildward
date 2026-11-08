@@ -158,6 +158,10 @@ def setup(bot: GuardBot) -> None:
             await i.response.send_message(embed=render.notice("g.cant_post", lang, channel=channel.mention),
                                           ephemeral=True)
             return
+        if channel.permissions_for(i.guild.default_role).view_channel:
+            await i.response.send_message(embed=render.notice("g.channel_public", lang, channel=channel.mention),
+                                          ephemeral=True)
+            return
         bot.store.update_settings(i.guild_id, {"alert_channel_id": str(channel.id), "mode": mode, "lang": lang})
         await i.response.defer(ephemeral=True, thinking=True)
         await bot.refresh_audit(i.guild)

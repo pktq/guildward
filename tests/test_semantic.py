@@ -72,6 +72,8 @@ def test_weight_scales_with_confidence_and_soft_hints_stay_small():
     (s,) = to_signals([0.4, 0, 0], h, "how old")
     assert s.weight == semantic.SOFT_WEIGHT  # a hint: feeds memory, too weak to alert
     assert to_signals([0.1, 0, 0], h, "x") == ()
+    assert to_signals([1.0, 0, 0], h, "hi im 13") == ()  # stating your own age isn't asking someone's
+    assert to_signals([1.0, 0, 0], h, "im 13, how old are u?")[0].code == "msg.age_probe"
 
 
 def test_isolation_names_the_app_or_falls_back_to_private():
