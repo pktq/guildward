@@ -477,10 +477,10 @@ register({
     "pocket.watch.confirmed.title": {"en": "Block this account", "sv": "Blockera det här kontot"},
     "pocket.watch.confirmed": {
         "en": "**{name}**, someone you checked before, has been confirmed as dangerous to kids. Block them now. "
-              "If they asked you for anything or threatened you, it's not your fault: tell an adult or press "
+              "If they asked you for anything or threatened you, tell an adult or press "
               "\"I need help\".",
         "sv": "**{name}**, som du kollade tidigare, är bekräftad som farlig för barn. Blockera hen nu. Om hen bett "
-              "dig om något eller hotat dig är det inte ditt fel: säg till en vuxen eller tryck \"Jag behöver hjälp\".",
+              "dig om något eller hotat dig: säg till en vuxen eller tryck \"Jag behöver hjälp\".",
     },
     "pocket.watch.deleted.title": {"en": "That account is gone", "sv": "Det kontot är borta"},
     "pocket.watch.deleted": {

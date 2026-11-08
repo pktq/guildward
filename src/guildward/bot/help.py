@@ -219,14 +219,13 @@ register({
         "sv": "Guildward · Bara du ser detta · Inget här sparas",
     },
     # menu
-    "help.menu.title": {"en": "You did the right thing by asking", "sv": "Det var rätt av dig att fråga"},
+    "help.menu.title": {"en": "Get help", "sv": "Få hjälp"},
     "help.menu.body": {
-        "en": "You're not in trouble. Pick what's happening below and you'll get simple steps, one at a time.\n\n"
+        "en": "Pick what's happening below for clear steps, one at a time.\n\n"
               "🚨 **In danger right now?** Call {emergency}.\n"
               "💬 **Want to talk to a person?** Try {talk}. You don't have to say your name.\n\n"
               "Nothing you pick here is saved or sent to anyone.",
-        "sv": "Du har inte gjort något fel, och du kommer inte att få skäll. Välj vad som händer här nedanför, "
-              "så får du enkla steg, ett i taget.\n\n"
+        "sv": "Välj vad som händer här nedanför, så får du tydliga steg, ett i taget.\n\n"
               "🚨 **Är du i fara just nu?** Ring {emergency}.\n"
               "💬 **Vill du prata med en människa?** Kontakta {talk}. Du behöver inte säga vem du är.\n\n"
               "Inget du väljer här sparas eller skickas till någon.",
@@ -344,8 +343,8 @@ register({
     # situations
     "help.threat.title": {"en": "Someone is threatening to share pictures", "sv": "Någon hotar att sprida bilder på dig"},
     "help.threat.steps": {
-        "en": "**This is not your fault.** The person threatening you is the one committing a crime. "
-              "You're not in trouble, and this can be fixed.\n\n"
+        "en": "**The person threatening you is committing a crime, and this can be stopped.** These threats "
+              "follow a script meant to scare you into paying fast.\n\n"
               "1. **Don't pay, and don't send anything more.** Paying almost never makes it stop. They usually just ask for more.\n"
               "2. **Stop replying, but don't delete the chat** or your account. The chat is evidence.\n"
               "3. **Save evidence.** Screenshot the chat and their profile, and write down their @username and user ID.\n"
@@ -357,8 +356,8 @@ register({
               "and sites that take part. Your picture never leaves your phone.{removal}\n\n"
               "If it all feels like too much, or you're thinking about hurting yourself, call {emergency} or "
               "{crisis} right now. You matter more than any picture.",
-        "sv": "**Det här är inte ditt fel.** Den som hotar dig är den som begår ett brott. "
-              "Du kommer inte att få skäll, och det går att lösa.\n\n"
+        "sv": "**Den som hotar dig begår ett brott, och det går att stoppa.** Hoten följer ett manus som ska "
+              "skrämma dig att betala snabbt.\n\n"
               "1. **Betala inte, och skicka inget mer.** Att betala får nästan aldrig det att sluta. Oftast vill de bara ha mer.\n"
               "2. **Sluta svara, men radera inte chatten** eller ditt konto. Chatten är bevis.\n"
               "3. **Spara bevis.** Ta skärmdumpar på chatten och profilen, och skriv upp personens @användarnamn och användar-ID.\n"
@@ -377,8 +376,8 @@ register({
         "sv": "Någon ber om bilder eller skickar sexuella saker",
     },
     "help.pics.steps": {
-        "en": "**You did nothing wrong.** Asking a young person for sexual pictures, or sending them sexual stuff, "
-              "is not okay, and it can be a crime.\n\n"
+        "en": "**Asking a young person for sexual pictures, or sending them sexual stuff, is not okay, and it can "
+              "be a crime.**\n\n"
               "1. **You never have to send anything.** Saying no, or just not answering, is always okay. "
               "Even if they're nice, or say they're your age.\n"
               "2. **Don't forward or save sexual pictures**, not even to show friends. Show an adult on your screen instead.\n"
@@ -386,11 +385,11 @@ register({
               "their @username and user ID.\n"
               "4. **Report, then block.** Right-click or long-press the message → **Report Message**. Don't delete the chat.\n"
               "5. **Tell an adult you trust**, or talk to {talk}.\n"
-              "6. **Already sent a picture?** It's not too late, and it's still not your fault. Take It Down can help get it "
+              "6. **Already sent a picture?** It's not too late. Take It Down can help get it "
               "removed. If they start threatening you, pick \"Someone threatens to share my pictures\" in the menu.\n"
               "7. **Saw sexual pictures of a child?** Report it to {hotline}, or to {police}.",
-        "sv": "**Du har inte gjort något fel.** Det är inte okej att be en ung person om sexuella bilder eller skicka "
-              "sexuella saker till dem, och det kan vara ett brott.\n\n"
+        "sv": "**Det är inte okej att be en ung person om sexuella bilder eller skicka sexuella saker till dem, "
+              "och det kan vara ett brott.**\n\n"
               "1. **Du behöver aldrig skicka något.** Det är alltid okej att säga nej eller att bara inte svara. "
               "Även om personen är snäll eller säger att hen är lika gammal som du.\n"
               "2. **Skicka inte vidare och spara inte sexuella bilder**, inte ens för att visa kompisar. Visa en vuxen "
@@ -400,15 +399,15 @@ register({
               "4. **Rapportera och blockera sedan.** Högerklicka eller håll inne på meddelandet → **Rapportera meddelande**. "
               "Radera inte chatten.\n"
               "5. **Berätta för en vuxen du litar på**, eller prata med {talk}.\n"
-              "6. **Har du redan skickat en bild?** Det är inte för sent, och det är fortfarande inte ditt fel. "
+              "6. **Har du redan skickat en bild?** Det är inte för sent. "
               "Take It Down kan hjälpa till att få bort den. Om personen börjar hota dig, välj "
               "\"Någon hotar att sprida bilder på mig\" i menyn.\n"
               "7. **Har du sett sexuella bilder på ett barn?** Tipsa {hotline}, eller {police}.",
     },
     "help.meet.title": {"en": "Someone wants to meet or knows where you live", "sv": "Någon vill träffas eller vet var du bor"},
     "help.meet.steps": {
-        "en": "**You were right to stop and ask.** People who want to meet a young person they only know online "
-              "are often not who they say they are.\n\n"
+        "en": "**People who want to meet a young person they only know online are often not who they say they "
+              "are.**\n\n"
               "1. **Don't go to meet them**, and don't say where you live, which school you go to, or where you hang out.\n"
               "2. **In danger right now**, or is someone outside? Call {emergency}.\n"
               "3. **Tell an adult at home today**, especially if they know your address or school, or say they'll come.\n"
@@ -417,8 +416,8 @@ register({
               "5. **Report it to {police}**, together with an adult if you can.\n"
               "6. **Hide clues about where you are.** Check your profile, pictures and connected accounts for your school, "
               "town or face. User Settings → **Data & Privacy** → **Profile Privacy**.",
-        "sv": "**Det var rätt av dig att stanna upp och fråga.** Personer som vill träffa en ung person som de bara "
-              "känner från nätet är ofta inte de som de säger att de är.\n\n"
+        "sv": "**Personer som vill träffa en ung person som de bara känner från nätet är ofta inte de som de "
+              "säger att de är.**\n\n"
               "1. **Gå inte och träffa personen**, och berätta inte var du bor, vilken skola du går på eller var du brukar vara.\n"
               "2. **Är du i fara just nu**, eller står någon utanför? Ring {emergency}.\n"
               "3. **Berätta för en vuxen hemma i dag**, särskilt om personen vet din adress eller skola, eller säger att "
@@ -434,7 +433,7 @@ register({
         "sv": "Bedrägeri, hackat konto eller någon vill ha pengar",
     },
     "help.scam.steps": {
-        "en": "**Scammers are good at tricking people, adults too.** Getting fooled doesn't make you stupid.\n\n"
+        "en": "**Scammers are good at tricking people, adults too.**\n\n"
               "1. **Don't pay or send anything:** no money, gift card codes, Nitro, skins or items.\n"
               "2. **Never share your password or login codes**, and never scan a login QR code someone sends you. "
               "Discord staff never DM you to ask for these.\n"
@@ -446,7 +445,7 @@ register({
               "5. **Already paid or gave something away?** Tell an adult now. They can contact the bank or app store, "
               "and report it to {police}.\n"
               "6. **Report the message** (right-click or long-press → **Report Message**), then block them.",
-        "sv": "**Bedragare är bra på att lura folk, vuxna också.** Det betyder inte att du är dum om du blir lurad.\n\n"
+        "sv": "**Bedragare är bra på att lura folk, vuxna också.**\n\n"
               "1. **Betala inte och skicka inget:** inga pengar, presentkortskoder, Nitro, skins eller föremål.\n"
               "2. **Dela aldrig ditt lösenord eller dina inloggningskoder**, och skanna aldrig en QR-kod för inloggning "
               "som någon skickar. Discords personal skickar aldrig DM och ber om sånt.\n"
@@ -461,7 +460,7 @@ register({
     },
     "help.bully.title": {"en": "Bullying, hate or threats", "sv": "Mobbning, hat eller hot"},
     "help.bully.steps": {
-        "en": "**Nobody deserves this, and it's not your fault.** You don't have to deal with it alone.\n\n"
+        "en": "**Save it, block it, report it.** Here's how.\n\n"
               "1. **Don't answer back** while you're upset. That's often what they want.\n"
               "2. **Save evidence first:** screenshots that show names, dates and what was said.\n"
               "3. **Block or ignore them.** Block stops them contacting you. Ignore hides their messages, and they won't "
@@ -470,7 +469,7 @@ register({
               "5. **Tell an adult you trust.** If it's people from school, tell a teacher or the school counsellor too.\n"
               "6. **Threats to hurt you, hate about who you are, or someone spreading your private stuff** can be crimes. "
               "Report it to {police}, or call {emergency} if you're in danger right now.",
-        "sv": "**Ingen förtjänar det här, och det är inte ditt fel.** Du behöver inte klara det själv.\n\n"
+        "sv": "**Spara det, blockera, rapportera.** Så här gör du.\n\n"
               "1. **Svara inte tillbaka** när du är upprörd. Det är ofta det de vill.\n"
               "2. **Spara bevis först:** skärmdumpar där namn, datum och det som skrevs syns.\n"
               "3. **Blockera eller ignorera.** Blockera stoppar dem från att kontakta dig. Ignorera döljer deras meddelanden "

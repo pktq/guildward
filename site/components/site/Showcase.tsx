@@ -133,11 +133,10 @@ const PANELS: Panel[] = [
       <div className="dc-pad">
         <Embed
           level="blue"
-          title="You did the right thing by asking"
+          title="Get help"
           description={
             <>
-              You&rsquo;re not in trouble. Pick what&rsquo;s happening below and you&rsquo;ll get simple steps, one at a
-              time.
+              Pick what&rsquo;s happening below for clear steps, one at a time.
             </>
           }
         />

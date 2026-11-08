@@ -90,9 +90,9 @@ def test_every_situation_in_every_country(key, lang, region):
 def test_sextortion_follows_guidance(lang, region):
     embed, view = _run(h.situation_embed, "threat", lang, region)
     text = embed.description.lower()
-    musts = {"en": ("don't pay", "don't delete", "screenshot", "block", "report", "adult", "not your fault",
+    musts = {"en": ("don't pay", "don't delete", "screenshot", "block", "report", "adult", "committing a crime",
                     "take it down", "police"),
-             "sv": ("betala inte", "radera inte", "skärmdump", "blockera", "rapportera", "vuxen", "inte ditt fel",
+             "sv": ("betala inte", "radera inte", "skärmdump", "blockera", "rapportera", "vuxen", "begår ett brott",
                     "take it down", "polis")}[lang]
     for m in musts:
         assert m in text, m
@@ -228,3 +228,14 @@ def test_evidence_excerpt_truncated_after_escaping(raw):
 def test_evidence_worst_case_still_fits():
     e = _evidence(sender_name="*" * 200, excerpt="|" * 5000)
     _assert_limits(e)
+
+
+def test_no_generic_reassurance():
+    """Kids get facts and steps, not "you did nothing wrong". The sextortion flow says who commits the crime."""
+    from guildward.core import i18n
+
+    banned = ("did nothing wrong", "not in trouble", "get in trouble", "right thing by asking", "not your fault",
+              "nobody deserves", "inget fel", "få skäll", "rätt av dig", "inte ditt fel", "ingen förtjänar")
+    hits = [f"{k}:{lang}" for k, v in i18n._catalog.items() for lang, text in v.items()
+            if any(b in text.lower() for b in banned)]
+    assert hits == []

@@ -75,7 +75,7 @@ const DOES: [string, string][] = [
   ],
   [
     "A calm word to the kid.",
-    "When a member under 18 receives a red message, Guard sends them a short DM: you did nothing wrong, don't reply, tell an adult, and who they can talk to.",
+    "When a member under 18 receives a red message, Guard sends them a short DM: what it saw, don't reply, show an adult, and who they can talk to.",
   ],
   [
     "Raids and scams too.",

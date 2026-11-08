@@ -100,11 +100,11 @@ register({
         "sv": "Svara inte på personliga frågor och byt inte app. Visa chatten för en vuxen du litar på.",
     },
     f"todo.{Kind.MESSAGE}.red": {
-        "en": "Stop replying. Don't send anything, don't delete the chat, and tell an adult you trust now. "
-              "You won't get in trouble. Report the message (right-click → Report) and block them. "
+        "en": "Stop replying. Don't send anything, don't delete the chat, and show it to an adult you trust now. "
+              "Report the message (right-click → Report) and block them. "
               "Need someone to talk to? **I need help** shows who you can call where you live.",
-        "sv": "Sluta svara. Skicka ingenting, radera inte chatten, och berätta för en vuxen du litar på nu. "
-              "Du kommer inte att få skäll. Anmäl meddelandet (högerklicka → Rapportera) och blockera personen. "
+        "sv": "Sluta svara. Skicka ingenting, radera inte chatten, och visa det för en vuxen du litar på nu. "
+              "Anmäl meddelandet (högerklicka → Rapportera) och blockera personen. "
               "Vill du prata med någon? **Jag behöver hjälp** visar vem du kan ringa där du bor.",
     },
     # confidence

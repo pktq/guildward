@@ -79,8 +79,8 @@ register({
         "sv": "Ber om bilder eller video på dig. Skicka aldrig bilder på dig själv till någon du bara känner på nätet.",
     },
     "msg.sexual": {
-        "en": "Talks about sexual stuff. That is never okay from someone online, and it's not your fault.",
-        "sv": "Pratar om sexuella saker. Det är aldrig okej från någon på nätet, och det är inte ditt fel.",
+        "en": "Talks about sexual stuff. That is never okay from someone online.",
+        "sv": "Pratar om sexuella saker. Det är aldrig okej från någon på nätet.",
     },
     "msg.gifts": {
         "en": "Offers free stuff like Robux, Nitro or money. Gifts from strangers usually come with a catch.",
@@ -108,10 +108,10 @@ register({
         "konton. Klicka inte, logga inte in och skanna ingenting.",
     },
     "msg.pressure": {
-        "en": "Pressures or threatens you. If someone threatens to share pictures, it's not your fault: don't send "
-        "more or pay, and tell an adult you trust.",
-        "sv": "Pressar eller hotar dig. Om någon hotar att sprida bilder är det inte ditt fel: skicka inget mer, "
-        "betala inte och berätta för en vuxen du litar på.",
+        "en": "Pressures or threatens you. If someone threatens to share pictures: don't send more or pay, and "
+        "tell an adult you trust.",
+        "sv": "Pressar eller hotar dig. Om någon hotar att sprida bilder: skicka inget mer, betala inte och "
+        "berätta för en vuxen du litar på.",
     },
     "msg.multi_stage": {
         "en": "Several warning signs in one message. That mix is typical of people trying to trick kids.",

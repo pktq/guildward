@@ -128,16 +128,16 @@ register({
     "g.missing": {"en": "Guard is missing permissions", "sv": "Guard saknar behörigheter"},
     "g.warn_title": {"en": "🛡️ A safety tip from Guildward", "sv": "🛡️ Ett säkerhetstips från Guildward"},
     "g.warn_body": {
-        "en": "Someone in **{server}** just sent you a message with warning signs, like asking for photos, "
-              "secrets, your age, or moving to another app.\n\n**You did nothing wrong.**\n"
+        "en": "A message you got in **{server}** has warning signs, like asking for photos, secrets, your age, "
+              "or to move to another app.\n\n"
               "• Don't reply and don't send anything.\n• Don't move to Snapchat, DMs or any other app with them.\n"
-              "• Tell an adult you trust. You won't get in trouble.\n\n"
-              "The server's moderators have been told. Need to talk? Try {talk}.",
-        "sv": "Någon i **{server}** skickade just ett meddelande till dig med varningstecken, som att be om bilder, "
-              "hemligheter, din ålder eller att byta till en annan app.\n\n**Du har inte gjort något fel.**\n"
+              "• Show it to an adult you trust.\n\n"
+              "The server's moderators have seen it. Want to talk to someone? Try {talk}.",
+        "sv": "Ett meddelande du fick i **{server}** har varningstecken, som att be om bilder, hemligheter, din "
+              "ålder eller att byta till en annan app.\n\n"
               "• Svara inte och skicka ingenting.\n• Flytta inte till Snapchat, DM eller någon annan app med personen.\n"
-              "• Berätta för en vuxen du litar på. Du får inte skäll.\n\n"
-              "Serverns moderatorer har fått veta. Vill du prata? Kontakta {talk}.",
+              "• Visa det för en vuxen du litar på.\n\n"
+              "Serverns moderatorer har sett det. Vill du prata med någon? Kontakta {talk}.",
     },
     "g.warn_footer": {"en": "Guildward · child safety on Discord", "sv": "Guildward · barnsäkerhet på Discord"},
     # buttons

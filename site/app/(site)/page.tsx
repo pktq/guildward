@@ -167,8 +167,8 @@ export default function Home() {
               description={
                 <>
                   <p>
-                    <b>This is not your fault.</b> The person threatening you is the one committing a crime.
-                    You&rsquo;re not in trouble, and this can be fixed.
+                    <b>The person threatening you is committing a crime, and this can be stopped.</b> These threats
+                    follow a script meant to scare you into paying fast.
                   </p>
                   <ol className="dc-steps">
                     <li>
@@ -227,8 +227,8 @@ export default function Home() {
           <div className="gw-guard-say" data-reveal>
             <h3>A calm word to the kid</h3>
             <p>
-              When a member under 18 receives a red message, Guard sends them a short, kind DM: you did nothing wrong,
-              don&rsquo;t reply, tell an adult. The moderators hear about it at the same time.
+              When a member under 18 receives a red message, Guard sends them a short DM: what it saw, don&rsquo;t
+              reply, show an adult, and who they can talk to. The moderators hear about it at the same time.
             </p>
           </div>
           <div className="gw-guard-frag dc" data-ui="" data-reveal>
@@ -239,20 +239,17 @@ export default function Home() {
                 description={
                   <>
                     <p>
-                      Someone in <b>Pixel Art Club</b> just sent you a message with warning signs, like asking for
-                      photos, secrets, your age, or moving to another app.
-                    </p>
-                    <p>
-                      <b>You did nothing wrong.</b>
+                      A message you got in <b>Pixel Art Club</b> has warning signs, like asking for photos, secrets,
+                      your age, or to move to another app.
                     </p>
                     <ul className="dc-lines dc-bullets">
                       <li>Don&rsquo;t reply and don&rsquo;t send anything.</li>
                       <li>Don&rsquo;t move to Snapchat, DMs or any other app with them.</li>
-                      <li>Tell an adult you trust. You won&rsquo;t get in trouble.</li>
+                      <li>Show it to an adult you trust.</li>
                     </ul>
                     <p>
-                      The server&rsquo;s moderators have been told. Need to talk? Try a child helpline in your
-                      country (childhelplineinternational.org).
+                      The server&rsquo;s moderators have seen it. Want to talk to someone? Try a child helpline in
+                      your country (childhelplineinternational.org).
                     </p>
                   </>
                 }
