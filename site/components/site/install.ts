@@ -18,3 +18,4 @@ export function installLinks(): InstallLinks {
   };
 }
 
+export const REPO_URL = "https://github.com/pktq/guildward";

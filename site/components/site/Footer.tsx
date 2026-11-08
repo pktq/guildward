@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { REPO_URL } from "./install";
 
 export function Footer() {
   return (
@@ -42,10 +43,10 @@ export function Footer() {
         <p>Free helplines, country by country. In danger: call your local emergency number.</p>
       </div>
       <div className="gw-tile gw-tile-code">
-        <p>Running a server with Guard?</p>
-        <Link className="gw-tile-big" href="/dashboard">
-          Open the dashboard
-        </Link>
+        <p>The code is public. Read how Guildward works, or open an issue.</p>
+        <a className="gw-tile-big" href={REPO_URL} rel="noopener">
+          github.com/pktq/guildward
+        </a>
       </div>
       <div className="gw-tile gw-tile-word" aria-hidden="true">
         guildward

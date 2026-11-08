@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Btn, Buttons, Dot, Embed, Field, Message } from "@/components/site/discord";
+import { DoorFilm } from "@/components/site/DoorFilm";
 import { GuardPlate } from "@/components/site/GuardPlate";
 import { HeroCheck } from "@/components/site/HeroCheck";
 import { InstallDialog } from "@/components/site/InstallDialog";
@@ -95,6 +96,8 @@ export default function Home() {
           <HeroCheck />
         </div>
       </section>
+
+      <DoorFilm />
 
       <section className="gw-stakes" aria-labelledby="stakes-title">
         <div className="gw-stakes-head">

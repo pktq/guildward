@@ -1193,6 +1193,119 @@
   }
 }
 
+/* ---------- The Door: launch film ---------- */
+
+.gw-film {
+  background: var(--field-1);
+  color: var(--field-1-ink);
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  column-gap: var(--gutter);
+  row-gap: 32px;
+  align-items: center;
+  padding: clamp(56px, 7vw, 104px) var(--edge);
+}
+.gw-film-head {
+  grid-column: 1 / span 4;
+  display: grid;
+  gap: 16px;
+}
+.gw-film h2 {
+  font-size: clamp(1.75rem, 1.35rem + 1.3vw, 2.5rem);
+}
+.gw-film-head p {
+  color: var(--field-1-soft);
+  max-width: 36ch;
+}
+.gw-film-frame {
+  grid-column: 5 / -1;
+  aspect-ratio: 16 / 9;
+  border-radius: 10px;
+  overflow: hidden;
+  background: #05080f;
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.08);
+}
+.gw-film-frame iframe {
+  width: 100%;
+  height: 100%;
+  border: 0;
+  display: block;
+}
+.gw-film-poster {
+  position: relative;
+  height: 100%;
+  display: grid;
+  place-items: center;
+  background: radial-gradient(120% 90% at 50% 100%, #142033 0%, #05080f 70%);
+}
+/* A closed door with cold light leaking under it: the film's core image. */
+.gw-film-door {
+  position: absolute;
+  left: 50%;
+  bottom: 14%;
+  width: 22%;
+  height: 64%;
+  transform: translateX(-50%);
+  border: 2px solid rgba(185, 195, 214, 0.22);
+  box-shadow: 0 2px 0 0 rgba(140, 196, 255, 0.85);
+  border-bottom: 0;
+  border-radius: 3px 3px 0 0;
+  background: linear-gradient(#0c1424, #0a111e);
+}
+.gw-film-door::after {
+  content: "";
+  position: absolute;
+  left: -30%;
+  right: -30%;
+  bottom: -8px;
+  height: 14px;
+  background: radial-gradient(50% 100% at 50% 0%, rgba(140, 196, 255, 0.95), transparent 80%);
+  filter: blur(3px);
+}
+.gw-film-play {
+  position: relative;
+  font: inherit;
+  font-weight: 600;
+  display: inline-grid;
+  grid-template-columns: auto auto;
+  align-items: center;
+  column-gap: 10px;
+  padding: 14px 22px;
+  border: 0;
+  border-radius: 999px;
+  background: #fff;
+  color: var(--ink);
+  cursor: pointer;
+}
+.gw-film-play:hover {
+  background: var(--accent);
+}
+.gw-film-note {
+  grid-column: 1 / -1;
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--muted);
+  text-align: center;
+}
+.gw-film-soon {
+  position: absolute;
+  bottom: 5%;
+  left: 0;
+  right: 0;
+  text-align: center;
+  font-size: var(--step-small);
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: var(--field-1-soft);
+}
+
+@media (max-width: 1100px) {
+  .gw-film-head,
+  .gw-film-frame {
+    grid-column: 1 / -1;
+  }
+}
+
 /* ---------- Install ---------- */
 
 .gw-install {
