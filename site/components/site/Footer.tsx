@@ -35,6 +35,10 @@ export function Footer() {
             <Link href="/#questions">Questions</Link>
           </li>
         </ul>
+        {/* "#top" scrolls to the top of the page without an element by that id; no script needed. */}
+        <a className="gw-totop" href="#top">
+          Back to top <span aria-hidden="true">↑</span>
+        </a>
       </nav>
       <div className="gw-tile gw-tile-help">
         <p>Need to talk to someone now?</p>

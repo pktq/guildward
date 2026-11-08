@@ -8,7 +8,7 @@ import { api, ApiError } from "@/lib/dashboard/api";
 import type { Demo } from "@/lib/dashboard/api";
 import { t as translate } from "@/lib/dashboard/i18n";
 import type { Lang } from "@/lib/dashboard/i18n";
-import { langStore, navLang, noopSubscribe, prefersLight, subscribeLight, themeStore } from "@/lib/dashboard/prefs";
+import { prefersLight, subscribeLight, themeStore } from "@/lib/dashboard/prefs";
 import type { Me } from "@/lib/dashboard/types";
 import { DashContext, makeFmt, useDash } from "./context";
 import type { Dash } from "./context";
@@ -25,8 +25,6 @@ export function DashShell({ children }: { children: ReactNode }) {
   const demo: Demo = demoParam == null ? null : demoParam === "signin" ? "signin" : "on";
 
   // ---- preferences
-  const chosenLang = useSyncExternalStore(langStore.subscribe, langStore.get, () => null);
-  const browserLang = useSyncExternalStore(noopSubscribe, navLang, () => "en");
   const theme = useSyncExternalStore(themeStore.subscribe, themeStore.get, () => null);
   const lightPref = useSyncExternalStore(subscribeLight, prefersLight, () => false);
   const dark = theme === "light" || theme === "dark" ? theme === "dark" : !lightPref;
@@ -39,8 +37,8 @@ export function DashShell({ children }: { children: ReactNode }) {
   const me = meRes && meRes.key === meKey ? meRes.me ?? null : null;
   const meError = meRes && meRes.key === meKey ? meRes.error : undefined;
 
-  const langPick = chosenLang === "sv" || chosenLang === "en" ? chosenLang : null;
-  const lang: Lang = langPick ?? (me?.lang === "sv" || me?.lang === "en" ? me.lang : browserLang === "sv" ? "sv" : "en");
+  // shortcut: English only for now (Swedish strings stay in i18n.ts); bring back a language switch when Swedish returns.
+  const lang: Lang = "en";
   const tr = useCallback((key: string, vars?: Record<string, string | number | null | undefined>) => translate(lang, key, vars), [lang]);
 
   const langRef = useRef(lang);
@@ -120,14 +118,13 @@ export function DashShell({ children }: { children: ReactNode }) {
     if (lastPath.current !== pathname) { lastPath.current = pathname; mainRef.current?.focus({ preventScroll: true }); }
   }, [pathname]);
 
-  const setLang = (l: Lang) => langStore.set(l);
   const toggleTheme = () => themeStore.set(dark ? "light" : "dark");
   const logout = () => {
     api("POST", "/api/logout", {}, demo, lang).catch(() => {}).then(() => { setSignedOut(true); toast(tr("signedOut")); });
   };
 
   let body: ReactNode;
-  if (signedOut) body = <SignIn demo={demo} lang={lang} setLang={setLang} />;
+  if (signedOut) body = <SignIn demo={demo} lang={lang} />;
   else if (meError) body = <ErrorView msg={meError.message || tr("errNetwork")} retry={() => { setMeRes(null); setMeNonce((n) => n + 1); }} />;
   else if (!me) body = <div className="skeleton" aria-busy="true"><div className="sk sk-h" /></div>;
   else body = children;
@@ -138,7 +135,7 @@ export function DashShell({ children }: { children: ReactNode }) {
         <a className="skip" href="#main">{tr("skip")}</a>
         <div className="app">
           <aside className="side" id="side">
-            {!signedOut && me && <Sidebar me={me} pathname={pathname} lang={lang} setLang={setLang} dark={dark} toggleTheme={toggleTheme} logout={logout} />}
+            {!signedOut && me && <Sidebar me={me} pathname={pathname} dark={dark} toggleTheme={toggleTheme} logout={logout} />}
           </aside>
           <main className="main" id="main" tabIndex={-1} ref={mainRef}>{body}</main>
         </div>
@@ -163,20 +160,13 @@ export function DashShell({ children }: { children: ReactNode }) {
   );
 }
 
-function LangSeg({ lang, setLang }: { lang: Lang; setLang: (l: Lang) => void }) {
-  return (
-    <div className="seg" role="group" aria-label={translate(lang, "language")}>
-      {(["en", "sv"] as const).map((l) => (
-        <button key={l} type="button" aria-pressed={lang === l} onClick={() => setLang(l)}>{l.toUpperCase()}</button>
-      ))}
-    </div>
-  );
-}
-
 // Discord's own mark, as Discord asks sign-in buttons to show it.
+
 const DISCORD_PATH = "M20.317 4.37a19.79 19.79 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.865-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.74 19.74 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.462-.63.873-1.295 1.226-1.994a.076.076 0 0 0-.042-.106 13.1 13.1 0 0 1-1.872-.892.077.077 0 0 1-.008-.128c.126-.094.252-.192.372-.291a.074.074 0 0 1 .078-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.009c.12.1.246.198.373.292a.077.077 0 0 1-.007.128 12.3 12.3 0 0 1-1.873.891.077.077 0 0 0-.041.107c.36.698.772 1.363 1.225 1.993a.076.076 0 0 0 .084.029 19.84 19.84 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.331c-1.183 0-2.157-1.086-2.157-2.42 0-1.333.956-2.418 2.157-2.418 1.21 0 2.176 1.095 2.157 2.419 0 1.333-.956 2.419-2.157 2.419zm7.975 0c-1.183 0-2.157-1.086-2.157-2.42 0-1.333.955-2.418 2.157-2.418 1.21 0 2.176 1.095 2.157 2.419 0 1.333-.946 2.419-2.157 2.419z";
 
-function SignIn({ demo, lang, setLang }: { demo: Demo; lang: Lang; setLang: (l: Lang) => void }) {
+
+
+function SignIn({ demo, lang }: { demo: Demo; lang: Lang }) {
   const t = (k: string, v?: Record<string, string>) => translate(lang, k, v);
   const pathname = usePathname();
   const params = useSearchParams();
@@ -184,7 +174,7 @@ function SignIn({ demo, lang, setLang }: { demo: Demo; lang: Lang; setLang: (l: 
   const q = params.toString();
   const next = pathname.startsWith("/dashboard") ? pathname + (q ? "?" + q : "") : "/dashboard";
   const discordHref = demo ? "/dashboard/g/10?demo" : `/auth/discord?next=${encodeURIComponent(next)}`;
-  const [before, after] = t("signinOr", { cmd: " " }).split(" ");
+  const [before, after] = t("signinOr", { cmd: "\u0000" }).split("\u0000");
   return (
     <div className="signin">
       <header className="signin-top">
@@ -192,7 +182,6 @@ function SignIn({ demo, lang, setLang }: { demo: Demo; lang: Lang; setLang: (l: 
           <ShieldMark size={26} />
           <span className="brand-text"><b>Guildward</b> <span>{t("brandSub")}</span></span>
         </Link>
-        <LangSeg lang={lang} setLang={setLang} />
       </header>
       <div className="signin-center">
         <section className="signin-card" aria-labelledby="signin-title">
@@ -213,8 +202,8 @@ function SignIn({ demo, lang, setLang }: { demo: Demo; lang: Lang; setLang: (l: 
   );
 }
 
-function Sidebar({ me, pathname, lang, setLang, dark, toggleTheme, logout }: {
-  me: Me; pathname: string; lang: Lang; setLang: (l: Lang) => void; dark: boolean; toggleTheme: () => void; logout: () => void;
+function Sidebar({ me, pathname, dark, toggleTheme, logout }: {
+  me: Me; pathname: string; dark: boolean; toggleTheme: () => void; logout: () => void;
 }) {
   const { t, href, demo, openAlerts, guildNames } = useDash();
   const router = useRouter();
@@ -273,7 +262,6 @@ function Sidebar({ me, pathname, lang, setLang, dark, toggleTheme, logout }: {
       )}
       <div className="side-foot">
         <div className="prefs">
-          <LangSeg lang={lang} setLang={setLang} />
           <button type="button" className="icon-btn" onClick={toggleTheme} aria-label={`${t("theme")}: ${t(dark ? "dark" : "light")}`} title={t("theme")}>
             <Icon name={dark ? "moon" : "sun"} />
           </button>

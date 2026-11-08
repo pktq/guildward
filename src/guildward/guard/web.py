@@ -215,7 +215,8 @@ class Dashboard:
         if sess is None:
             return self._err(401, "Sign in again: run /guard dashboard in your server.")
         request[SESSION] = sess
-        request[LANG] = sess["lang"] if sess["lang"] in ("en", "sv") else "en"
+        # shortcut: the dashboard is English-only for now; use sess["lang"] again when Swedish comes back.
+        request[LANG] = "en"
         request[GUILDS] = {int(g) for g in json.loads(sess["guilds"] or "[]")}
         request[OWNER] = bool(sess["owner"])
         if "gid" in request.match_info and request.path.startswith("/api/guilds/"):

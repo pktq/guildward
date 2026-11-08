@@ -9,7 +9,6 @@ const LINKS = [
   { href: "/parents", label: "Parents" },
   { href: "/admins", label: "Servers" },
   { href: "/stats", label: "Stats" },
-  { href: "/dashboard", label: "Dashboard" },
 ] as const;
 
 export function Header() {
@@ -27,9 +26,14 @@ export function Header() {
           </Link>
         ))}
       </nav>
-      <Link href="/#install" className="gw-btn gw-btn-accent gw-header-cta">
-        Add to Discord
-      </Link>
+      <div className="gw-header-actions">
+        <Link href="/dashboard" className="gw-btn gw-btn-line gw-header-cta">
+          Dashboard
+        </Link>
+        <Link href="/#install" className="gw-btn gw-btn-accent gw-header-cta">
+          Add to Discord
+        </Link>
+      </div>
     </header>
   );
 }

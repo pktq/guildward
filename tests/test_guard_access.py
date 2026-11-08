@@ -308,7 +308,7 @@ async def _oauth():
         assert sess["httponly"] and sess["samesite"] == "Strict" and "abc" not in r.headers["Location"]
         assert (await c.get(cb, headers=bound, allow_redirects=False)).status == 403  # single use
         me = await (await c.get("/api/me", headers={"Cookie": f"{COOKIE}={sess.value}"})).json()
-        assert me["user"]["name"] == "Mod Ana" and me["lang"] == "sv" and me["owner"] is False
+        assert me["user"]["name"] == "Mod Ana" and me["lang"] == "en" and me["owner"] is False  # English-only for now
         assert me["user"]["avatar"].startswith(f"https://cdn.discordapp.com/avatars/{ACT}/")
         assert [(g["id"], g["level"]) for g in me["guilds"]] == [(str(GID), "act")]
 

@@ -117,6 +117,13 @@
 .gw-btn-ink:hover {
   background: #2c3b66;
 }
+.gw-btn-line {
+  box-shadow: inset 0 0 0 2px var(--ink);
+  color: var(--ink);
+}
+.gw-btn-line:hover {
+  background: var(--surface);
+}
 .gw-textlink {
   font-weight: 600;
   text-decoration: underline;
@@ -163,6 +170,10 @@
 .gw-nav {
   display: flex;
   gap: 28px;
+}
+.gw-header-actions {
+  display: flex;
+  gap: 12px;
 }
 .gw-navlink {
   font-weight: 600;
@@ -1415,6 +1426,24 @@
   display: inline-block;
   padding: 4px 0;
 }
+.gw-tile-nav .gw-totop {
+  margin-top: auto;
+  align-self: flex-end;
+  padding: 8px 14px;
+  border-radius: var(--radius);
+  box-shadow: inset 0 0 0 2px var(--ink);
+}
+.gw-tile-nav .gw-totop:hover {
+  background: var(--bg);
+  text-decoration: none;
+}
+.gw-totop span {
+  display: inline-block;
+  transition: transform 160ms var(--ease);
+}
+.gw-totop:hover span {
+  transform: translateY(-3px);
+}
 .gw-tile-nav a:hover {
   text-decoration: underline;
   text-decoration-thickness: 2px;
@@ -1660,9 +1689,13 @@
     gap: 22px;
     padding: 4px 0 2px;
   }
+  .gw-header-actions {
+    gap: 8px;
+  }
   .gw-header-cta {
     min-height: 44px;
-    padding: 0 16px;
+    padding: 0 12px;
+    font-size: 0.9375rem;
   }
   .gw-hero {
     min-height: 0;
@@ -1750,4 +1783,16 @@
 
 .dc-jump {
   font-size: 14px;
+}
+
+/* Narrow phones: the logo plus both header buttons don't fit, so the header shows just the shield. */
+@media (max-width: 420px) {
+  .gw-brand span {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
 }
