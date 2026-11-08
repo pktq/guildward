@@ -113,11 +113,11 @@
 }
 
 .st-loading {
-  padding: 160px var(--gutter);
+  padding: 160px var(--edge);
   font-size: var(--step-lead);
 }
 .st-intro {
-  padding: clamp(56px, 9vw, 140px) var(--gutter) clamp(64px, 8vw, 120px);
+  padding: clamp(56px, 9vw, 140px) var(--edge) clamp(64px, 8vw, 120px);
 }
 .st-intro h1 {
   font-size: var(--step-display);
@@ -148,15 +148,14 @@
 .st-field {
   background: var(--field-1);
   color: var(--field-1-ink);
-  min-height: 90svh;
   display: grid;
   grid-template-rows: auto 1fr auto;
   row-gap: 32px;
-  padding: clamp(48px, 6vw, 96px) var(--gutter) 32px;
+  padding: clamp(48px, 6vw, 96px) var(--edge) 32px;
 }
 .st-figure {
   font-weight: 600;
-  font-size: clamp(5.5rem, 10vw, 10.5rem);
+  font-size: clamp(4rem, 7vw, 7rem);
   line-height: 0.9;
   letter-spacing: -0.04em;
 }
@@ -168,11 +167,6 @@
 }
 .st-field .gw-cols {
   align-self: end;
-  margin-inline: calc(var(--gutter) * -1);
-}
-.st-field .gw-cols-axis,
-.st-field .gw-table {
-  padding-inline: var(--gutter);
 }
 .st-field-note {
   font-size: var(--step-small);
@@ -189,7 +183,7 @@
   grid-template-columns: repeat(12, minmax(0, 1fr));
   column-gap: var(--gutter);
   row-gap: 80px;
-  padding: clamp(96px, 11vw, 180px) var(--gutter);
+  padding: clamp(72px, 8vw, 128px) var(--edge);
 }
 .st-group:first-child {
   grid-column: 1 / span 8;
@@ -246,7 +240,7 @@
   grid-template-columns: repeat(12, minmax(0, 1fr));
   column-gap: var(--gutter);
   row-gap: 48px;
-  padding: clamp(96px, 11vw, 180px) var(--gutter);
+  padding: clamp(72px, 8vw, 128px) var(--edge);
 }
 .st-split-head {
   grid-column: 1 / span 4;
@@ -322,7 +316,7 @@
   grid-template-columns: repeat(12, minmax(0, 1fr));
   column-gap: var(--gutter);
   row-gap: 48px;
-  padding: clamp(96px, 11vw, 180px) var(--gutter);
+  padding: clamp(72px, 8vw, 128px) var(--edge);
 }
 .st-signals h2 {
   grid-column: 1 / span 4;
@@ -366,7 +360,7 @@
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 64px var(--gutter);
-  padding: clamp(80px, 9vw, 140px) var(--gutter);
+  padding: clamp(80px, 9vw, 140px) var(--edge);
 }
 .st-multi h3 {
   font-family: var(--gw-font-text), sans-serif;
@@ -394,7 +388,7 @@
   grid-template-columns: repeat(12, minmax(0, 1fr));
   column-gap: var(--gutter);
   row-gap: 32px;
-  padding: clamp(96px, 10vw, 160px) var(--gutter);
+  padding: clamp(72px, 8vw, 128px) var(--edge);
 }
 .st-how h2 {
   grid-column: 1 / span 4;

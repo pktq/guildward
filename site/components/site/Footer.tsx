@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { REPO_URL } from "./install";
 
 export function Footer() {
   return (
@@ -7,8 +6,8 @@ export function Footer() {
       <div className="gw-tile gw-tile-statement">
         <p className="gw-tile-lead">Built for kids on Discord, and for the people who look out for them.</p>
         <p className="gw-tile-legal">
-          Guildward is open source and not affiliated with Discord. Detection rules are kept private so abusers
-          can&rsquo;t phrase around them.
+          Guildward is not affiliated with Discord. Detection rules are kept private so abusers can&rsquo;t phrase
+          around them.
         </p>
       </div>
       <nav className="gw-tile gw-tile-nav" aria-label="Footer">
@@ -38,10 +37,10 @@ export function Footer() {
         <p>Free and anonymous, for anyone under 18 in Sweden. In danger: call 112.</p>
       </div>
       <div className="gw-tile gw-tile-code">
-        <p>Read the code, run your own copy, or open an issue.</p>
-        <a className="gw-tile-big" href={REPO_URL} rel="noopener">
-          github.com/pktq/guildward
-        </a>
+        <p>Running a server with Guard?</p>
+        <Link className="gw-tile-big" href="/dashboard">
+          Open the dashboard
+        </Link>
       </div>
       <div className="gw-tile gw-tile-word" aria-hidden="true">
         guildward

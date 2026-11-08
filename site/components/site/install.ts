@@ -6,9 +6,11 @@ const GUARD_PERMISSIONS = "1099780156582";
 
 export type InstallLinks = { kid: string; checks: string; guard: string };
 
-export function installLinks(): InstallLinks | null {
-  const id = process.env.NEXT_PUBLIC_DISCORD_CLIENT_ID?.trim();
-  if (!id) return null;
+// The hosted Guildward app. Override only for a staging app.
+const CLIENT_ID = process.env.NEXT_PUBLIC_DISCORD_CLIENT_ID?.trim() || "1568659844003668059";
+
+export function installLinks(): InstallLinks {
+  const id = CLIENT_ID;
   return {
     kid: `${AUTHORIZE}?client_id=${id}&integration_type=1&scope=applications.commands`,
     checks: `${AUTHORIZE}?client_id=${id}&integration_type=0&scope=applications.commands`,
@@ -16,4 +18,3 @@ export function installLinks(): InstallLinks | null {
   };
 }
 
-export const REPO_URL = "https://github.com/pktq/guildward";

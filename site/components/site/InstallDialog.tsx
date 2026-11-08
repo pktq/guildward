@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { ShieldMark } from "./ShieldMark";
-import { REPO_URL, type InstallLinks } from "./install";
+import type { InstallLinks } from "./install";
 
 type Where = "kid" | "server";
 type Mode = "checks" | "guard";
@@ -14,11 +14,11 @@ const COPY = {
     "In a server, full Guard: alerts in a private mod channel, the audit and the dashboard. It asks only for the permissions its actions use.",
 };
 
-export function InstallDialog({ links }: { links: InstallLinks | null }) {
+export function InstallDialog({ links }: { links: InstallLinks }) {
   const [where, setWhere] = useState<Where>("kid");
   const [mode, setMode] = useState<Mode>("guard");
   const key = where === "kid" ? "kid" : mode;
-  const href = links?.[key];
+  const href = links[key];
 
   return (
     <div className="gw-dialog dc-light" data-ui="" role="group" aria-labelledby="install-dialog-title">
@@ -53,21 +53,13 @@ export function InstallDialog({ links }: { links: InstallLinks | null }) {
       <p className="gw-dialog-copy" aria-live="polite">
         {COPY[key]}
       </p>
-      {href ? (
-        <a className="gw-btn gw-btn-ink gw-dialog-go" href={href} rel="noopener">
-          Open Discord to add it
-        </a>
-      ) : (
-        <>
-          <a className="gw-btn gw-btn-ink gw-dialog-go" href={`${REPO_URL}#set-up-the-discord-app`} rel="noopener">
-            Set up your own copy
-          </a>
-          <p className="gw-dialog-fine">
-            The public install link isn&rsquo;t switched on yet. Until it is, you can run Guildward from the source on
-            GitHub.
-          </p>
-        </>
-      )}
+      <a className="gw-btn gw-btn-ink gw-dialog-go" href={href} rel="noopener">
+        Open Discord to add it
+      </a>
+      <p className="gw-dialog-fine">
+        Discord shows what Guildward can do and asks you to confirm. Nothing to install or host: it runs on our
+        servers.
+      </p>
     </div>
   );
 }

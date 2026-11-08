@@ -17,7 +17,7 @@ The site proxies `/api/*` to the Guard API, so start Guildward too (`uv run guil
 | Variable | What it does |
 |---|---|
 | `GUARD_API_URL` | Where the Guard API listens (default `http://localhost:8091`). |
-| `NEXT_PUBLIC_DISCORD_CLIENT_ID` | Your Discord application ID. Turns the install dialog's button into the real Discord install link (your account, server checks only, or full Guard); without it the button points to the setup guide on GitHub. |
+| `NEXT_PUBLIC_DISCORD_CLIENT_ID` | Optional. Discord application ID for the install buttons; defaults to the hosted Guildward app. Set it only to point a staging site at a test app. |
 
 If the Guard API can't be reached, `/stats` shows bundled sample numbers (`public/demo/stats.json`) and says so on the page.
 

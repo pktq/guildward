@@ -3,7 +3,7 @@ import { Btn, Buttons, Dot, Embed, Field, Message } from "@/components/site/disc
 import { GuardPlate } from "@/components/site/GuardPlate";
 import { HeroCheck } from "@/components/site/HeroCheck";
 import { InstallDialog } from "@/components/site/InstallDialog";
-import { installLinks, REPO_URL } from "@/components/site/install";
+import { installLinks } from "@/components/site/install";
 import { Showcase } from "@/components/site/Showcase";
 
 const FAQ: [string, React.ReactNode][] = [
@@ -59,14 +59,10 @@ const FAQ: [string, React.ReactNode][] = [
     </>,
   ],
   [
-    "Is it open source?",
+    "Do I need to host or set up anything?",
     <>
-      Yes, on{" "}
-      <a href={REPO_URL} rel="noopener">
-        GitHub
-      </a>
-      , except the detection rules and the message model&rsquo;s weights. Those are kept private so abusers can&rsquo;t
-      read them and phrase around them.
+      No. Guildward runs on our servers: add it from Discord and it works straight away. The detection rules and the
+      message model are ours and stay private, so abusers can&rsquo;t read them and phrase around them.
     </>,
   ],
 ];
