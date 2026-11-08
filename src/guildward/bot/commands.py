@@ -13,7 +13,7 @@ import discord
 from discord import app_commands
 from discord.app_commands import locale_str
 
-from guildward.bot import flows, render, scan
+from guildward.bot import flows, helplines, render, scan
 from guildward.bot import help as kidhelp
 from guildward.bot.adapters import display_name, invite_facts, parse_invite_code, user_facts
 from guildward.core.i18n import Lang, has, lang_for, register, t
@@ -203,7 +203,7 @@ def setup(bot: GuildwardBot) -> None:
     @_everywhere
     async def help_cmd(interaction: discord.Interaction) -> None:
         lang = _touch(bot, interaction)
-        embed, view = kidhelp.help_menu(lang)
+        embed, view = kidhelp.help_menu(lang, helplines.region_for(bot, interaction.user.id, lang))
         await interaction.response.send_message(embed=embed, view=view, ephemeral=True)
 
     gw = app_commands.Group(name="guildward", description=locale_str("Your Guildward settings and tools",
@@ -275,7 +275,7 @@ def setup(bot: GuildwardBot) -> None:
                                                       key="cmd.gw.safety"))
     async def gw_safety(interaction: discord.Interaction) -> None:
         lang = _touch(bot, interaction)
-        embed, view = kidhelp.settings_embed(lang)
+        embed, view = kidhelp.settings_embed(lang, helplines.region_for(bot, interaction.user.id, lang))
         await interaction.response.send_message(embed=embed, view=view, ephemeral=True)
 
     @gw.command(name="forget", description=locale_str("Erase what Guildward keeps about you", key="cmd.gw.forget"))

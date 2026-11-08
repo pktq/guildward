@@ -12,7 +12,7 @@ DOTS = {Level.GREEN: "🟢", Level.YELLOW: "🟡", Level.RED: "🔴"}
 MAX_REASONS = 6
 
 REPORT_URL = "https://support.discord.com/hc/en-us/articles/360000291932"
-BRIS_URL = "https://www.bris.se"
+HELPLINES_URL = "https://childhelplineinternational.org/helplines/"
 
 
 def verdict_embed(v: Verdict, lang: Lang, *, subject: str) -> discord.Embed:
@@ -45,7 +45,7 @@ def help_buttons(v: Verdict, lang: Lang) -> discord.ui.View | None:
     view = discord.ui.View()
     view.add_item(discord.ui.Button(label=t("ui.btn_report", lang), url=REPORT_URL))
     if v.level is Level.RED:
-        view.add_item(discord.ui.Button(label=t("ui.btn_bris", lang), url=BRIS_URL))
+        view.add_item(discord.ui.Button(label=t("ui.btn_helpline", lang), url=HELPLINES_URL))
     return view
 
 
@@ -102,10 +102,10 @@ register({
     f"todo.{Kind.MESSAGE}.red": {
         "en": "Stop replying. Don't send anything, don't delete the chat, and tell an adult you trust now. "
               "You won't get in trouble. Report the message (right-click → Report) and block them. "
-              "Bris: call 116 111 (free and anonymous).",
+              "Need someone to talk to? **I need help** shows who you can call where you live.",
         "sv": "Sluta svara. Skicka ingenting, radera inte chatten, och berätta för en vuxen du litar på nu. "
               "Du kommer inte att få skäll. Anmäl meddelandet (högerklicka → Rapportera) och blockera personen. "
-              "Bris: ring 116 111 (gratis och anonymt).",
+              "Vill du prata med någon? **Jag behöver hjälp** visar vem du kan ringa där du bor.",
     },
     # confidence
     "confidence.low": {
@@ -135,7 +135,7 @@ register({
         "sv": "Guildward · Bara du ser detta · Meddelandetext sparas aldrig",
     },
     "ui.btn_report": {"en": "How to report", "sv": "Så anmäler du"},
-    "ui.btn_bris": {"en": "Talk to Bris", "sv": "Prata med Bris"},
+    "ui.btn_helpline": {"en": "Find a helpline", "sv": "Hitta en stödlinje"},
     # subjects
     "subject.server": {"en": "**{name}** · {members} members", "sv": "**{name}** · {members} medlemmar"},
     "subject.group_dm": {"en": "Group chat invite", "sv": "Inbjudan till gruppchatt"},

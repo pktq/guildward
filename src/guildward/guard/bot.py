@@ -19,6 +19,7 @@ from typing import Any
 
 import discord
 
+from guildward.bot import helplines
 from guildward.core.i18n import Lang, t
 from guildward.guard import render
 from guildward.guard.engine import Engine, JoinEvent, MemberInfo, MessageEvent, Out
@@ -364,7 +365,8 @@ class GuardBot(discord.Client):
             return
         lang = "sv" if str(getattr(m, "locale", "") or g.preferred_locale).startswith("sv") else self.lang(gid)
         with contextlib.suppress(discord.HTTPException):
-            await m.send(embed=render.warn_embed(g.name, lang))
+            talk = helplines.phrases(helplines.region_for(self, m.id, lang), lang)["talk"]
+            await m.send(embed=render.warn_embed(g.name, lang, talk))
             self.store.bump(gid, "warned")
 
     async def act(self, gid: int, uid: int | None, action: str, *, by_id: int | None, by_name: str | None,

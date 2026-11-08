@@ -53,8 +53,8 @@ const EXAMPLES: Example[] = [
         </Field>
         <Field name="What to do">
           Stop replying. Don&rsquo;t send anything, don&rsquo;t delete the chat, and tell an adult you trust now. You
-          won&rsquo;t get in trouble. Report the message (right-click → Report) and block them. Bris: call 116 111 (free
-          and anonymous).
+          won&rsquo;t get in trouble. Report the message (right-click → Report) and block them. Need someone to talk
+          to? <b>I need help</b> shows who you can call where you live.
         </Field>
         <Buttons>
           <Btn kind="primary">I need help</Btn>

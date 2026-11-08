@@ -185,7 +185,7 @@ const PANELS: Panel[] = [
             footer="You get this because you checked this account. Turn it off: /guildward settings"
           />
           <Buttons>
-            <Btn kind="link">Chat with Bris</Btn>
+            <Btn kind="link">Find a helpline in your country</Btn>
             <Btn kind="link">How to report on Discord</Btn>
           </Buttons>
         </Message>

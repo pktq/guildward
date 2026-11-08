@@ -54,8 +54,9 @@ const FAQ: [string, React.ReactNode][] = [
   [
     "Which languages does it speak?",
     <>
-      English and Swedish, following each kid&rsquo;s Discord language. The help flows list Swedish helplines (Bris,
-      Ditt ECPAT, Polisen) and a helpline finder for other countries.
+      English and Swedish, following each kid&rsquo;s Discord language. In <code>/help</code>, kids pick where they
+      live and get local numbers: Sweden, the US, the UK, Australia and Canada so far, and services that work in every
+      other country.
     </>,
   ],
   [
@@ -150,8 +151,8 @@ export default function Home() {
             don&rsquo;t send more, keep the chat, save the evidence, report and block, and tell an adult today.
           </p>
           <p>
-            It points to the people who can act: the police, a child helpline in their country, and Take It Down to get
-            pictures removed. It is the same advice the FBI, NCMEC and police in Sweden and Australia give. Nothing a
+            It points to the people who can act: the police, a child helpline, and Take It Down to get pictures
+            removed. Kids pick where they live and the numbers change to theirs. It is the same advice the FBI, NCMEC and police in Sweden and Australia give. Nothing a
             kid picks in <code>/help</code> is saved.
           </p>
         </div>
@@ -184,10 +185,11 @@ export default function Home() {
                     </li>
                     <li>
                       <b>Tell an adult you trust, today.</b> A parent, someone else in your family, a teacher or the
-                      school counsellor. If that feels too hard, start by calling Bris on <b>116 111</b>.
+                      school counselor. If that feels too hard, start with a child helpline in your country
+                      (childhelplineinternational.org).
                     </li>
                     <li>
-                      <b>Report it to the police</b> on <b>114 14</b>. They can act even if the person lives in another
+                      <b>Report it to the police where you live.</b> They can act even if the person lives in another
                       country.
                     </li>
                     <li>
@@ -201,9 +203,8 @@ export default function Home() {
             />
             <Buttons>
               <Btn kind="link">Take It Down: remove pictures</Btn>
-              <Btn kind="link">Chat with Bris</Btn>
-              <Btn kind="link">Ditt ECPAT (under 18)</Btn>
-              <Btn kind="link">Police: how to report</Btn>
+              <Btn kind="link">Find a helpline in your country</Btn>
+              <Btn kind="link">How to report on Discord</Btn>
             </Buttons>
           </Message>
         </div>
@@ -247,8 +248,8 @@ export default function Home() {
                       <li>Tell an adult you trust. You won&rsquo;t get in trouble.</li>
                     </ul>
                     <p>
-                      The server&rsquo;s moderators have been told. Need to talk? <b>Bris: 116 111</b> (free,
-                      anonymous).
+                      The server&rsquo;s moderators have been told. Need to talk? Try a child helpline in your
+                      country (childhelplineinternational.org).
                     </p>
                   </>
                 }

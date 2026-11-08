@@ -92,8 +92,8 @@ def overview_embed(o: dict[str, Any], lang: Lang) -> discord.Embed:
     return e
 
 
-def warn_embed(server: str, lang: Lang) -> discord.Embed:
-    e = discord.Embed(title=t("g.warn_title", lang), description=t("g.warn_body", lang, server=server),
+def warn_embed(server: str, lang: Lang, talk: str) -> discord.Embed:
+    e = discord.Embed(title=t("g.warn_title", lang), description=t("g.warn_body", lang, server=server, talk=talk),
                       color=COLORS[Level.YELLOW])
     e.set_footer(text=t("g.warn_footer", lang))
     return e
@@ -132,14 +132,14 @@ register({
               "secrets, your age, or moving to another app.\n\n**You did nothing wrong.**\n"
               "• Don't reply and don't send anything.\n• Don't move to Snapchat, DMs or any other app with them.\n"
               "• Tell an adult you trust. You won't get in trouble.\n\n"
-              "The server's moderators have been told. Need to talk? **Bris: 116 111** (free, anonymous).",
+              "The server's moderators have been told. Need to talk? Try {talk}.",
         "sv": "Någon i **{server}** skickade just ett meddelande till dig med varningstecken, som att be om bilder, "
               "hemligheter, din ålder eller att byta till en annan app.\n\n**Du har inte gjort något fel.**\n"
               "• Svara inte och skicka ingenting.\n• Flytta inte till Snapchat, DM eller någon annan app med personen.\n"
               "• Berätta för en vuxen du litar på. Du får inte skäll.\n\n"
-              "Serverns moderatorer har fått veta. Vill du prata? **Bris: 116 111** (gratis, anonymt).",
+              "Serverns moderatorer har fått veta. Vill du prata? Kontakta {talk}.",
     },
-    "g.warn_footer": {"en": "Guildward · free, open-source child safety", "sv": "Guildward · gratis barnsäkerhet med öppen källkod"},
+    "g.warn_footer": {"en": "Guildward · child safety on Discord", "sv": "Guildward · barnsäkerhet på Discord"},
     # buttons
     "g.btn_timeout": {"en": "Timeout 1h", "sv": "Stäng av 1 h"},
     "g.btn_kick": {"en": "Kick", "sv": "Sparka"},

@@ -239,3 +239,19 @@ def test_auto_flagged_account_cannot_frame_another_through_a_handle():
         p.report(kid, victim, "other")
     assert p.level_of(victim) != "flagged"  # the link only corroborates when the other account is confirmed
     assert p.match_text("victim.handle on snap") == []
+
+
+def test_region_is_saved_beside_the_toggles():
+    p = Pocket(Store(":memory:"))
+    p.touch_user(5, "en")
+    assert p.region(5) is None
+    p.set_region(5, "gb")
+    p.set_pref(5, "weekly", True)  # saving a toggle keeps the country
+    assert p.region(5) == "gb"
+    assert "region" not in p.prefs(5) and p.prefs(5)["weekly"] is True  # settings panel shows toggles only
+    for bad in ("", "x" * 9, "g b", "se;--"):
+        try:
+            p.set_region(5, bad)
+        except ValueError:
+            continue
+        raise AssertionError(bad)

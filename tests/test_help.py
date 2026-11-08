@@ -8,6 +8,7 @@ import discord
 import pytest
 
 from guildward.bot import help as h
+from guildward.bot import helplines as hl
 from guildward.core.i18n import LANGS, missing_translations, t
 
 
@@ -35,10 +36,13 @@ def _assert_view(v: discord.ui.View, lang: str) -> None:
             assert item.url and item.url.startswith("https://"), item.url
             assert 0 < len(item.label) <= 80
         else:
-            assert isinstance(item, discord.ui.Select)
-            assert item.custom_id == h.PICK_ID.format(lang=lang)
-            assert len(item.options) <= 25 and len(item.placeholder) <= 150
-            for o in item.options:
+            select = item.item if isinstance(item, h.RegionPicker) else item
+            assert isinstance(select, discord.ui.Select)
+            assert (select.custom_id == h.PICK_ID.format(lang=lang)
+                    or select.custom_id.startswith(f"gw:help:where:{lang}:"))
+            assert len(select.custom_id) <= 100
+            assert len(select.options) <= 25 and len(select.placeholder) <= 150
+            for o in select.options:
                 assert 0 < len(o.label) <= 100 and len(o.description or "") <= 100
     assert v.is_persistent()
 
@@ -47,40 +51,90 @@ def test_i18n_complete():
     assert missing_translations() == []
 
 
+EMERGENCY = {"se": "112", "us": "911", "gb": "999", "au": "000", "ca": "911"}
+
+
 @pytest.mark.parametrize("lang", LANGS)
 def test_menu(lang):
     embed, view = _run(h.help_menu, lang)
     _assert_limits(embed)
     _assert_view(view, lang)
-    assert "112" in embed.description and "116 111" in embed.description
+    if lang == "sv":  # Swedish speakers start on Sweden
+        assert "112" in embed.description and "116 111" in embed.description
+    else:  # everyone else starts on help that works anywhere, until they pick a country
+        assert "emergency number" in embed.description and "116 111" not in embed.description
     picker = next(i for i in view.children if isinstance(i, discord.ui.Select))
     assert [o.value for o in picker.options] == [*h.SITUATIONS, h.SETTINGS]
+    where = next(i for i in view.children if isinstance(i, h.RegionPicker))
+    assert [o.value for o in where.item.options] == list(hl.REGIONS)
 
 
+@pytest.mark.parametrize("region", hl.REGIONS)
 @pytest.mark.parametrize("lang", LANGS)
 @pytest.mark.parametrize("key", h.SITUATIONS)
-def test_every_situation(key, lang):
-    embed, view = _run(h.situation_embed, key, lang)
+def test_every_situation_in_every_country(key, lang, region):
+    embed, view = _run(h.situation_embed, key, lang, region)
     _assert_limits(embed)
     _assert_view(view, lang)
-    assert "112" in embed.fields[0].value
+    text = embed.description + embed.fields[0].value
+    assert "{" not in text and "}" not in text, "unfilled placeholder"
+    if region in EMERGENCY:
+        assert EMERGENCY[region] in embed.fields[0].value
+    if region != "se":  # no Swedish numbers outside Sweden
+        assert "116 111" not in text and "114 14" not in text and "90101" not in text
     assert sum(isinstance(i, discord.ui.Button) for i in view.children) >= 3
 
 
+@pytest.mark.parametrize("region", hl.REGIONS)
 @pytest.mark.parametrize("lang", LANGS)
-def test_sextortion_follows_guidance(lang):
-    embed, view = _run(h.situation_embed, "threat", lang)
+def test_sextortion_follows_guidance(lang, region):
+    embed, view = _run(h.situation_embed, "threat", lang, region)
     text = embed.description.lower()
     musts = {"en": ("don't pay", "don't delete", "screenshot", "block", "report", "adult", "not your fault",
-                    "take it down", "114 14"),
+                    "take it down", "police"),
              "sv": ("betala inte", "radera inte", "skärmdump", "blockera", "rapportera", "vuxen", "inte ditt fel",
-                    "take it down", "114 14")}[lang]
+                    "take it down", "polis")}[lang]
     for m in musts:
         assert m in text, m
     urls = {b.url for b in view.children if isinstance(b, discord.ui.Button)}
     assert any("takeitdown.ncmec.org" in u for u in urls)
-    assert any("bris.se" in u for u in urls)
-    assert ("https://report.cybertip.org/" in urls) == (lang == "en")
+    want = {"se": "bris.se", "us": "988lifeline.org", "gb": "childline.org.uk", "au": "kidshelpline.com.au",
+            "ca": "kidshelpphone.ca", "intl": "childhelplineinternational.org"}[region]
+    assert any(want in u for u in urls), urls
+    assert ("https://discord.com/report" in urls) == (region == "se")  # Discord's EU form, Sweden only
+
+
+def test_region_picker_saves_and_redraws():
+    class Pocket:
+        def __init__(self):
+            self.saved = {}
+
+        def touch_user(self, uid, lang):
+            pass
+
+        def set_region(self, uid, region):
+            self.saved[uid] = region
+
+        def region(self, uid):
+            return self.saved.get(uid)
+
+    async def go():
+        pocket, seen = Pocket(), {}
+        picker = h.RegionPicker("en", "threat", "intl")
+        picker.item._values = ["gb"]
+
+        async def edit_message(**kw):
+            seen.update(kw)
+
+        inter = type("I", (), {"client": type("C", (), {"pocket": pocket})(), "user": type("U", (), {"id": 7})(),
+                               "response": type("R", (), {"edit_message": staticmethod(edit_message)})()})()
+        await picker.callback(inter)
+        return pocket, seen
+    pocket, seen = asyncio.run(go())
+    assert pocket.saved == {7: "gb"}
+    assert "999" in seen["embed"].fields[0].value and "0800 1111" in seen["embed"].description
+    assert hl.region_for(type("B", (), {"pocket": pocket})(), 7, "sv") == "gb"  # the pick beats the language
+    assert hl.region_for(object(), 7, "sv") == "se" and hl.region_for(object(), 7, "en") == "intl"
 
 
 @pytest.mark.parametrize("lang", LANGS)
@@ -107,7 +161,8 @@ def test_picker_callback_edits_message():
         async def edit_message(**kw):
             seen.update(kw)
 
-        inter = type("I", (), {"response": type("R", (), {"edit_message": staticmethod(edit_message)})()})()
+        inter = type("I", (), {"client": object(), "user": type("U", (), {"id": 1})(),
+                               "response": type("R", (), {"edit_message": staticmethod(edit_message)})()})()
         await picker.callback(inter)
         return seen
     seen = asyncio.run(go())
@@ -121,9 +176,10 @@ def test_persistent_views():
     assert all(v.is_persistent() for v in views)
 
 
+@pytest.mark.parametrize("region", hl.REGIONS)
 @pytest.mark.parametrize("lang", LANGS)
-def test_quick_links(lang):
-    links = h.quick_links(lang)
+def test_quick_links(lang, region):
+    links = h.quick_links(lang, region)
     assert 2 <= len(links) <= 3
     for label, url in links:
         assert 0 < len(label) <= 80 and url.startswith("https://") and not label.startswith("help.")

@@ -96,20 +96,37 @@ class Pocket:
                         ON CONFLICT(user_id) DO UPDATE SET lang=excluded.lang, last_at=excluded.last_at""",
                      uid, lang, now(), now())
 
-    def prefs(self, uid: int) -> dict[str, bool]:
+    def _raw_prefs(self, uid: int) -> dict[str, object]:
         row = self.user(uid)
-        return {**DEFAULT_PREFS, **(json.loads(row["prefs"]) if row else {})}
+        return json.loads(row["prefs"]) if row else {}
+
+    def prefs(self, uid: int) -> dict[str, bool]:
+        """The on/off settings only (the settings panel shows one toggle per key)."""
+        raw = self._raw_prefs(uid)
+        return {k: bool(raw.get(k, v)) for k, v in DEFAULT_PREFS.items()}
 
     def set_pref(self, uid: int, key: str, value: bool) -> dict[str, bool]:
         if key not in DEFAULT_PREFS:
             raise ValueError(key)
-        p = {**self.prefs(uid), key: bool(value)}
-        self.store.x("UPDATE pocket_users SET prefs=? WHERE user_id=?", json.dumps(p), uid)
+        raw = {**self._raw_prefs(uid), key: bool(value)}
+        self.store.x("UPDATE pocket_users SET prefs=? WHERE user_id=?", json.dumps(raw), uid)
+        p = self.prefs(uid)
         if key == "watch_alerts" and not value:
             self.store.x("DELETE FROM watches WHERE kid_id=?", uid)
         if key == "memory" and not value:
             self.store.x("DELETE FROM pair_signals WHERE pair LIKE ?", self.who(uid)[:16] + "%")
         return p
+
+    def region(self, uid: int) -> str | None:
+        """Country the kid picked in /help for local helplines, or None."""
+        value = self._raw_prefs(uid).get("region")
+        return value if isinstance(value, str) else None
+
+    def set_region(self, uid: int, region: str) -> None:
+        if not (region.isascii() and region.isalpha() and len(region) <= 8):  # list lives in bot/helplines.py
+            raise ValueError(region)
+        raw = {**self._raw_prefs(uid), "region": region}
+        self.store.x("UPDATE pocket_users SET prefs=? WHERE user_id=?", json.dumps(raw), uid)
 
     def set_dm(self, uid: int, state: str) -> None:
         self.store.x("UPDATE pocket_users SET dm=? WHERE user_id=?", state, uid)

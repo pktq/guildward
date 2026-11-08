@@ -14,7 +14,7 @@ from typing import TYPE_CHECKING
 
 import discord
 
-from guildward.bot import flows, scan
+from guildward.bot import flows, helplines, scan
 from guildward.bot import help as kidhelp
 from guildward.core.i18n import Lang, register, t
 
@@ -60,7 +60,7 @@ async def watches(bot: GuildwardBot) -> None:
         lang = _lang(bot, w["kid_id"])
         name = (w["display"] or w["username"] or str(w["user_id"])) if w["username"] else str(w["user_id"])
         view = discord.ui.View(timeout=None)
-        for label, url in kidhelp.quick_links(lang):
+        for label, url in kidhelp.quick_links(lang, helplines.region_for(bot, w["kid_id"], lang)):
             view.add_item(discord.ui.Button(label=label, url=url))
         sent = await flows.try_dm(bot, w["kid_id"], flows.watch_embed(news, name, lang), view)
         if sent:

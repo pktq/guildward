@@ -56,6 +56,7 @@ class GuildwardBot(GuardBot):
         commands.setup(self)  # after Guard: its error handler is the one that stays
         for view in kidhelp.persistent_views():  # help menus keep working after a restart
             self.add_view(view)
+        self.add_dynamic_items(kidhelp.RegionPicker)
         self.loop.create_task(tasks.run(self))
         self.loop.create_task(self._housekeeping())
         if self._sync:

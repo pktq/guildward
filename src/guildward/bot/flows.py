@@ -18,7 +18,7 @@ from typing import TYPE_CHECKING, Any
 import discord
 
 from guildward.bot import help as kidhelp
-from guildward.bot import render
+from guildward.bot import helplines, render
 from guildward.bot.adapters import display_name
 from guildward.core.i18n import Lang, register, t
 from guildward.core.models import Confidence, Kind, Level, Signal, Verdict, build_verdict
@@ -299,7 +299,7 @@ class ResultView(discord.ui.View):
 
     @discord.ui.button(label="I need help", style=discord.ButtonStyle.primary)
     async def need_help(self, interaction: discord.Interaction, _b: discord.ui.Button) -> None:
-        embed, view = kidhelp.help_menu(self.lang)
+        embed, view = kidhelp.help_menu(self.lang, helplines.region_for(self.bot, interaction.user.id, self.lang))
         await interaction.response.send_message(embed=embed, view=view, ephemeral=True)
 
     @discord.ui.button(label="Tell my trusted adult", style=discord.ButtonStyle.secondary)
@@ -308,8 +308,9 @@ class ResultView(discord.ui.View):
         ok = await tell_adult(self.bot, self.kid, interaction.user, self.lang,
                               evidence_for(self.account, self.message, self.lang)
                               if self.account is not None and self.message is not None else None)
-        await interaction.followup.send(t("pocket.adult_told" if ok else "pocket.adult_unreachable", self.lang),
-                                        ephemeral=True)
+        talk = helplines.phrases(helplines.region_for(self.bot, self.kid, self.lang), self.lang)["talk"]
+        await interaction.followup.send(t("pocket.adult_told" if ok else "pocket.adult_unreachable", self.lang,
+                                          talk=talk), ephemeral=True)
 
 
 def result_view(bot: GuildwardBot, **kw: Any) -> ResultView:
@@ -456,8 +457,8 @@ register({
         "sv": "Jag har sagt till din trygga vuxna att du behöver hjälp.",
     },
     "pocket.adult_unreachable": {
-        "en": "I couldn't reach your trusted adult on Discord. Please tell them in person or call Bris on 116 111.",
-        "sv": "Jag nådde inte din trygga vuxna på Discord. Säg till hen direkt eller ring Bris på 116 111.",
+        "en": "I couldn't reach your trusted adult on Discord. Please tell them in person, or talk to {talk}.",
+        "sv": "Jag nådde inte din trygga vuxna på Discord. Säg till hen direkt, eller prata med {talk}.",
     },
     "pocket.adult_alert_title": {"en": "Your kid asked for help", "sv": "Ditt barn bad om hjälp"},
     "pocket.adult_alert": {

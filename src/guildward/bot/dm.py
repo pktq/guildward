@@ -14,7 +14,7 @@ from typing import TYPE_CHECKING
 
 import discord
 
-from guildward.bot import flows, render
+from guildward.bot import flows, helplines, render
 from guildward.bot import help as kidhelp
 from guildward.bot.adapters import parse_invite_code
 from guildward.core.i18n import Lang, register, t
@@ -58,7 +58,7 @@ async def on_dm(bot: GuildwardBot, message: discord.Message) -> None:
         await message.channel.send(embed=render.notice_embed("dm.empty", lang))
         return
     if len(items) == 1 and items[0][0].strip().casefold() in _HELP_WORDS:
-        embed, view = kidhelp.help_menu(lang)
+        embed, view = kidhelp.help_menu(lang, helplines.region_for(bot, kid, lang))
         await message.channel.send(embed=embed, view=view)
         return
     batch, handle = _pending.get(kid, ([], None))
