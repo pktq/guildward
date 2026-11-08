@@ -26,7 +26,7 @@ const FAQ: [string, React.ReactNode][] = [
     <>
       Only if your kid chooses. They can name a trusted adult with <code>/guildward adult</code>, and that adult hears
       from Guildward when they press &ldquo;Tell my trusted adult&rdquo; under a result. Nothing goes to an adult behind
-      a kid&rsquo;s back. <Link href="/parents#step-adult">How to set it up together</Link>.
+      a kid&rsquo;s back. <Link href="/parents#setup">How to set it up together</Link>.
     </>,
   ],
   [
