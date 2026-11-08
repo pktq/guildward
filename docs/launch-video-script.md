@@ -12,7 +12,8 @@
 - **NARRATOR:** calm, plain, like a good teacher. Carries most of the film.
 - **MOM:** used only at the start and the end, so the film opens and closes on a person rather than a product.
 
-**Look:** soft 2D, night palette. The chat app is a **generic, made-up UI**, not Discord's.
+**Look:** cinematic, painterly-real night interiors generated in Higgsfield (see `higgsfield-shotlist.md`), with every piece of text, UI, caption and voice built on top in Remotion (`film/`). The chat app is a **generic, made-up UI**, not Discord's.
+**No child is ever on screen.** Leo exists only as his chat messages and, at the end, his voice. We see rooms, light, objects, adult hands, and the offender from behind.
 
 ---
 
@@ -45,7 +46,7 @@
 
 ## 3. How it works (0:40–1:15)
 
-**VISUAL:** Four steps across the top, lighting up one by one: **Meet → Trust → Move → Trap.** Below them, a chat window shows LEO (14) talking to **mia 🌸**.
+**VISUAL:** Four steps across the top, lighting up one by one: **Meet → Trust → Move → Trap.** Below them, a chat window between Leo and **mia 🌸**, over an empty desk lit by a monitor. We only ever see his messages.
 
 **Meet.**
 > *saw u in the server, ur actually so funny lol*
@@ -141,8 +142,8 @@
 >
 > **They're safe. That's what matters.**
 
-**VISUAL:** The door opens and warm hallway light floods the room. Leo stands in the doorway.
-> **LEO:** Mom? Can I show you something?
+**VISUAL:** The door opens. Light floods out and fills the frame. We never see him, only the light.
+> **LEO (O.S.):** Mom? Can I show you something?
 
 **CARD (for any kid watching):**
 > **If this is happening to you:** Don't pay. Don't reply. Save the messages. Block. Tell an adult you trust. **It is not your fault.**
