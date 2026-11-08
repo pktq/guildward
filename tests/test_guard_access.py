@@ -289,7 +289,7 @@ async def _oauth():
         assert r.status == 302
         loc = urlparse(r.headers["Location"])
         q = {k: v[0] for k, v in parse_qs(loc.query).items()}
-        assert loc.netloc == "discord.com" and q["scope"] == "identify" and q["client_id"] == "555"
+        assert loc.netloc == "discord.com" and q["scope"] == "identify guilds" and q["client_id"] == "555"
         assert q["redirect_uri"] == "http://localhost/auth/discord/callback"
         cookie = r.cookies[OAUTH_COOKIE]
         assert cookie["httponly"] and cookie["samesite"] == "Lax" and cookie["path"] == "/auth/discord"
@@ -340,3 +340,46 @@ async def _oauth():
     async with _client(off) as c:
         assert (await (await c.get("/api/public/auth")).json())["discord"] is False
         assert (await c.get("/auth/discord", allow_redirects=False)).status == 503
+
+
+def test_discord_sign_in_with_bot_offline():
+    asyncio.run(_oauth_offline())
+
+
+async def _oauth_offline():
+    """No live bot: the client id comes from the token, and Discord's own server list decides admin."""
+    store = Store()
+    simulate(store)
+    dash = Dashboard(store, Reports(Engine(store)), base_url="http://localhost", host="", port=0,
+                     owner_ids=frozenset(), client_secret="s3cret", client_id=555)
+    servers = [{"id": str(GID), "owner": False, "permissions": str(0x20)},  # Manage Server
+               {"id": "999", "owner": True, "permissions": "0"},  # not a Guard server
+               "junk", {"id": "x"}]
+
+    async def fake_user(code):
+        return {"id": str(fake_user.uid), "username": "u", "guilds": fake_user.guilds}
+
+    dash._discord_user = fake_user
+    async with _client(dash) as c:
+        for uid, guilds, dest, level in ((ADMIN, servers, f"/dashboard/g/{GID}", [(str(GID), "admin")]),
+                                         (NOBODY, [{"id": str(GID), "permissions": str(0x400)}], "/dashboard", [])):
+            fake_user.uid, fake_user.guilds = uid, guilds
+            r = await c.get("/auth/discord", allow_redirects=False)
+            assert r.status == 302 and "client_id=555" in r.headers["Location"]
+            state = parse_qs(urlparse(r.headers["Location"]).query)["state"][0]
+            bound = {"Cookie": f"{OAUTH_COOKIE}={r.cookies[OAUTH_COOKIE].value}"}
+            r = await c.get(f"/auth/discord/callback?code=c&state={state}", headers=bound, allow_redirects=False)
+            assert r.headers["Location"] == dest, uid
+            me = await (await c.get("/api/me", headers={"Cookie": f"{COOKIE}={r.cookies[COOKIE].value}"})).json()
+            assert [(g["id"], g["level"]) for g in me["guilds"]] == level, uid
+
+
+def test_app_id_from_token():
+    import base64
+
+    from guildward.config import Settings
+
+    head = base64.b64encode(b"1568659844003668059").decode().rstrip("=")
+    assert Settings(token=f"{head}.abc.def", dev_guild_id=None, log_level="INFO").app_id == 1568659844003668059
+    for bad in ("", "not-base64!.x", base64.b64encode(b"hello").decode()):
+        assert Settings(token=bad, dev_guild_id=None, log_level="INFO").app_id is None

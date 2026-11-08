@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import base64
+import binascii
 import os
 from dataclasses import dataclass
 from pathlib import Path
@@ -40,6 +42,17 @@ class Settings:
     anthropic_key: str = ""  # opt-in AI second opinion; empty = button hidden
     safe_browsing_key: str = ""  # Google Safe Browsing for link checks; optional
     model: bool = True  # local message model (intel/semantic.py); GUILDWARD_MODEL=off = rules only
+
+    @property
+    def app_id(self) -> int | None:
+        """The bot's application ID from the token's first part (base64 of the bot user ID), so Discord
+        sign-in on the dashboard works while the bot itself is offline."""
+        head = self.token.split(".", 1)[0]
+        try:
+            raw = base64.b64decode(head + "=" * (-len(head) % 4), validate=True).decode()
+        except (binascii.Error, UnicodeDecodeError):
+            return None
+        return int(raw) if raw.isdigit() else None
 
     @classmethod
     def from_env(cls, env_file: Path = Path(".env"), *, need_token: bool = True) -> Settings:

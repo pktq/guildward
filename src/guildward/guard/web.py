@@ -1,8 +1,9 @@
 """Dashboard server: the JSON API from docs/GUARD_API.md plus the static SPA in web/dashboard.
 
 Runs on aiohttp (already a discord.py dependency) in the same event loop as the bots, so API calls
-can act through the live Guard client. Two ways in: "Sign in with Discord" (OAuth2, scope `identify`,
-needs DISCORD_CLIENT_SECRET), or a one-time link the bot hands a member inside Discord (`/guard dashboard`).
+can act through the live Guard client. Two ways in: "Sign in with Discord" (OAuth2, scopes `identify guilds`,
+needs DISCORD_CLIENT_SECRET; works while the bot is offline), or a one-time link the bot hands a member
+inside Discord (`/guard dashboard`).
 The bot owner can also get a link from `uv run guildward owner-link`.
 
 A session only proves who someone is. What they may do in a server (view / act / admin) is worked out on
@@ -55,6 +56,7 @@ LEVEL = web.RequestKey("level", str)
 OAUTH_COOKIE = "gw_oauth"  # binds a Discord sign-in to the browser that started it (login CSRF)
 OAUTH_TTL = 600
 DISCORD_API = "https://discord.com/api/v10"
+MANAGE = 0x8 | 0x20  # Administrator, Manage Server
 # Non-GET guild routes need "admin" unless listed here.
 NEED_ACT = {("POST", "/api/guilds/{gid}/alerts/{aid}"), ("POST", "/api/guilds/{gid}/members/{uid}")}
 _NEXT = re.compile(r"/dashboard(?:[/?#][A-Za-z0-9/_?=&#%.-]*)?")
@@ -116,7 +118,7 @@ def verify(secret: bytes, token: str) -> dict[str, Any] | None:
 class Dashboard:
     def __init__(self, store: Store, reports: Reports, *, base_url: str, host: str, port: int,
                  owner_ids: frozenset[int], guard: GuardBot | None = None, pocket: Any = None,
-                 crowd: Any = None, client_secret: str = "") -> None:
+                 crowd: Any = None, client_secret: str = "", client_id: int | None = None) -> None:
         self.store, self.reports = store, reports
         self.crowd = crowd  # pocket.Pocket: shared flags from every Guildward user
         self.base_url = base_url.rstrip("/")
@@ -125,6 +127,7 @@ class Dashboard:
         self.guard, self.pocket = guard, pocket
         self.secret = secret_for(store)
         self.client_secret = client_secret
+        self._client_id = client_id  # from the token, for when the bot is offline
         self.started = time.time()
         self._runner: web.AppRunner | None = None
         self._public: tuple[float, dict[str, Any]] | None = None
@@ -310,10 +313,14 @@ class Dashboard:
                                      guilds=sorted(guilds), owner=bool(payload.get("o")),
                                      lang=payload.get("l") or "en")
 
-    # --- Sign in with Discord (OAuth2, scope identify) --------------------------------------
+    # --- Sign in with Discord (OAuth2, scopes identify + guilds) -----------------------------
+    @property
+    def client_id(self) -> int | None:
+        return (self.guard.application_id if self.guard is not None else None) or self._client_id
+
     @property
     def oauth_enabled(self) -> bool:
-        return bool(self.client_secret and self.guard is not None and self.guard.application_id)
+        return bool(self.client_secret and self.client_id)
 
     @property
     def redirect_uri(self) -> str:
@@ -325,7 +332,7 @@ class Dashboard:
 
     def _oauth_off(self) -> web.Response:
         return self._page(503, "Discord sign-in is off here",
-                          "This Guard instance has no <code>DISCORD_CLIENT_SECRET</code> set. Run "
+                          "This Guard instance has no <code>DISCORD_CLIENT_SECRET</code> (or bot token) set. Run "
                           "<code>/guard dashboard</code> in your server for a sign-in link instead.")
 
     async def discord_start(self, request: web.Request) -> web.StreamResponse:
@@ -335,8 +342,8 @@ class Dashboard:
         state = sign(self.secret, {"t": "login", "p": safe_next(request.query.get("next")), "b": _hash(bind),
                                    "e": int(time.time()) + OAUTH_TTL, "x": secrets.token_hex(8)})
         resp = web.HTTPFound("https://discord.com/oauth2/authorize?" + urlencode({
-            "client_id": str(self.guard.application_id), "response_type": "code", "redirect_uri": self.redirect_uri,
-            "scope": "identify", "state": state, "prompt": "none"}))
+            "client_id": str(self.client_id), "response_type": "code", "redirect_uri": self.redirect_uri,
+            "scope": "identify guilds", "state": state, "prompt": "none"}))
         # Lax, not Strict: the callback is a top-level navigation coming back from discord.com.
         resp.set_cookie(OAUTH_COOKIE, bind, max_age=OAUTH_TTL, httponly=True, samesite="Lax",
                         secure=self.base_url.startswith("https://"), path="/auth/discord")
@@ -364,26 +371,41 @@ class Dashboard:
             avatar = (f"https://cdn.discordapp.com/avatars/{uid}/{user['avatar']}.png?size=64"
                       if re.fullmatch(r"(a_)?[0-9a-f]{32}", str(user.get("avatar") or "")) else None)
             owner = uid in self.owner_ids
+            managed = self._managed(user.get("guilds"))
             resp = self._session_response(
-                safe_next(payload.get("p")) or self._home(uid, owner), user_id=uid,
-                name=str(user.get("global_name") or user.get("username") or uid)[:100], avatar=avatar, guilds=[],
+                safe_next(payload.get("p")) or self._home(uid, owner, managed), user_id=uid,
+                name=str(user.get("global_name") or user.get("username") or uid)[:100], avatar=avatar, guilds=managed,
                 owner=owner, lang="sv" if str(user.get("locale", "")).startswith("sv") else "en")
         resp.del_cookie(OAUTH_COOKIE, path="/auth/discord")
         if isinstance(resp, web.HTTPException):
             raise resp
         return resp
 
-    def _home(self, uid: int, owner: bool) -> str:
+    def _managed(self, guilds: Any) -> list[str]:
+        """Servers Discord says this user owns or can manage, that Guard knows. Used when the bot can't check
+        live (offline, or no longer in that server); role-based mod access needs the bot."""
+        out = []
+        for g in guilds if isinstance(guilds, list) else []:
+            try:
+                gid, perms = int(g["id"]), int(g.get("permissions") or 0)
+            except (TypeError, ValueError, KeyError, AttributeError):
+                continue
+            if (g.get("owner") is True or perms & MANAGE) and self.store.guild(gid) is not None:
+                out.append(str(gid))
+        return out
+
+    def _home(self, uid: int, owner: bool, managed: list[str]) -> str:
         if owner:
             return "/dashboard/owner"
         for g in self.store.active_guilds():
             if self.guard is not None and self.guard.get_guild(g["id"]) is not None and self.guard.access(g["id"], uid):
                 return f"/dashboard/g/{g['id']}"
-        return "/dashboard"
+        return f"/dashboard/g/{managed[0]}" if managed else "/dashboard"
 
     async def _discord_user(self, code: str) -> dict[str, Any] | None:
-        """Code -> access token -> /users/@me, then revoke the token: only the identity is kept, never the token."""
-        creds = {"client_id": str(self.guard.application_id), "client_secret": self.client_secret}
+        """Code -> access token -> /users/@me (+ its server list as "guilds"), then revoke the token: only the
+        identity and the managed server IDs are kept, never the token."""
+        creds = {"client_id": str(self.client_id), "client_secret": self.client_secret}
         try:
             async with aiohttp.ClientSession(timeout=aiohttp.ClientTimeout(total=15)) as http:
                 async with http.post(f"{DISCORD_API}/oauth2/token", data={
@@ -393,15 +415,18 @@ class Dashboard:
                         log.warning("discord sign-in: token exchange failed (%s)", r.status)
                         return None
                     access = (await r.json()).get("access_token", "")
-                async with http.get(f"{DISCORD_API}/users/@me", headers={"Authorization": f"Bearer {access}"}) as r:
+                auth = {"Authorization": f"Bearer {access}"}
+                async with http.get(f"{DISCORD_API}/users/@me", headers=auth) as r:
                     me = await r.json() if r.status == 200 else None
+                async with http.get(f"{DISCORD_API}/users/@me/guilds", headers=auth) as r:
+                    guilds = await r.json() if r.status == 200 else []
                 async with http.post(f"{DISCORD_API}/oauth2/token/revoke",
                                      data={**creds, "token": access, "token_type_hint": "access_token"}):
                     pass
         except (aiohttp.ClientError, TimeoutError, ValueError) as e:
             log.warning("discord sign-in failed: %s", type(e).__name__)
             return None
-        return me if isinstance(me, dict) else None
+        return {**me, "guilds": guilds} if isinstance(me, dict) else None
 
     async def logout(self, request: web.Request) -> web.Response:
         token = request.cookies.get(COOKIE)

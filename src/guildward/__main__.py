@@ -41,7 +41,7 @@ async def _run(settings: Settings, *, sync: bool, bots: bool) -> None:
     reports = bot.reports if bot else Reports(Engine(store))
     dash = Dashboard(store, reports, base_url=settings.dashboard_url, host=settings.dashboard_host,
                      port=settings.dashboard_port, owner_ids=settings.owner_ids, guard=bot, pocket=bot, crowd=crowd,
-                     client_secret=settings.client_secret)
+                     client_secret=settings.client_secret, client_id=settings.app_id)
     await dash.start()
     try:
         if bot is not None:

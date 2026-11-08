@@ -49,9 +49,7 @@
       "env": {
         "DATABASE_PATH": "data/sim.db",
         "DASHBOARD_PORT": "8091",
-        "DASHBOARD_URL": "http://localhost:3000",
-        "DISCORD_TOKEN": "",
-        "GUARD_TOKEN": ""
+        "DASHBOARD_URL": "http://localhost:3000"
       }
     }
   ]
