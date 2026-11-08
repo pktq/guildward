@@ -39,6 +39,14 @@ const SOURCES: [title: string, href: string][] = [
     "NCMEC, Sextortion: What Parents Should Know (2024)",
     "https://www.missingkids.org/content/dam/netsmartz/downloadable/tipsheets/sextortion-what-parents-should-know.pdf",
   ],
+  [
+    "FBI and international partners, joint warning about a global financial sextortion crisis (7 February 2023)",
+    "https://www.fbi.gov/news/press-releases/international-law-enforcement-agencies-issue-joint-warning-about-global-financial-sextortion-crisis",
+  ],
+  [
+    "Australian Federal Police, AFP joins international law enforcement agencies to deliver joint warning (7 February 2023)",
+    "https://afp.gov.au/news-centre/media-release/afp-joins-international-law-enforcement-agencies-deliver-joint-warning",
+  ],
 ];
 
 function Ref({ n }: { n: number }) {
@@ -64,8 +72,8 @@ const HOW: [string, ReactNode][] = [
   [
     "Then the demand.",
     <>
-      As soon as a picture arrives: pay, or it goes to your family, friends and followers. ECPAT Sweden has seen demands
-      from about 1,000 to tens of thousands of kronor.
+      As soon as a picture arrives: pay, or it goes to your family, friends and followers. ECPAT has seen demands from
+      about $100 to several thousand dollars.
       <Ref n={5} />
     </>,
   ],
@@ -81,18 +89,19 @@ const HOW: [string, ReactNode][] = [
     "Paying doesn't end it.",
     <>
       In NCMEC reports where a victim said they had paid, 27% described new demands afterwards.
-      <Ref n={1} /> Swedish police say not to pay: the picture is still out there either way.
+      <Ref n={1} /> Police say not to pay: the picture is still out there either way.
       <Ref n={3} />
     </>,
   ],
   [
-    "It is organised, and it targets boys.",
+    "It is organized, worldwide, and it targets boys.",
     <>
-      90% of financial sextortion victims in NCMEC&rsquo;s data were boys aged 14 to 17.
-      <Ref n={1} /> Swedish police describe organised groups based abroad, which makes the cases very hard to
-      investigate.
-      <Ref n={2} /> ECPAT&rsquo;s helpline hears from boys aged 10 to 17 every week.
-      <Ref n={4} />
+      The FBI counted more than 12,600 minor victims in the US in a year and a half, mostly boys, and knows of more than
+      20 suicides linked to it.
+      <Ref n={6} /> 90% of financial sextortion victims in NCMEC&rsquo;s data were boys aged 14 to 17.
+      <Ref n={1} /> Police describe organized groups based abroad, which makes the cases very hard to investigate.
+      <Ref n={2} />
+      <Ref n={9} />
     </>,
   ],
 ];
@@ -100,7 +109,7 @@ const HOW: [string, ReactNode][] = [
 const TELL: [string, ReactNode][] = [
   [
     "How the scam goes, step by step.",
-    "A stranger who is suddenly very interested, a picture sent first, a request for one back. Knowing the pattern is what lets a kid recognise it while it's happening.",
+    "A stranger who is suddenly very interested, a picture sent first, a request for one back. Knowing the pattern is what lets a kid recognize it while it's happening.",
   ],
   [
     "That it is a crime against them.",
@@ -134,9 +143,11 @@ const IF_IT_HAPPENS: [string, ReactNode][] = [
   [
     "Report it to the police.",
     <>
-      114 14, or 112 if your kid is in danger right now. Police say more reports make these cases easier to
+      Call your local police, or your emergency number if your kid is in danger right now. In the US, also report to the
+      FBI at tips.fbi.gov and to NCMEC&rsquo;s CyberTipline. Police say more reports make these cases easier to
       investigate.
       <Ref n={3} />
+      <Ref n={6} />
     </>,
   ],
   [
@@ -150,17 +161,41 @@ const IF_IT_HAPPENS: [string, ReactNode][] = [
     "Watch how they are doing, not just the case.",
     <>
       In NCMEC reports that describe how the victim was affected, 17.5% mention suicidal thoughts or self-harm.
-      <Ref n={1} /> If your kid talks about not wanting to live, call 112, or Mind Självmordslinjen on 90101.
+      <Ref n={1} /> If your kid talks about not wanting to live, call your emergency number or a crisis line now.
     </>,
   ],
 ];
 
-const HELP: [string, string, string][] = [
-  ["Bris", "116 111, call or chat, every day. Anonymous, for anyone under 18.", "https://www.bris.se/"],
-  ["Ditt ECPAT", "ECPAT's support for young people who have been exposed online.", "https://ecpat.se/"],
-  ["Polisen", "114 14. In an emergency, 112.", "https://polisen.se/"],
-  ["Mind Självmordslinjen", "90101, phone and chat.", "https://mind.se/"],
-  ["Take It Down", "NCMEC's service for getting nude pictures of under-18s removed.", "https://takeitdown.ncmec.org/"],
+const HELP: [region: string, items: [name: string, text: string, href: string][]][] = [
+  [
+    "Anywhere",
+    [
+      ["Child Helpline International", "Free child helplines, country by country.", "https://childhelplineinternational.org/helplines/"],
+      ["Take It Down", "NCMEC's service for getting nude pictures of under-18s removed.", "https://takeitdown.ncmec.org/"],
+    ],
+  ],
+  [
+    "United States",
+    [
+      ["NCMEC CyberTipline", "Report online exploitation of a child. 1-800-THE-LOST.", "https://report.cybertip.org/"],
+      ["FBI", "Report at tips.fbi.gov or 1-800-CALL-FBI.", "https://tips.fbi.gov/"],
+    ],
+  ],
+  [
+    "Australia",
+    [
+      ["ACCCE", "Report online child sexual exploitation to the Australian Federal Police.", "https://www.accce.gov.au/report"],
+      ["Kids Helpline", "1800 55 1800.", "https://kidshelpline.com.au/"],
+    ],
+  ],
+  [
+    "Sweden",
+    [
+      ["Bris", "116 111, call or chat, every day. Anonymous, for anyone under 18.", "https://www.bris.se/"],
+      ["Polisen", "114 14. In an emergency, 112.", "https://polisen.se/"],
+      ["Mind Självmordslinjen", "90101, phone and chat.", "https://mind.se/"],
+    ],
+  ],
 ];
 
 export default function ParentsPage() {
@@ -186,7 +221,9 @@ export default function ParentsPage() {
           <h2 id="how-title">How sextortion actually happens</h2>
           <p>
             It is rarely what parents picture. It is a scripted scam run at scale, built to get one picture and then
-            money, as fast as possible.
+            money, as fast as possible. The FBI, the UK&rsquo;s National Crime Agency and police in Australia, Canada and
+            New Zealand have warned about it together as a global crisis.
+            <Ref n={9} />
           </p>
         </div>
         <ol className="pa-facts">
@@ -208,10 +245,12 @@ export default function ParentsPage() {
             The blackmailer&rsquo;s whole plan depends on your kid believing they can&rsquo;t come to you.
           </p>
           <p>
-            Real messages from these cases tell kids they will be labelled a paedophile, that they will go to jail, and that
+            Real messages from these cases tell kids they will be labeled a pedophile, that they will go to jail, and that
             their parents won&rsquo;t love them anymore.
-            <Ref n={1} /> Shame and guilt are why so many never report it.
+            <Ref n={1} /> Shame and guilt are why so many never report it. Australian police estimate fewer than a
+            quarter of young victims go to the police.
             <Ref n={4} />
+            <Ref n={10} />
           </p>
           <p>
             Thorn&rsquo;s research found that these threats stand in the way of asking for help, and that this is
@@ -249,9 +288,10 @@ export default function ParentsPage() {
         <div className="pa-side">
           <h2 id="happens-title">If it happens</h2>
           <p>
-            Swedish police&rsquo;s first advice to parents: let your kid tell you what happened, listen, and stay calm.
-            They are the victim of a crime.
+            Police give parents the same first advice: let your kid tell you what happened, listen, and stay calm. They
+            are the victim of a crime, and won&rsquo;t be blamed for it.
             <Ref n={3} />
+            <Ref n={10} />
           </p>
         </div>
         <ol className="pa-facts pa-facts-num">
@@ -265,17 +305,25 @@ export default function ParentsPage() {
       </section>
 
       <section className="pa-help" aria-labelledby="help-title">
-        <h2 id="help-title">Where to get help in Sweden</h2>
-        <ul>
-          {HELP.map(([name, text, href]) => (
-            <li key={name}>
-              <a href={href} rel="noopener">
-                {name}
-              </a>
-              <span>{text}</span>
-            </li>
+        <h2 id="help-title">Where to get help</h2>
+        <div className="pa-help-regions">
+          {HELP.map(([region, items]) => (
+            <div key={region}>
+              <h3>{region}</h3>
+              <ul>
+                {items.map(([name, text, href]) => (
+                  <li key={name}>
+                    <a href={href} rel="noopener">
+                      {name}
+                    </a>
+                    <span>{text}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
           ))}
-        </ul>
+        </div>
+        <p className="pa-help-note">In immediate danger, call your local emergency number.</p>
       </section>
 
       <section className="pa-sources" aria-labelledby="sources-title">

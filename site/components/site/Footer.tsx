@@ -35,9 +35,11 @@ export function Footer() {
       <div className="gw-tile gw-tile-help">
         <p>Need to talk to someone now?</p>
         <p className="gw-tile-big">
-          Bris <a href="tel:116111">116 111</a>
+          <a href="https://childhelplineinternational.org/helplines/" rel="noopener">
+            Find a child helpline
+          </a>
         </p>
-        <p>Free and anonymous, for anyone under 18 in Sweden. In danger: call 112.</p>
+        <p>Free helplines, country by country. In danger: call your local emergency number.</p>
       </div>
       <div className="gw-tile gw-tile-code">
         <p>Running a server with Guard?</p>

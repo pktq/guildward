@@ -341,13 +341,27 @@
 .pa-help {
   padding: clamp(56px, 7vw, 104px) var(--edge) 32px;
 }
+.pa-help-regions {
+  margin-top: 28px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+  gap: 32px var(--gutter);
+}
+.pa-help h3 {
+  font-family: var(--gw-font-text), sans-serif;
+  font-size: var(--step-small);
+  font-weight: 600;
+  letter-spacing: 0;
+  color: var(--muted);
+  padding-bottom: 8px;
+}
 .pa-help ul {
   list-style: none;
   padding: 0;
+}
+.pa-help-note {
   margin-top: 24px;
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
-  gap: 0 var(--gutter);
+  font-weight: 600;
 }
 .pa-help li {
   display: grid;

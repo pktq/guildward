@@ -75,8 +75,8 @@ export default function Home() {
         <div className="gw-hero-text">
           <h1 id="hero-title">Is this sketchy?</h1>
           <p className="gw-lead">
-            Guildward is a Discord app that checks a server, a person, a message or a link in two clicks, then answers
-            in plain words: green, yellow or red, why, and what to do.
+            Guildward is a Discord app against sextortion and grooming. A kid checks a server, a person, a message or
+            a link in two clicks and gets a plain answer: green, yellow or red, why, and what to do.
           </p>
           <div className="gw-actions">
             <a className="gw-btn gw-btn-accent" href="#install">
@@ -95,22 +95,64 @@ export default function Home() {
         </div>
       </section>
 
+      <section className="gw-stakes" aria-labelledby="stakes-title">
+        <div className="gw-stakes-head">
+          <h2 id="stakes-title">Sextortion is a worldwide crime against kids</h2>
+          <p>
+            Organized groups run it as a script: a friendly profile, a picture sent first, one asked back, then a demand
+            for money. The FBI, the UK&rsquo;s National Crime Agency and police in Australia, Canada and New Zealand
+            have warned about it together as a global crisis.
+          </p>
+          <Link className="gw-textlink" href="/parents">
+            What parents should know <span aria-hidden="true">→</span>
+          </Link>
+        </div>
+        <dl className="gw-stakes-figs">
+          <div>
+            <dt>minor victims counted by the FBI in a year and a half, with more than 20 suicides linked to it</dt>
+            <dd>12,600+</dd>
+          </div>
+          <div>
+            <dt>of financial sextortion victims in NCMEC&rsquo;s reports are boys aged 14 to 17</dt>
+            <dd>90%</dd>
+          </div>
+          <div>
+            <dt>sextortion reports reach NCMEC in an average week</dt>
+            <dd>812</dd>
+          </div>
+        </dl>
+        <p className="gw-stakes-src">
+          Sources:{" "}
+          <a href="https://www.fbi.gov/news/stories/the-financially-motivated-sextortion-threat" rel="noopener">
+            FBI
+          </a>{" · "}
+          <a href="https://info.thorn.org/hubfs/Research/Thorn_TrendsInFinancialSextortion_June2024.pdf" rel="noopener">
+            Thorn &amp; NCMEC, 2024
+          </a>{" · "}
+          <a href="https://www.fbi.gov/news/press-releases/international-law-enforcement-agencies-issue-joint-warning-about-global-financial-sextortion-crisis" rel="noopener">
+            Joint warning, 2023
+          </a>
+        </p>
+      </section>
+
       <Showcase />
 
       <section className="gw-help" aria-labelledby="help-title">
         <div className="gw-help-text" data-reveal>
           <h2 id="help-title">When someone threatens to share pictures</h2>
           <p className="gw-strong">
-            Sextortion often starts like any other chat: flattery, an age question, a push to Snapchat.
-            Guildward&rsquo;s checks look for exactly that setup, and for photo requests, pressure and threats.
+            Sextortion usually starts like any other chat: a friendly profile, flattery, a push to another app, a
+            picture sent first and one asked back. Guildward&rsquo;s checks look for exactly that setup, and for photo
+            requests, pressure and threats.
           </p>
           <p>
             If it has already happened, <code>/help</code> walks a kid through it one step at a time: don&rsquo;t pay,
             don&rsquo;t send more, keep the chat, save the evidence, report and block, and tell an adult today.
           </p>
           <p>
-            It points to the people who can act: Bris on 116 111, the police on 114 14, Ditt ECPAT, and Take It Down to
-            get pictures removed. Nothing a kid picks in <code>/help</code> is saved.
+            It points to the people who can act: the police, a child helpline in their country, and Take It Down to get
+            pictures removed. It is the same advice the FBI, NCMEC and police in Sweden and Australia give. Nothing a
+            kid picks in <code>/help</code> is saved.
           </p>
         </div>
         <div className="gw-help-frag dc" data-ui="" data-reveal>

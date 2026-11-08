@@ -1116,6 +1116,83 @@
   font-weight: 600;
 }
 
+/* ---------- Stakes: sourced figures under the hero ---------- */
+
+.gw-stakes {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  column-gap: var(--gutter);
+  row-gap: 40px;
+  padding: clamp(56px, 7vw, 104px) var(--edge);
+  border-top: 1px solid #dde3ec;
+}
+.gw-stakes-head {
+  grid-column: 1 / span 5;
+  display: grid;
+  gap: 18px;
+  align-content: start;
+}
+.gw-stakes h2 {
+  font-size: clamp(1.75rem, 1.35rem + 1.3vw, 2.5rem);
+}
+.gw-stakes-head p {
+  color: var(--muted);
+  max-width: 44ch;
+}
+.gw-stakes-head .gw-textlink {
+  width: fit-content;
+}
+.gw-stakes-figs {
+  grid-column: 7 / -1;
+  margin: 0;
+  display: grid;
+}
+.gw-stakes-figs div {
+  display: grid;
+  grid-template-columns: minmax(7ch, auto) minmax(0, 1fr);
+  align-items: baseline;
+  gap: 24px;
+  padding: 18px 0;
+  border-top: 1px solid #dde3ec;
+}
+.gw-stakes-figs div:first-child {
+  border-top: 0;
+  padding-top: 0;
+}
+.gw-stakes-figs dd {
+  grid-row: 1;
+  margin: 0;
+  font-family: var(--gw-font-display), sans-serif;
+  font-weight: 700;
+  font-size: clamp(2rem, 1.6rem + 1.4vw, 3rem);
+  line-height: 1;
+  letter-spacing: -0.03em;
+  font-variant-numeric: tabular-nums;
+}
+.gw-stakes-figs dt {
+  color: #3d4664;
+  max-width: 40ch;
+}
+.gw-stakes-src {
+  grid-column: 7 / -1;
+  font-size: var(--step-small);
+  color: var(--muted);
+}
+
+@media (max-width: 1100px) {
+  .gw-stakes-head,
+  .gw-stakes-figs,
+  .gw-stakes-src {
+    grid-column: 1 / -1;
+  }
+}
+@media (max-width: 640px) {
+  .gw-stakes-figs div {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 6px;
+  }
+}
+
 /* ---------- Install ---------- */
 
 .gw-install {

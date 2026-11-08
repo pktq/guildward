@@ -10,7 +10,7 @@ export const metadata: Metadata = {
   metadataBase: new URL(process.env.SITE_URL || "http://localhost:3000"),
   title: { default: "Guildward: Discord safety for kids", template: "%s · Guildward" },
   description:
-    "A Discord app that lets kids check a server, a person, a message or a link in two clicks, and helps server admins spot grooming and scams. Message text is never stored.",
+    "A Discord app against sextortion and grooming, anywhere in the world. Kids check a server, a person, a message or a link in two clicks; server admins get alerts on grooming and scams. Message text is never stored.",
   applicationName: "Guildward",
   openGraph: { siteName: "Guildward", type: "website" },
 };
