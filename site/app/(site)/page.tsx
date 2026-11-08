@@ -26,7 +26,7 @@ const FAQ: [string, React.ReactNode][] = [
     <>
       Only if your kid chooses. They can name a trusted adult with <code>/guildward adult</code>, and that adult hears
       from Guildward when they press &ldquo;Tell my trusted adult&rdquo; under a result. Nothing goes to an adult behind
-      a kid&rsquo;s back.
+      a kid&rsquo;s back. <Link href="/parents#step-adult">How to set it up together</Link>.
     </>,
   ],
   [
@@ -82,6 +82,9 @@ export default function Home() {
             <a className="gw-btn gw-btn-accent" href="#install">
               Add to Discord
             </a>
+            <Link className="gw-textlink" href="/parents">
+              For parents <span aria-hidden="true">→</span>
+            </Link>
             <a className="gw-textlink" href="#guard">
               For server admins <span aria-hidden="true">→</span>
             </a>

@@ -1,0 +1,392 @@
+/* /parents. Scoped under .gw-site like the rest of the marketing pages. */
+
+.gw-site .pa-intro {
+  padding: clamp(40px, 6vw, 88px) var(--edge) clamp(48px, 6vw, 88px);
+}
+.pa-intro h1 {
+  font-size: var(--step-display);
+  line-height: 0.92;
+  max-width: 12ch;
+}
+.pa-intro .gw-lead {
+  max-width: 44ch;
+}
+.pa-need {
+  margin-top: 16px;
+  color: var(--muted);
+  font-size: var(--step-small);
+}
+
+/* The promise: the one dark section, because it is the point of the page. */
+.pa-promise {
+  background: var(--field-1);
+  color: var(--field-1-ink);
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  column-gap: var(--gutter);
+  row-gap: 48px;
+  padding: clamp(64px, 8vw, 120px) var(--edge);
+  scroll-margin-top: 0;
+}
+.pa-promise-head {
+  grid-column: 1 / span 5;
+}
+.pa-promise-body {
+  grid-column: 7 / -1;
+}
+.pa-promise h2 {
+  font-size: var(--step-head);
+}
+.pa-promise-lead {
+  font-size: var(--step-lead);
+  line-height: 1.4;
+  margin-top: 24px;
+}
+.pa-promise-head > p + p {
+  margin-top: 16px;
+  color: var(--field-1-soft);
+}
+.pa-promise h3 {
+  font-family: var(--gw-font-text), sans-serif;
+  font-size: var(--step-body);
+  font-weight: 600;
+  letter-spacing: 0;
+  color: var(--field-1-soft);
+}
+.pa-promise h3 + * {
+  margin-top: 16px;
+}
+.pa-promise h3:not(:first-child) {
+  margin-top: 48px;
+}
+.pa-say {
+  list-style: none;
+  padding: 0;
+  display: grid;
+  gap: 18px;
+}
+.pa-say li {
+  font-size: var(--step-lead);
+  line-height: 1.4;
+  padding-left: 20px;
+  border-left: 2px solid var(--accent);
+}
+.pa-keep {
+  margin: 0;
+  display: grid;
+}
+.pa-keep div {
+  padding: 16px 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.14);
+}
+.pa-keep dt {
+  font-weight: 600;
+}
+.pa-keep dd {
+  margin: 4px 0 0;
+  color: var(--field-1-soft);
+}
+.pa-promise-close {
+  margin-top: 24px;
+  font-weight: 600;
+}
+
+/* Steps */
+.pa-steps {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  column-gap: var(--gutter);
+  row-gap: 40px;
+  padding: clamp(64px, 8vw, 120px) var(--edge);
+  scroll-margin-top: 0;
+}
+.pa-steps-head {
+  grid-column: 1 / span 4;
+  align-self: start;
+  position: sticky;
+  top: 24px;
+}
+.pa-steps h2,
+.pa-signs h2,
+.pa-tell h2 {
+  font-size: var(--step-head);
+}
+.pa-steps-head p,
+.pa-signs-head p {
+  margin-top: 20px;
+  color: var(--muted);
+  max-width: 38ch;
+}
+.pa-steplist {
+  grid-column: 5 / -1;
+}
+.pa-stepbar {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background: var(--bg);
+  padding-top: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--ink);
+}
+.pa-stepbar b {
+  font-size: var(--step-lead);
+}
+.pa-device {
+  display: flex;
+  gap: 4px;
+}
+.pa-device button {
+  font: inherit;
+  font-weight: 600;
+  min-height: 36px;
+  padding: 0 14px;
+  border: 1px solid #d3dae5;
+  border-radius: 999px;
+  background: #fff;
+  color: var(--ink);
+  cursor: pointer;
+}
+.pa-device button[aria-pressed="true"] {
+  background: var(--ink);
+  border-color: var(--ink);
+  color: #fff;
+}
+.pa-steplist > ol {
+  list-style: none;
+  padding: 0;
+}
+.pa-step {
+  display: grid;
+  grid-template-columns: 56px minmax(0, 1fr);
+  gap: 0 16px;
+  padding: 32px 0;
+  border-bottom: 1px solid #dde3ec;
+  scroll-margin-top: 16px;
+}
+.pa-num {
+  font-family: var(--gw-font-display), sans-serif;
+  font-weight: 700;
+  font-size: 2rem;
+  line-height: 1;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+}
+.pa-step[data-done] .pa-num {
+  color: #2ea043;
+}
+.pa-step h3 {
+  font-size: clamp(1.25rem, 1.1rem + 0.5vw, 1.5rem);
+  line-height: 1.15;
+}
+.pa-why {
+  margin-top: 10px;
+  color: #3d4664;
+  max-width: 62ch;
+}
+.pa-install {
+  margin-top: 20px;
+}
+.pa-how,
+.pa-tell-list {
+  list-style: decimal;
+}
+.pa-bullets,
+.pa-see ul {
+  list-style: disc;
+}
+.pa-how {
+  margin-top: 20px;
+  padding-left: 1.25em;
+  display: grid;
+  gap: 8px;
+  max-width: 62ch;
+}
+.pa-how li::marker {
+  font-weight: 600;
+  color: var(--muted);
+}
+.pa-bullets {
+  margin-top: 16px;
+  padding-left: 1.1em;
+  display: grid;
+  gap: 6px;
+  max-width: 62ch;
+}
+.pa-see {
+  margin-top: 20px;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 24px;
+  max-width: 62ch;
+}
+.pa-see p {
+  font-weight: 600;
+}
+.pa-see ul {
+  margin-top: 8px;
+  padding-left: 1.1em;
+  display: grid;
+  gap: 4px;
+  font-size: var(--step-small);
+}
+.pa-note,
+.pa-tip {
+  margin-top: 16px;
+  max-width: 62ch;
+  font-size: var(--step-small);
+}
+.pa-note {
+  color: var(--muted);
+}
+.pa-tip {
+  font-weight: 600;
+}
+.pa-step-foot {
+  margin-top: 20px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px 24px;
+}
+.pa-check {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 44px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.pa-check input {
+  width: 20px;
+  height: 20px;
+  margin: 0;
+  accent-color: #2ea043;
+}
+.pa-src {
+  font-size: var(--step-small);
+  color: var(--muted);
+}
+
+/* Warning signs */
+.pa-signs {
+  background: var(--surface);
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  column-gap: var(--gutter);
+  row-gap: 40px;
+  padding: clamp(64px, 8vw, 120px) var(--edge);
+}
+.pa-signs-head {
+  grid-column: 1 / span 4;
+}
+.pa-stages {
+  grid-column: 5 / -1;
+  list-style: none;
+  padding: 0;
+  counter-reset: stage;
+}
+.pa-stages li {
+  counter-increment: stage;
+  display: grid;
+  grid-template-columns: 56px minmax(0, 14rem) minmax(0, 1fr);
+  gap: 4px 16px;
+  padding: 18px 0;
+  border-top: 1px solid #d3dae5;
+}
+.pa-stages li::before {
+  content: counter(stage);
+  font-weight: 600;
+  color: var(--muted);
+}
+.pa-stages span {
+  color: #3d4664;
+}
+
+/* If they tell you + help */
+.pa-tell {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 48px var(--gutter);
+  padding: clamp(64px, 8vw, 120px) var(--edge);
+}
+.pa-tell-list {
+  margin-top: 28px;
+  padding-left: 1.25em;
+  display: grid;
+  gap: 14px;
+  max-width: 52ch;
+}
+.pa-help {
+  margin-top: 28px;
+  list-style: none;
+  padding: 0;
+}
+.pa-help li {
+  display: grid;
+  gap: 2px;
+  padding: 14px 0;
+  border-top: 1px solid #dde3ec;
+}
+.pa-help span {
+  color: #3d4664;
+  font-size: var(--step-small);
+}
+.pa-help a {
+  font-size: var(--step-small);
+  font-weight: 600;
+  width: fit-content;
+}
+
+.pa-end {
+  padding: 0 var(--edge) clamp(64px, 8vw, 120px);
+}
+.pa-end p {
+  font-family: var(--gw-font-display), sans-serif;
+  font-weight: 700;
+  font-size: clamp(1.5rem, 1.2rem + 1vw, 2.125rem);
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  max-width: 30ch;
+  padding-top: 40px;
+  border-top: 1px solid var(--ink);
+}
+
+@media (max-width: 1100px) {
+  .pa-promise-head,
+  .pa-promise-body,
+  .pa-steps-head,
+  .pa-steplist,
+  .pa-signs-head,
+  .pa-stages {
+    grid-column: 1 / -1;
+  }
+  .pa-steps-head {
+    position: static;
+  }
+  .pa-tell {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+@media (max-width: 640px) {
+  .pa-step {
+    grid-template-columns: 36px minmax(0, 1fr);
+  }
+  .pa-num {
+    font-size: 1.5rem;
+  }
+  .pa-see {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .pa-stages li {
+    grid-template-columns: 28px minmax(0, 1fr);
+  }
+  .pa-stages span {
+    grid-column: 2;
+  }
+}
