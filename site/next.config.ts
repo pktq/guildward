@@ -19,6 +19,9 @@ const nextConfig: NextConfig = {
     return [
       { source: "/api/:path*", destination: `${GUARD_API_URL}/api/:path*` },
       { source: "/pocket/:path*", destination: `${GUARD_API_URL}/pocket/:path*` },
+      // Sign in with Discord: /auth/discord starts it, /auth/discord/callback finishes it. (Plain /auth, the
+      // one-time link from /guard dashboard, is app/auth/route.ts.)
+      { source: "/auth/discord/:path*", destination: `${GUARD_API_URL}/auth/discord/:path*` },
     ];
   },
 };

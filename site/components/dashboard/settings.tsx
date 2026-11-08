@@ -4,18 +4,23 @@ import { useParams } from "next/navigation";
 import { useRef, useState } from "react";
 import type { FormEvent, ReactNode } from "react";
 import type { Settings, SettingsResponse } from "@/lib/dashboard/types";
-import { useApi, useDash } from "./context";
+import { useApi, useCan, useDash } from "./context";
 import { Async, PageHead } from "./ui";
 
 type Form = Omit<Settings, "retention_days"> & { retention_days: string };
 
 type BoolKey = "quote_in_alerts" | "auto_delete" | "auto_timeout" | "warn_targets" | "raid_protection" | "quarantine_new_accounts" | "network_share";
 const same = (a: unknown, b: unknown) => JSON.stringify(a) === JSON.stringify(b);
-
-const toForm = (s: Settings): Form => ({ ...s, retention_days: String(s.retention_days) });
+const sorted = (o: Record<string, string>) => Object.entries(o).sort(([a], [b]) => (a < b ? -1 : 1));
 
 function SettingsForm({ d, gid }: { d: SettingsResponse; gid: string }) {
   const { t, call, toast, fail } = useDash();
+  const admin = useCan(gid)("admin"); // the API takes settings changes from server admins only
+  // Roles deleted from the server since they were given access drop out here, so saving doesn't trip on them.
+  const toForm = (s: Settings): Form => ({
+    ...s, retention_days: String(s.retention_days),
+    dashboard_roles: Object.fromEntries(Object.entries(s.dashboard_roles ?? {}).filter(([id]) => d.roles.some((r) => r.id === id))),
+  });
   const [saved, setSaved] = useState<Form>(() => toForm(d.settings));
   const [form, setForm] = useState<Form>(saved);
   const [saving, setSaving] = useState(false);
@@ -27,6 +32,7 @@ function SettingsForm({ d, gid }: { d: SettingsResponse; gid: string }) {
     const cur = parsed(form), orig = parsed(saved), out: Record<string, unknown> = {};
     for (const k of Object.keys(cur) as (keyof Settings)[]) {
       if (k === "minor_role_ids") { if (!same([...cur[k]].sort(), [...orig[k]].sort())) out[k] = cur[k]; }
+      else if (k === "dashboard_roles") { if (!same(sorted(cur[k]), sorted(orig[k]))) out[k] = cur[k]; }
       else if (!same(cur[k], orig[k])) out[k] = cur[k];
     }
     return out;
@@ -66,11 +72,19 @@ function SettingsForm({ d, gid }: { d: SettingsResponse; gid: string }) {
       <select id={`s-${key}`} name={key} value={form[key] ?? ""} onChange={(e) => set(key, (key === "lang" ? e.target.value : e.target.value || null) as never)}>{inner}</select>
     </div>
   );
+  const setAccess = (role: string, level: string) => {
+    const next = { ...form.dashboard_roles };
+    if (level === "view" || level === "act") next[role] = level;
+    else delete next[role];
+    set("dashboard_roles", next);
+  };
   const none = <option value="">{t("none")}</option>;
   const roleOpts = <>{none}{d.roles.map((x) => <option key={x.id} value={x.id}>{x.name}</option>)}</>;
 
   return (
     <form id="settings" className="settings" noValidate onSubmit={submit}>
+      {!admin && <p className="view-only" role="note">{t("settingsReadOnly")}</p>}
+      <fieldset className="settings-lock" disabled={!admin}>
       <fieldset className="panel"><legend>{t("g_mode")}</legend>
         <div className="mode-pick">
           {(["observe", "protect"] as const).map((mo) => (
@@ -130,11 +144,28 @@ function SettingsForm({ d, gid }: { d: SettingsResponse; gid: string }) {
         </div>
         {select("lang", <><option value="en">English</option><option value="sv">Svenska</option></>)}
       </fieldset>
-      <div className="savebar" id="savebar" data-dirty={dirty}>
+      {admin && (
+        <fieldset className="panel"><legend>{t("g_access")}</legend>
+          <p className="help help-top" id="d-access">{t("set_access_d")}</p>
+          {d.roles.length ? d.roles.map((x) => (
+            <div className="field field-access" key={x.id}>
+              <label htmlFor={`acc-${x.id}`}>{x.name}</label>
+              <select id={`acc-${x.id}`} name={`dashboard_roles.${x.id}`} value={form.dashboard_roles[x.id] ?? ""}
+                onChange={(e) => setAccess(x.id, e.target.value)}>
+                <option value="">{t("acc_none")}</option>
+                <option value="view">{t("acc_view")}</option>
+                <option value="act">{t("acc_act")}</option>
+              </select>
+            </div>
+          )) : <p className="help">{t("set_access_none")}</p>}
+        </fieldset>
+      )}
+      </fieldset>
+      {admin && <div className="savebar" id="savebar" data-dirty={dirty}>
         <span className="savebar-msg" role="status">{dirty ? t("unsaved") : ""}</span>
         <button type="button" className="btn" onClick={() => setForm(saved)}>{t("reset")}</button>
         <button type="submit" className="btn btn-primary" disabled={saving} aria-busy={saving}>{saving ? t("saving") : t("save")}</button>
-      </div>
+      </div>}
     </form>
   );
 }

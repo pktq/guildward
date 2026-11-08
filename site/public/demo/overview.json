@@ -489,7 +489,9 @@
       "status": "open",
       "created_at": "2026-11-07T13:40:00Z",
       "resolved_by": null,
-      "action": null
+      "action": null,
+      "assigned": null,
+      "note": null
     },
     {
       "id": 109,
@@ -533,7 +535,13 @@
       "status": "open",
       "created_at": "2026-11-07T12:20:00Z",
       "resolved_by": null,
-      "action": null
+      "action": null,
+      "assigned": {
+        "id": "2",
+        "name": "Sunny (@sunny_mod)",
+        "avatar": null
+      },
+      "note": null
     },
     {
       "id": 108,
@@ -582,7 +590,9 @@
       "status": "open",
       "created_at": "2026-11-07T08:20:00Z",
       "resolved_by": null,
-      "action": null
+      "action": null,
+      "assigned": null,
+      "note": null
     },
     {
       "id": 107,
@@ -619,7 +629,9 @@
       "status": "open",
       "created_at": "2026-11-06T08:20:00Z",
       "resolved_by": null,
-      "action": null
+      "action": null,
+      "assigned": null,
+      "note": null
     },
     {
       "id": 106,
@@ -651,7 +663,9 @@
       "status": "open",
       "created_at": "2026-11-05T11:10:00Z",
       "resolved_by": null,
-      "action": null
+      "action": null,
+      "assigned": null,
+      "note": null
     },
     {
       "id": 105,
@@ -693,7 +707,9 @@
       "status": "open",
       "created_at": "2026-11-06T10:20:00Z",
       "resolved_by": null,
-      "action": null
+      "action": null,
+      "assigned": null,
+      "note": null
     },
     {
       "id": 104,
@@ -730,7 +746,9 @@
       "status": "open",
       "created_at": "2026-11-06T05:20:00Z",
       "resolved_by": null,
-      "action": null
+      "action": null,
+      "assigned": null,
+      "note": null
     },
     {
       "id": 103,
@@ -760,7 +778,9 @@
       "status": "resolved",
       "created_at": "2026-11-04T14:20:00Z",
       "resolved_by": "Mira (@mod_mira)",
-      "action": "delete"
+      "action": "delete",
+      "assigned": null,
+      "note": "Checked the whole chat with them. Asked their parent to keep an eye on DMs; timeout stays."
     }
   ],
   "audit": [

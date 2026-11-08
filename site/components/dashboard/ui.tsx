@@ -23,6 +23,8 @@ const ICONS: Record<string, string> = {
   flat: "M5 12h14M15 8l4 4-4 4",
   ext: "M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5",
   check: "M5 12.5l4.5 4.5L19 7.5",
+  claim: "M9 11a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7zM2.5 20a6.5 6.5 0 0 1 13 0M16 11.5l2 2 4-4",
+  note: "M5 4h14v11l-5 5H5zM14 20v-5h5M8 9h8M8 12.5h5",
   x: "M6 6l12 12M18 6L6 18",
   warn: "M12 4l9 16H3L12 4zM12 10v4M12 17.2h.01",
   print: "M7 9V3h10v6M7 17H4v-7h16v7h-3M7 14h10v7H7z",

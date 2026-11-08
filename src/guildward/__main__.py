@@ -40,7 +40,8 @@ async def _run(settings: Settings, *, sync: bool, bots: bool) -> None:
     crowd = bot.pocket if bot else Pocket(store)
     reports = bot.reports if bot else Reports(Engine(store))
     dash = Dashboard(store, reports, base_url=settings.dashboard_url, host=settings.dashboard_host,
-                     port=settings.dashboard_port, owner_ids=settings.owner_ids, guard=bot, pocket=bot, crowd=crowd)
+                     port=settings.dashboard_port, owner_ids=settings.owner_ids, guard=bot, pocket=bot, crowd=crowd,
+                     client_secret=settings.client_secret)
     await dash.start()
     try:
         if bot is not None:

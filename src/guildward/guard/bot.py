@@ -24,7 +24,7 @@ from guildward.core.i18n import Lang, t
 from guildward.guard import render
 from guildward.guard.engine import Engine, JoinEvent, MemberInfo, MessageEvent, Out
 from guildward.guard.reports import Reports
-from guildward.guard.store import Store
+from guildward.guard.store import Store, role_access
 from guildward.intel import semantic
 from guildward.intel.audit import AM_MENTION, AM_PRESET, AM_SPAM, GuildFacts
 from guildward.intel.behavior import role_age
@@ -176,6 +176,16 @@ class GuardBot(discord.Client):
         g = self.get_guild(gid)
         m = g.get_member(uid) if g else None
         return bool(m and (m.guild_permissions.manage_guild or m.id == g.owner_id))
+
+    def access(self, gid: int, uid: int) -> str | None:
+        """Dashboard level from the member's roles right now (member cache, kept live by the members intent)."""
+        g = self.get_guild(gid)
+        m = g.get_member(uid) if g else None
+        if m is None:
+            return None
+        admin = m.id == g.owner_id or m.guild_permissions.manage_guild
+        return role_access(admin=admin, role_ids=[r.id for r in m.roles],
+                           dashboard_roles=self.store.settings(gid)["dashboard_roles"])
 
     async def refresh_audit(self, g: discord.Guild) -> GuildFacts:
         triggers: set[int] = set()
@@ -371,7 +381,8 @@ class GuardBot(discord.Client):
 
     async def act(self, gid: int, uid: int | None, action: str, *, by_id: int | None, by_name: str | None,
                   alert_id: int | None = None, channel_id: int | None = None, message_id: int | None = None,
-                  seconds: int = 3600, resolve: bool = True, actor: discord.Member | None = None) -> tuple[bool, str]:
+                  seconds: int = 3600, resolve: bool = True, actor: discord.Member | None = None,
+                  note: str | None = None) -> tuple[bool, str]:
         """One entry point for buttons, dashboard and automatic actions. Returns (ok, translated text)."""
         lang = self.lang(gid)
         g = self.get_guild(gid)
@@ -430,11 +441,24 @@ class GuardBot(discord.Client):
         if alert_id and resolve:
             status = "false_positive" if action == "false_positive" else "resolved" if action != "watch" else None
             if status:
-                self.store.resolve_alert(alert_id, status=status, by=by_id, by_name=by_name, action=action)
+                self.store.resolve_alert(alert_id, status=status, by=by_id, by_name=by_name, action=action,
+                                         note=note)
                 if action == "false_positive" and uid:
                     self.engine.rescore(gid, uid)
                 await self.post_alert(alert_id, edit=True)
         return True, t("g.done", lang, action=t(f"g.act_{action}", lang))
+
+    async def claim(self, aid: int, *, by_id: int, by_name: str, action: str,
+                    force: bool = False) -> tuple[bool, str]:
+        """Claim or release an alert ("I'm on it") and refresh its card in the alert channel."""
+        row = self.store.alert(aid)
+        lang = self.lang(row["guild_id"]) if row else "en"
+        code = self.store.claim_alert(aid, by=by_id, by_name=by_name, action=action, force=force)
+        row = self.store.alert(aid)
+        if code in ("claimed", "unclaimed"):
+            await self.post_alert(aid, edit=True)
+        return code in ("claimed", "unclaimed"), t(f"g.claim_{code}", lang,
+                                                    name=(row["assigned_name"] if row else None) or "?")
 
     async def apply_fix(self, gid: int, fix: str) -> tuple[bool, str]:
         lang = self.lang(gid)

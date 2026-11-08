@@ -174,12 +174,35 @@ function LangSeg({ lang, setLang }: { lang: Lang; setLang: (l: Lang) => void }) 
 
 function SignIn({ demo, lang, setLang }: { demo: Demo; lang: Lang; setLang: (l: Lang) => void }) {
   const t = (k: string, v?: Record<string, string>) => translate(lang, k, v);
-  const [before, after] = t("signinBody", { cmd: "\u0000" }).split("\u0000");
+  const pathname = usePathname();
+  const params = useSearchParams();
+  // null while asking: the API says whether this Guard instance has Discord sign-in (a client secret) set up.
+  const [discord, setDiscord] = useState<boolean | null>(null);
+  useEffect(() => {
+    let alive = true;
+    api<{ discord?: boolean }>("GET", "/api/public/auth", undefined, demo).then(
+      (r) => { if (alive) setDiscord(!!r.discord); },
+      () => { if (alive) setDiscord(false); },
+    );
+    return () => { alive = false; };
+  }, [demo]);
+  // Come back to the page that asked for sign-in. The API only accepts /dashboard paths.
+  const q = params.toString();
+  const next = pathname.startsWith("/dashboard") ? pathname + (q ? "?" + q : "") : "/dashboard";
+  const discordHref = demo ? "/dashboard/g/10?demo" : `/auth/discord?next=${encodeURIComponent(next)}`;
+  const [before, after] = t(discord ? "signinOr" : "signinBody", { cmd: "\u0000" }).split("\u0000");
   return (
     <div className="signin">
       <Icon name="shield" className="signin-mark" />
       <h1>{t("signinTitle")}</h1>
-      <p>{before}<code>/guard dashboard</code>{after}</p>
+      {discord && (
+        <>
+          {/* A full navigation, not <Link>: the API answers with a redirect to discord.com. */}
+          <a className="btn btn-primary btn-discord" href={discordHref}>{t("signinDiscord")}</a>
+          <p className="signin-who">{t("signinWho")}</p>
+        </>
+      )}
+      <p className={discord ? "signin-alt" : undefined}>{before}<code>/guard dashboard</code>{after}</p>
       {!demo && <p className="signin-demo"><Link href="/dashboard/g/10?demo">{t("signinDemo")}</Link></p>}
       <LangSeg lang={lang} setLang={setLang} />
     </div>
@@ -222,6 +245,7 @@ function Sidebar({ me, pathname, lang, setLang, dark, toggleTheme, logout }: {
                 </select>
               </>
             ) : <div className="guild-name">{g ? g.name : guildNames[gid] ?? ""}</div>}
+            {g && !me.owner && g.level !== "admin" && <span className="chip chip-access">{t("acc_" + g.level)}</span>}
           </div>
           <nav className="nav" aria-label={t("nav")}>
             {link("", "overview", "grid", t("overview"))}

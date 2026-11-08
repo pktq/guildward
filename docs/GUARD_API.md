@@ -12,9 +12,38 @@ The dashboard is the Next.js site in `site/` (`/dashboard/...`, proxying `/api/*
 - Times are ISO-8601 UTC strings (`2026-11-07T12:34:56Z`), or `null`.
 - `level` is `"green" | "yellow" | "red"`. `score` is 0–100 risk (higher = worse).
 - All human text (`text`, `title`, `summary`, `label`, …) is already translated server-side into the session language (`en` / `sv`). The frontend translates only its own chrome.
-- Auth: cookie `gw_session` (HttpOnly, SameSite=Strict). Any 401 → show the sign-in screen: "Run `/guard dashboard` in your server to get a sign-in link."
+- Auth: cookie `gw_session` (HttpOnly, SameSite=Strict, Secure when `DASHBOARD_URL` is https, 12 h). Any 401 → show the sign-in screen: a **Sign in with Discord** button (when `GET /api/public/auth` says `discord: true`) plus the fallback "Run `/guard dashboard` in your server to get a sign-in link."
 - Every POST/PUT must send header `X-Guildward: 1` and a JSON body. Errors: `{"ok": false, "error": "<translated text>"}` with 4xx.
-- Sign-in: `GET /auth?t=<token>` sets the cookie and redirects to `/#/g/<gid>` (or `/#/owner`). `POST /api/logout` clears it.
+- `POST /api/logout` clears the session.
+
+## Sign-in
+
+A session only says who someone is. What they may do in each server is worked out on every request (see Access levels), so it can change while they are signed in.
+
+**Sign in with Discord** (OAuth2, scope `identify` only; needs `DISCORD_CLIENT_SECRET` and the live bot):
+- `GET /auth/discord?next=/dashboard/...` redirects to Discord's authorize page. `next` is optional and only kept if it is a same-origin `/dashboard` path (no `//`, `..`, scheme or other characters); anything else is dropped. The `state` is signed (HMAC), expires in 10 minutes and works once; a random value in an HttpOnly, SameSite=Lax cookie `gw_oauth` (path `/auth/discord`) ties it to the browser that started (login CSRF).
+- `GET /auth/discord/callback?code=…&state=…` checks the state and cookie, exchanges the code (client id = the bot's application id), reads `/users/@me`, revokes the Discord token right away (Guard keeps no OAuth token) and sets `gw_session`. Then it redirects to `next`, else the first server the user can see (`/dashboard/g/<gid>`), `/dashboard/owner` for `OWNER_IDS`, or `/dashboard`. Cancel on Discord's page → `/dashboard`. Bad, replayed or unbound state → 403 page.
+- Without a client secret both endpoints answer 503 with an explanation, and `GET /api/public/auth` (no sign-in) returns `{"discord": false, "link": true}` so the dashboard hides the button.
+- The site proxies `/auth/discord/*` to Guard (`site/next.config.ts`). The callback is a cross-site navigation from discord.com, so the Strict session cookie only rides along from the next request on; the dashboard loads its data client-side, so that is fine.
+- Developer Portal → OAuth2 → Redirects must list `<DASHBOARD_URL>/auth/discord/callback`.
+
+**Link** (`/guard dashboard`, or `uv run guildward owner-link` for the bot owner): `GET /auth?t=<token>` (one-time, 10 minutes) sets the cookie and redirects to `/#/g/<gid>` (or `/#/owner`); the site's `app/auth/route.ts` maps that to `/dashboard/...`.
+
+## Access levels
+
+Per server, from the member's roles **right now** (Guard's member cache, kept live by the Server Members intent). Removing a role removes the access on the next request.
+
+| level | who | may |
+|---|---|---|
+| `admin` | server owner, anyone with Manage Server | everything below, plus `PUT settings` (including `dashboard_roles`), `POST fix` |
+| `act` | a role set to `"act"` in `dashboard_roles` | `view`, plus `POST alerts/{id}` and `POST members/{uid}` |
+| `view` | a role set to `"view"` | every `GET` under `/api/guilds/{gid}/` |
+
+- The highest level any of the member's roles gives wins. No level → 403 "No access to this server." Too low → 403 with a translated reason.
+- Moderation actions from the dashboard run as the signed-in member, so Guard also checks their own Discord permission (Timeout/Kick/Ban Members, Manage Messages), as the alert buttons do.
+- Bot owners (`OWNER_IDS`) are `admin` in every server and keep the owner endpoints.
+- Erasing a server's data stays `/guard erase` in Discord (Administrator or owner).
+- Dashboard-only mode (no live bot): a link session counts as `admin` for the server its link named, as before; Discord sign-in is off.
 
 ## Shared shapes
 
@@ -50,7 +79,9 @@ The dashboard is the Next.js site in `site/` (`/dashboard/...`, proxying `/api/*
   "signals": [Signal],
   "jump_url": "https://discord.com/channels/g/c/m" ,  // or null
   "status": "open",              // open | resolved | false_positive
-  "created_at": "...", "resolved_by": "ModName" , "action": "timeout"   // last two null while open
+  "created_at": "...", "resolved_by": "ModName" , "action": "timeout",   // last two null while open
+  "assigned": {"id": "5", "name": "ModName", "avatar": null},   // who clicked "I'm on it", or null
+  "note": "Talked to the parent; timeout stays."                // set when closing (max 500 chars), or null
 }
 ```
 
@@ -59,8 +90,9 @@ The dashboard is the Next.js site in `site/` (`/dashboard/...`, proxying `/api/*
 `GET /api/me`
 ```json
 {"user": {"id": "1", "name": "morphh", "avatar": null}, "owner": true, "lang": "en",
- "guilds": [{"id": "10", "name": "Minecraft Kids SE", "icon": null}]}
+ "guilds": [{"id": "10", "name": "Minecraft Kids SE", "icon": null, "level": "admin"}]}
 ```
+`guilds` = every Guard server where the user has at least `view` right now, with their `level` (`view | act | admin`).
 
 `GET /api/guilds/{gid}/overview`
 ```jsonc
@@ -87,7 +119,10 @@ Fix ids: `verification`, `content_filter`, `automod_presets`, `automod_spam`, `a
 
 `GET /api/guilds/{gid}/alerts?status=open|all&limit=50` → `{"alerts": [Alert]}`
 
-`POST /api/guilds/{gid}/alerts/{id}` `{"action": "resolve|false_positive|timeout|kick|ban|delete|watch"}` → `{"ok": true, "alert": Alert}`
+`POST /api/guilds/{gid}/alerts/{id}` `{"action": "resolve|false_positive|timeout|kick|ban|delete|watch|claim|unclaim", "note": "optional"}` → `{"ok": true, "text": "…", "alert": Alert}` (needs `act`)
+- `claim` = "I'm on it": sets `assigned` to the caller. Someone else's claim is never overwritten (409 "X is already on this alert."). `unclaim` releases your own claim; `admin` can release anyone's (otherwise 409). Closed alerts can't be claimed (409).
+- `note` (string, ≤ 500 characters after trimming, else 400) is stored when the action closes the alert, and shows on the alert, on the Discord card and in the member timeline.
+- In Discord the card has the same: **I'm on it** (click again to let go; the card shows "Handled by @mod"), and **Resolved** / **False alarm** open a short form with an optional note.
 
 `GET /api/guilds/{gid}/members?filter=all|at_risk|minors|watch|new&sort=risk|recent|name&q=&limit=100`
 → `{"members": [MemberRow], "total": 812}`
@@ -103,7 +138,8 @@ Fix ids: `verification`, `content_filter`, `automod_presets`, `automod_spam`, `a
   "stats": {"messages": 140, "flagged": 9, "distinct_targets": 11, "minor_targets": 4, "reports": 2, "mod_actions": 1, "network_flags": 0},
   "contacts": [{"user": UserRef, "messages": 31, "stages": ["Trust building", "Risk check", "Isolation"], "level": "red", "last_at": "…"}],
   "timeline": [{"at": "…", "kind": "signal", "text": "Asked for photos (to a member under 18)", "level": "red", "jump_url": "…"}],
-  // timeline kind: join | leave | signal | report | action | alert | name_change
+  // timeline kind: join | leave | signal | report | action | alert | name_change | note
+  // note: "ModName on alert #42: <note>", at the time the alert was closed
   "series": {"days": ["… 30 …"], "messages": [], "flagged": []}
 }
 ```
@@ -111,7 +147,7 @@ Fix ids: `verification`, `content_filter`, `automod_presets`, `automod_spam`, `a
 `POST /api/guilds/{gid}/members/{uid}` `{"action": "watch|trust|clear|timeout|kick|ban"}` → `{"ok": true, "member": MemberRow}`
 
 `GET /api/guilds/{gid}/settings` → `{"settings": Settings, "channels": [{"id": "1", "name": "mod-alerts"}], "roles": [{"id": "2", "name": "Mods"}]}`
-`PUT /api/guilds/{gid}/settings` `{partial Settings}` → `{"ok": true, "settings": Settings}`
+`PUT /api/guilds/{gid}/settings` `{partial Settings}` → `{"ok": true, "settings": Settings}` (needs `admin`)
 
 ```jsonc
 // Settings
@@ -130,11 +166,14 @@ Fix ids: `verification`, `content_filter`, `automod_presets`, `automod_spam`, `a
   "quote_in_alerts": true,        // include the flagged text in the alert (Discord only; never stored by Guard)
   "minor_role_ids": [],           // roles that mean "under 18" (auto-detected by name too)
   "retention_days": 90,
-  "lang": "en"                    // en | sv: language of alerts posted in Discord
+  "lang": "en",                   // en | sv: language of alerts posted in Discord
+  "dashboard_roles": {"2": "act"} // role id -> "view" | "act" (max 50); roles must exist in the server
 }
 ```
 
-## Public endpoint (no sign-in)
+## Public endpoints (no sign-in)
+
+`GET /api/public/auth` → `{"discord": true, "link": true}`: which sign-in methods to offer.
 
 `GET /api/public/stats`: deployment-wide counts for the public site's stats page. No names, IDs or text; rebuilt at most every 5 minutes (`Cache-Control: public, max-age=300`, CORS `*`). Totals cover what `daily` keeps (400 days).
 ```jsonc

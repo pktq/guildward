@@ -7,7 +7,7 @@ import type { ReactNode } from "react";
 import type { Overview } from "@/lib/dashboard/types";
 import { AlertItem } from "./alerts";
 import { Gauge, SeriesCharts } from "./charts";
-import { useApi, useDash } from "./context";
+import { useApi, useCan, useDash } from "./context";
 import { MemberTable } from "./members";
 import { Async, Empty, Icon, LevelPill, Panel, PageHead, Sentences, SignalList } from "./ui";
 
@@ -72,6 +72,7 @@ function FixButton({ fix, gid, onDone, icon }: { fix: string; gid: string; onDon
 
 export function OverviewBody({ o, gid, isReport, reload }: { o: Overview; gid: string; isReport: boolean; reload: () => void }) {
   const { t, f, href } = useDash();
+  const canFix = useCan(gid)("admin") && !isReport; // one-click fixes change server settings: admins only
   const g = o.guild, h = o.health;
   const passed = o.audit.filter((a) => a.ok).length;
   const base = `/dashboard/g/${encodeURIComponent(gid)}`;
@@ -111,7 +112,7 @@ export function OverviewBody({ o, gid, isReport, reload }: { o: Overview; gid: s
             <li key={i} className="rec">
               <span className={`sev sev-${r.severity}`}>{t("sev_" + r.severity)}</span>
               <span className="rec-text">{r.text}</span>
-              {r.fix && !isReport && <FixButton fix={r.fix} gid={gid} onDone={reload} icon />}
+              {r.fix && canFix && <FixButton fix={r.fix} gid={gid} onDone={reload} icon />}
             </li>
           ))}
         </ul>
@@ -128,7 +129,7 @@ export function OverviewBody({ o, gid, isReport, reload }: { o: Overview; gid: s
               <b>{a.label}</b> {!a.ok && <span className={`sev sev-${a.severity}`}>{t("sev_" + a.severity)}</span>}
               <p>{a.detail}</p>
             </div>
-            {!a.ok && a.fix && !isReport && <FixButton fix={a.fix} gid={gid} onDone={reload} />}
+            {!a.ok && a.fix && canFix && <FixButton fix={a.fix} gid={gid} onDone={reload} />}
           </li>
         ))}
       </ul>

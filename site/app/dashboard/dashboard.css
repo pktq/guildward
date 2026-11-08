@@ -395,6 +395,20 @@
 .gw-dash .alert-resolved { color: var(--muted); font-size: .8125rem; margin-top: .5rem; }
 .gw-dash .alert-actions { display: flex; flex-wrap: wrap; gap: .4rem; margin-top: .85rem; }
 .gw-dash .alert-actions .btn-ghost { margin-left: auto; }
+.gw-dash .chip-claim { background: var(--accent-soft); color: var(--ink); }
+.gw-dash .alert-note { display: flex; gap: .45rem; align-items: flex-start; margin-top: .5rem; font-size: .875rem; color: var(--ink-2); max-width: 80ch; overflow-wrap: anywhere; }
+.gw-dash .alert-note .ic { flex: none; margin-top: .15rem; color: var(--muted); }
+.gw-dash .alert-close { display: grid; gap: .4rem; margin-top: .85rem; max-width: 40rem; }
+.gw-dash .alert-close label { font-size: .875rem; font-weight: 550; }
+.gw-dash .alert-close textarea {
+  font: inherit; font-size: .875rem; color: var(--ink); background: var(--surface); border: 1px solid var(--line-2);
+  border-radius: var(--radius-sm); padding: .5rem .6rem; resize: vertical; min-height: 4.5rem; width: 100%;
+}
+.gw-dash .alert-close textarea:hover { border-color: var(--muted); }
+.gw-dash .alert-close-foot { display: flex; flex-wrap: wrap; align-items: center; gap: .4rem; }
+.gw-dash .alert-close-foot .help { margin-right: auto; }
+.gw-dash .view-only { font-size: .875rem; color: var(--ink-2); background: var(--surface-2); border: 1px solid var(--line); border-radius: var(--radius-sm); padding: .6rem .8rem; margin-bottom: 1rem; max-width: 52rem; }
+.gw-dash .chip-access { margin-top: .4rem; }
 .gw-dash .alert-list.is-compact { gap: 0; }
 .gw-dash .is-compact .alert { border: 0; border-top: 1px solid var(--line); border-radius: 0; padding: .7rem 0; background: transparent; }
 .gw-dash .is-compact .alert:first-child { border-top: 0; padding-top: 0; }
@@ -449,6 +463,10 @@
 
 /* ------------------------------------------------------------------ settings */.gw-dash .settings { display: grid; gap: 1rem; max-width: 52rem; }
 .gw-dash .settings fieldset { margin: 0; min-width: 0; }
+.gw-dash .settings .settings-lock { display: contents; border: 0; padding: 0; }
+.gw-dash .settings .view-only { margin-bottom: 0; }
+.gw-dash .field-access { grid-template-columns: minmax(0, 1fr) auto; align-items: center; column-gap: .75rem; }
+.gw-dash .field-access select { width: auto; }
 .gw-dash .settings legend { float: left; width: 100%; font-weight: 620; font-size: .9375rem; padding: 0; margin-bottom: .75rem; }
 .gw-dash .settings legend + * { clear: both; }
 .gw-dash .field { display: grid; gap: .3rem; padding: .6rem 0; border-top: 1px solid var(--line); }
@@ -533,6 +551,9 @@
 .gw-dash .signin p { color: var(--ink-2); }
 .gw-dash .signin code { color: var(--ink); white-space: nowrap; }
 .gw-dash .signin .seg { margin-top: 1rem; }
+.gw-dash .signin .btn-discord { min-height: 44px; padding-inline: 1.25rem; font-size: .9375rem; }
+.gw-dash .signin .signin-who { font-size: .875rem; color: var(--muted); margin-top: -.35rem; }
+.gw-dash .signin .signin-alt { font-size: .875rem; color: var(--muted); }
 .gw-dash .skeleton { display: flex; flex-direction: column; gap: 1rem; }
 .gw-dash .sk { border-radius: var(--radius); background: var(--surface); border: 1px solid var(--line); position: relative; overflow: hidden; }
 .gw-dash .sk::after { content: ""; position: absolute; inset: 0; background: linear-gradient(90deg, transparent, var(--surface-2), transparent); transform: translateX(-100%); animation: gw-sk 1.4s ease-in-out infinite; }

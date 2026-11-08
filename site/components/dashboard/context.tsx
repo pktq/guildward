@@ -4,7 +4,7 @@ import { createContext, useCallback, useContext, useEffect, useRef, useState } f
 import { ApiError } from "@/lib/dashboard/api";
 import type { Demo } from "@/lib/dashboard/api";
 import type { Lang } from "@/lib/dashboard/i18n";
-import type { Me } from "@/lib/dashboard/types";
+import type { Access, Me } from "@/lib/dashboard/types";
 import * as F from "@/lib/dashboard/format";
 
 type Vars = Record<string, string | number | null | undefined>;
@@ -43,6 +43,15 @@ export function useDash(): Dash {
   const c = useContext(DashContext);
   if (!c) throw new Error("useDash outside the dashboard shell");
   return c;
+}
+
+const RANK: Record<Access, number> = { view: 0, act: 1, admin: 2 };
+
+/** True when the signed-in user's level in `gid` is at least `need`. The API enforces the same rule. */
+export function useCan(gid: string | null | undefined): (need: Access) => boolean {
+  const { me } = useDash();
+  const level = me?.owner ? "admin" : me?.guilds.find((g) => g.id === gid)?.level;
+  return (need) => level != null && RANK[level] >= RANK[need];
 }
 
 export function makeFmt(lang: Lang): Fmt {

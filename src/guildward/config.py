@@ -35,7 +35,7 @@ class Settings:
     dashboard_host: str = "127.0.0.1"
     dashboard_port: int = 8080
     owner_ids: frozenset[int] = frozenset()
-    client_secret: str = ""  # pocket app OAuth (server scan); empty = scan off
+    client_secret: str = ""  # app OAuth: server scan + dashboard "Sign in with Discord"; empty = both off
     home_invite: str = ""  # Guildward community server invite, so the bot can DM kids who share no server with it
     anthropic_key: str = ""  # opt-in AI second opinion; empty = button hidden
     safe_browsing_key: str = ""  # Google Safe Browsing for link checks; optional

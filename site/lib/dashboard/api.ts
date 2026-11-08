@@ -71,6 +71,7 @@ async function demoApi(method: string, path: string, body: any, demo: Demo, lang
     const [r] = await Promise.all([promise, new Promise((res) => setTimeout(res, 120))]);
     return clone(r);
   };
+  if (p === "/api/public/auth") return answer(Promise.resolve({ discord: true, link: true }));
   if (demo === "signin" && p !== "/api/logout") throw new ApiError(401, "");
   if (p === "/api/me") return answer(fx("me"));
   if (p === "/api/logout") return answer(Promise.resolve({ ok: true }));
@@ -103,13 +104,18 @@ async function demoApi(method: string, path: string, body: any, demo: Demo, lang
   }
   if ((m = /^\/api\/guilds\/(\w+)\/alerts\/(\w+)$/.exec(p))) {
     const id = +m[2];
-    return answer(Promise.all([fx("alerts"), fx("overview")]).then(([al, ov]) => {
+    return answer(Promise.all([fx("alerts"), fx("overview"), fx("me")]).then(([al, ov, me]) => {
       const a = al.alerts.find((x: any) => x.id === id);
       if (!a) throw new ApiError(404, t(lang, "errNotFound"));
-      if (body.action !== "watch") {
+      if (body.action === "claim" || body.action === "unclaim") {
+        if (a.status !== "open") throw new ApiError(409, "This alert is already closed.");
+        if (body.action === "claim" && a.assigned && a.assigned.id !== me.user.id) throw new ApiError(409, `${a.assigned.name} is already on this alert.`);
+        a.assigned = body.action === "claim" ? { id: me.user.id, name: me.user.name, avatar: null } : null;
+      } else if (body.action !== "watch") {
         a.status = body.action === "false_positive" ? "false_positive" : "resolved";
-        a.resolved_by = "morphh";
+        a.resolved_by = me.user.name;
         a.action = body.action;
+        if (typeof body.note === "string" && body.note.trim()) a.note = body.note.trim().slice(0, 500);
       }
       ov.recent_alerts = ov.recent_alerts.map((x: any) => (x.id === id ? a : x));
       ov.kpis.open_alerts = al.alerts.filter((x: any) => x.status === "open").length;

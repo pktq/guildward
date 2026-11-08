@@ -42,11 +42,15 @@ def alert_embed(a: dict[str, Any], lang: Lang, *, dashboard_url: str | None, quo
         links.append(f"[{t('g.open_dash', lang)}]({dashboard_url})")
     if links:
         e.add_field(name="​", value=" · ".join(links), inline=True)
+    if a["status"] == "open" and a.get("assigned"):
+        e.add_field(name=t("g.assigned", lang), value=f"<@{a['assigned']['id']}>", inline=False)
     if a["status"] != "open":
         e.add_field(name=t("g.status", lang),
                     value=t(f"g.status_{a['status']}", lang, by=a.get("resolved_by") or "?",
                             action=t(f"g.act_{a['action']}", lang) if a.get("action") else "-"), inline=False)
         e.color = GREY
+    if a.get("note"):
+        e.add_field(name=t("g.note", lang), value=discord.utils.escape_markdown(a["note"])[:1024], inline=False)
     e.set_footer(text=t("g.footer_alert", lang, id=a["id"]))
     return e
 
@@ -111,6 +115,8 @@ register({
     "g.jump": {"en": "Jump to message", "sv": "Gå till meddelandet"},
     "g.open_dash": {"en": "Full report", "sv": "Hela rapporten"},
     "g.status": {"en": "Handled", "sv": "Hanterat"},
+    "g.assigned": {"en": "Handled by", "sv": "Hanteras av"},
+    "g.note": {"en": "Note", "sv": "Anteckning"},
     "g.status_resolved": {"en": "Resolved by {by} ({action})", "sv": "Löst av {by} ({action})"},
     "g.status_false_positive": {"en": "Marked false alarm by {by}", "sv": "Markerat som falsklarm av {by}"},
     "g.footer_alert": {"en": "Guildward Guard · alert #{id} · message text is never stored",
@@ -148,6 +154,27 @@ register({
     "g.btn_watch": {"en": "Watch", "sv": "Bevaka"},
     "g.btn_resolve": {"en": "Resolved", "sv": "Löst"},
     "g.btn_false_positive": {"en": "False alarm", "sv": "Falsklarm"},
+    "g.btn_claim": {"en": "I'm on it", "sv": "Jag tar det"},
+    "g.btn_claimed": {"en": "{name} is on it", "sv": "{name} tar det"},
+    # claims and notes
+    "g.claim_claimed": {"en": "It's yours. The card shows you're on it; click again to let it go.",
+                        "sv": "Den är din. Kortet visar att du tar det; klicka igen för att släppa det."},
+    "g.claim_unclaimed": {"en": "You let this alert go. Someone else can take it.",
+                          "sv": "Du släppte larmet. Någon annan kan ta det."},
+    "g.claim_taken": {"en": "{name} is already on this alert.", "sv": "{name} tar redan det här larmet."},
+    "g.claim_not_yours": {"en": "{name} has this alert. Only they or a server admin can release it.",
+                          "sv": "{name} har larmet. Bara hen eller en serveradmin kan släppa det."},
+    "g.claim_closed": {"en": "This alert is already closed.", "sv": "Larmet är redan stängt."},
+    "g.note_long": {"en": "Notes can be up to 500 characters.", "sv": "Anteckningar får vara högst 500 tecken."},
+    "g.dash_need_act": {"en": "Your dashboard access here is view only. A server admin can give your role act access "
+                              "in Settings.",
+                        "sv": "Din åtkomst här är bara läsning. En serveradmin kan ge din roll åtgärdsåtkomst i Inställningar."},
+    "g.dash_need_admin": {"en": "Only server admins (Manage Server) can do that.",
+                          "sv": "Bara serveradmins (Hantera server) kan göra det."},
+    "g.modal_resolve": {"en": "Resolve alert #{id}", "sv": "Lös larm #{id}"},
+    "g.modal_false_positive": {"en": "False alarm: alert #{id}", "sv": "Falsklarm: larm #{id}"},
+    "g.note_label": {"en": "Note for the team (optional)", "sv": "Anteckning till teamet (valfritt)"},
+    "g.note_ph": {"en": "What you checked or did, for the next moderator", "sv": "Vad du kollade eller gjorde, för nästa moderator"},
     "g.btn_dashboard": {"en": "Open dashboard", "sv": "Öppna instrumentpanelen"},
     "g.btn_fix_all": {"en": "Apply recommended settings", "sv": "Använd rekommenderade inställningar"},
     "g.btn_confirm_erase": {"en": "Yes, erase everything", "sv": "Ja, radera allt"},

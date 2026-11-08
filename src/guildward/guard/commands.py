@@ -15,6 +15,7 @@ from discord.app_commands import locale_str
 from guildward.core.i18n import Lang, lang_for, t
 from guildward.guard import render
 from guildward.guard.bot import FIXES, INSTALL_URL, member_info, needed_permissions
+from guildward.guard.store import NOTE_MAX
 
 if TYPE_CHECKING:
     from guildward.guard.bot import GuardBot
@@ -24,13 +25,47 @@ log = logging.getLogger(__name__)
 _BUTTONS = (  # action, style, row
     ("timeout", discord.ButtonStyle.secondary, 0), ("kick", discord.ButtonStyle.secondary, 0),
     ("ban", discord.ButtonStyle.danger, 0), ("delete", discord.ButtonStyle.secondary, 0),
-    ("watch", discord.ButtonStyle.secondary, 1), ("resolve", discord.ButtonStyle.success, 1),
+    ("claim", discord.ButtonStyle.primary, 1), ("watch", discord.ButtonStyle.secondary, 1),
+    ("resolve", discord.ButtonStyle.success, 1),
     ("false_positive", discord.ButtonStyle.secondary, 1),
 )
 
 
 def _bot(i: discord.Interaction) -> GuardBot:
     return i.client  # type: ignore[return-value]
+
+
+def _may_handle(bot: GuardBot, actor: discord.Member) -> bool:
+    """Alert buttons: Discord moderators, or a role the admins gave "act" access on the dashboard."""
+    p = actor.guild_permissions
+    return (p.moderate_members or p.manage_guild or p.manage_messages
+            or bot.access(actor.guild.id, actor.id) in ("act", "admin"))
+
+
+class NoteModal(discord.ui.Modal):
+    """Resolve / False alarm from the alert card, with an optional note for the rest of the team."""
+
+    def __init__(self, aid: int, act: str, lang: Lang) -> None:
+        super().__init__(title=t(f"g.modal_{act}", lang, id=aid)[:45], timeout=600)
+        self.aid, self.act = aid, act
+        self.note = discord.ui.TextInput(label=t("g.note_label", lang)[:45], style=discord.TextStyle.paragraph,
+                                         required=False, max_length=NOTE_MAX, placeholder=t("g.note_ph", lang)[:100])
+        self.add_item(self.note)
+
+    async def on_submit(self, interaction: discord.Interaction) -> None:
+        bot = _bot(interaction)
+        row = bot.store.alert(self.aid)
+        actor = interaction.user
+        if (row is None or not isinstance(actor, discord.Member) or row["guild_id"] != interaction.guild_id
+                or not _may_handle(bot, actor)):
+            lang = bot.lang(interaction.guild_id) if interaction.guild_id else "en"
+            await interaction.response.send_message(embed=render.notice("g.unknown_alert", lang), ephemeral=True)
+            return
+        await interaction.response.defer(ephemeral=True, thinking=True)
+        ok, text = await bot.act(row["guild_id"], row["user_id"], self.act, by_id=actor.id, by_name=actor.display_name,
+                                 alert_id=self.aid, actor=actor, note=self.note.value.strip() or None)
+        await interaction.followup.send(embed=discord.Embed(description=text, color=0x2EA043 if ok else 0xDA3633),
+                                        ephemeral=True)
 
 
 class AlertButton(discord.ui.DynamicItem[discord.ui.Button], template=r"gw:a:(?P<aid>\d+):(?P<act>[a-z_]+)"):
@@ -54,12 +89,19 @@ class AlertButton(discord.ui.DynamicItem[discord.ui.Button], template=r"gw:a:(?P
             await interaction.response.send_message(embed=render.notice("g.unknown_alert", lang), ephemeral=True)
             return
         actor = interaction.user if isinstance(interaction.user, discord.Member) else None
-        if actor is None or not (actor.guild_permissions.moderate_members or actor.guild_permissions.manage_guild
-                                 or actor.guild_permissions.manage_messages):
+        if actor is None or not _may_handle(bot, actor):
             await interaction.response.send_message(
                 embed=render.notice("g.no_perm_user", lang, perm="Timeout Members"), ephemeral=True)
             return
+        if self.act in ("resolve", "false_positive"):
+            await interaction.response.send_modal(NoteModal(self.aid, self.act, lang))
+            return
         await interaction.response.defer(ephemeral=True, thinking=True)
+        if self.act == "claim":
+            ok, text = await bot.claim(self.aid, by_id=actor.id, by_name=actor.display_name, action="toggle")
+            color = 0x2EA043 if ok else render.GREY
+            await interaction.followup.send(embed=discord.Embed(description=text, color=color), ephemeral=True)
+            return
         ok, text = await bot.act(row["guild_id"], row["user_id"], self.act, by_id=actor.id, by_name=actor.display_name,
                                  alert_id=self.aid, actor=actor)
         if ok and self.act == "watch" and row["user_id"]:
@@ -104,7 +146,10 @@ def alert_view(a: dict[str, Any], lang: Lang) -> discord.ui.View:
             continue
         if act in ("timeout", "kick", "ban", "watch") and not a.get("user"):
             continue
-        view.add_item(AlertButton(a["id"], act, label=t(f"g.btn_{act}", lang), style=style, row=row))
+        label = t(f"g.btn_{act}", lang)
+        if act == "claim" and a.get("assigned"):
+            label, style = t("g.btn_claimed", lang, name=a["assigned"]["name"])[:80], discord.ButtonStyle.success
+        view.add_item(AlertButton(a["id"], act, label=label, style=style, row=row))
     return view
 
 

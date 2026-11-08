@@ -46,13 +46,20 @@ export type Alert = {
   created_at: string;
   resolved_by: string | null;
   action: string | null;
+  /** Moderator who clicked "I'm on it", or null. */
+  assigned: UserRef | null;
+  /** Note left when the alert was closed (up to 500 characters), or null. */
+  note: string | null;
 };
+
+/** Dashboard level in one server: view (read only) < act (alerts and members) < admin (settings, fixes, access). */
+export type Access = "view" | "act" | "admin";
 
 export type Me = {
   user: { id: string; name: string; avatar: string | null };
   owner: boolean;
   lang?: string;
-  guilds: { id: string; name: string; icon: string | null }[];
+  guilds: { id: string; name: string; icon: string | null; level: Access }[];
 };
 
 export type Series = { days: string[]; [key: string]: string[] | number[] };
@@ -107,6 +114,7 @@ export type Settings = {
   minor_role_ids: string[];
   retention_days: number;
   lang: "en" | "sv";
+  dashboard_roles: Record<string, "view" | "act">;
 };
 
 export type SettingsResponse = { settings: Settings; channels: { id: string; name: string }[]; roles: { id: string; name: string }[] };

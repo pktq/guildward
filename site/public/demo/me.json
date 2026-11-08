@@ -10,12 +10,14 @@
     {
       "id": "10",
       "name": "Blockhaven Minecraft Kids",
-      "icon": null
+      "icon": null,
+      "level": "admin"
     },
     {
       "id": "11",
       "name": "Pixel Pals Art Club",
-      "icon": null
+      "icon": null,
+      "level": "admin"
     }
   ]
 }

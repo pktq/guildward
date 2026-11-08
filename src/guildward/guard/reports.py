@@ -143,6 +143,9 @@ class Reports:
             "signals": [signal_dict(s, lang) for s in signals],
             "jump_url": jump(gid, row["channel_id"], row["message_id"]), "status": row["status"],
             "created_at": iso(row["created_at"]), "resolved_by": row["resolved_by_name"], "action": row["action"],
+            "assigned": {"id": str(row["assigned_to"]), "name": row["assigned_name"] or "?", "avatar": None}
+            if row["assigned_to"] else None,
+            "note": row["note"],
         }
 
     def alerts(self, gid: int, lang: Lang, *, status: str = "open", limit: int = 50) -> list[dict[str, Any]]:
@@ -255,6 +258,10 @@ class Reports:
         for a in s.q("SELECT * FROM alerts WHERE guild_id=? AND user_id=? ORDER BY id DESC LIMIT 30", gid, uid):
             timeline.append({"at": iso(a["created_at"]), "kind": "alert", "text": self.alert_dict(a, lang)["title"],
                              "level": a["level"], "jump_url": jump(gid, a["channel_id"], a["message_id"])})
+            if a["note"]:
+                timeline.append({"at": iso(a["resolved_at"] or a["created_at"]), "kind": "note",
+                                 "text": t("tl.alert_note", lang, id=a["id"], by=a["resolved_by_name"] or "?",
+                                           note=a["note"]), "level": None, "jump_url": None})
         timeline.sort(key=lambda x: x["at"] or "", reverse=True)
 
         days = last_days(30)
@@ -588,6 +595,7 @@ register({
     # timeline
     "tl.to_minor": {"en": " → {name} (under 18)", "sv": " → {name} (under 18)"},
     "tl.to_member": {"en": " → {name}", "sv": " → {name}"},
+    "tl.alert_note": {"en": "{by} on alert #{id}: {note}", "sv": "{by} om larm #{id}: {note}"},
     "tl.deleted": {"en": " · deleted afterwards", "sv": " · raderat efteråt"},
     "tl.join": {"en": "Joined (invite {invite})", "sv": "Gick med (inbjudan {invite})"},
     "tl.leave": {"en": "Left the server", "sv": "Lämnade servern"},

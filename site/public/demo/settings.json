@@ -16,7 +16,10 @@
       "602"
     ],
     "retention_days": 90,
-    "lang": "en"
+    "lang": "en",
+    "dashboard_roles": {
+      "601": "act"
+    }
   },
   "channels": [
     {

@@ -1,9 +1,12 @@
 """Dashboard server: the JSON API from docs/GUARD_API.md plus the static SPA in web/dashboard.
 
 Runs on aiohttp (already a discord.py dependency) in the same event loop as the bots, so API calls
-can act through the live Guard client. Sign-in is a one-time link the bot hands an admin inside
-Discord (`/guard dashboard`), so no OAuth secret is needed and Discord itself vouches for the admin.
-The bot owner gets one from `uv run guildward owner-link`.
+can act through the live Guard client. Two ways in: "Sign in with Discord" (OAuth2, scope `identify`,
+needs DISCORD_CLIENT_SECRET), or a one-time link the bot hands a member inside Discord (`/guard dashboard`).
+The bot owner can also get a link from `uv run guildward owner-link`.
+
+A session only proves who someone is. What they may do in a server (view / act / admin) is worked out on
+every request from their roles right now, so taking a role away takes the access away at once.
 """
 
 from __future__ import annotations
@@ -15,16 +18,20 @@ import html
 import json
 import logging
 import os
+import re
 import secrets
 import time
 from pathlib import Path
 from typing import TYPE_CHECKING, Any
+from urllib.parse import urlencode
 
+import aiohttp
 from aiohttp import web
 
+import guildward.guard.render  # noqa: F401  (registers the g.* strings the API answers with)
 from guildward import __version__
 from guildward.core.i18n import t
-from guildward.guard.store import Store, clean_settings
+from guildward.guard.store import ACCESS, NOTE_MAX, Store, clean_settings
 from guildward.intel import semantic
 from guildward.intel.rules import is_private
 
@@ -44,6 +51,13 @@ LANG = web.RequestKey("lang", str)
 GUILDS = web.RequestKey("guilds", set)
 OWNER = web.RequestKey("owner", bool)
 GID = web.RequestKey("gid", int)
+LEVEL = web.RequestKey("level", str)
+OAUTH_COOKIE = "gw_oauth"  # binds a Discord sign-in to the browser that started it (login CSRF)
+OAUTH_TTL = 600
+DISCORD_API = "https://discord.com/api/v10"
+# Non-GET guild routes need "admin" unless listed here.
+NEED_ACT = {("POST", "/api/guilds/{gid}/alerts/{aid}"), ("POST", "/api/guilds/{gid}/members/{uid}")}
+_NEXT = re.compile(r"/dashboard(?:[/?#][A-Za-z0-9/_?=&#%.-]*)?")
 MEMBER_ACTIONS = {"watch", "trust", "clear", "timeout", "kick", "ban"}
 ALERT_ACTIONS = {"resolve", "false_positive", "timeout", "kick", "ban", "delete", "watch"}
 CSP = ("default-src 'self'; img-src 'self' https://cdn.discordapp.com data:; style-src 'self' 'unsafe-inline'; "
@@ -60,6 +74,13 @@ def _unb64(s: str) -> bytes:
 
 def _hash(token: str) -> str:
     return hashlib.sha256(token.encode()).hexdigest()
+
+
+def safe_next(path: object) -> str | None:
+    """A dashboard path to land on after sign-in, or None. Same-origin `/dashboard...` only: no open redirect."""
+    if not isinstance(path, str) or len(path) > 200 or "//" in path or ".." in path:
+        return None
+    return path if _NEXT.fullmatch(path) else None
 
 
 def secret_for(store: Store) -> bytes:
@@ -95,7 +116,7 @@ def verify(secret: bytes, token: str) -> dict[str, Any] | None:
 class Dashboard:
     def __init__(self, store: Store, reports: Reports, *, base_url: str, host: str, port: int,
                  owner_ids: frozenset[int], guard: GuardBot | None = None, pocket: Any = None,
-                 crowd: Any = None) -> None:
+                 crowd: Any = None, client_secret: str = "") -> None:
         self.store, self.reports = store, reports
         self.crowd = crowd  # pocket.Pocket: shared flags from every Guildward user
         self.base_url = base_url.rstrip("/")
@@ -103,6 +124,7 @@ class Dashboard:
         self.owner_ids = owner_ids
         self.guard, self.pocket = guard, pocket
         self.secret = secret_for(store)
+        self.client_secret = client_secret
         self.started = time.time()
         self._runner: web.AppRunner | None = None
         self._public: tuple[float, dict[str, Any]] | None = None
@@ -126,6 +148,9 @@ class Dashboard:
         app = web.Application(middlewares=[self._headers, self._auth], client_max_size=64 * 1024)
         r = app.router
         r.add_get("/auth", self.auth)
+        r.add_get("/auth/discord", self.discord_start)
+        r.add_get("/auth/discord/callback", self.discord_callback)
+        r.add_get("/api/public/auth", self.public_auth)
         r.add_post("/api/logout", self.logout)
         r.add_get("/api/me", self.me)
         r.add_get("/api/public/stats", self.public_stats)
@@ -192,22 +217,32 @@ class Dashboard:
         request[OWNER] = bool(sess["owner"])
         if "gid" in request.match_info and request.path.startswith("/api/guilds/"):
             gid = self._int(request.match_info["gid"])
-            if gid is None or not self._may_see(request, gid):
+            level = self._level(request, gid) if gid is not None else None
+            if level is None:
                 return self._err(403, "No access to this server.")
-            request[GID] = gid
+            route = (request.method, request.match_info.route.resource.canonical)
+            need = "view" if request.method == "GET" else "act" if route in NEED_ACT else "admin"
+            if ACCESS.index(level) < ACCESS.index(need):
+                return self._err(403, t(f"g.dash_need_{need}", request[LANG]))
+            request[GID], request[LEVEL] = gid, level
         if request.path.startswith("/api/owner/") and not request[OWNER]:
             return self._err(403, "Owner only.")
         return await handler(request)
 
-    def _may_see(self, request: web.Request, gid: int) -> bool:
+    def _level(self, request: web.Request, gid: int) -> str | None:
+        """view | act | admin in this server, or None. Live from Guard's member cache on every request."""
         if request[OWNER]:
-            return self.store.guild(gid) is not None
-        if gid not in request[GUILDS]:
-            return False
-        # Lost Manage Server since signing in? Then the session no longer covers this server.
+            return "admin" if self.store.guild(gid) is not None else None
         if self.guard is not None and self.guard.get_guild(gid) is not None:
-            return self.guard.is_admin(gid, request[SESSION]["user_id"])
-        return True
+            return self.guard.access(gid, request[SESSION]["user_id"])
+        # No live bot for this server (dashboard-only mode): trust the server a signed link named, as before.
+        return "admin" if gid in request[GUILDS] else None
+
+    def _actor(self, request: web.Request, gid: int) -> Any:
+        """The signed-in member, so Guard checks their own Discord permission for timeout/kick/ban/delete."""
+        if request[OWNER] or self.guard is None or (g := self.guard.get_guild(gid)) is None:
+            return None
+        return g.get_member(request[SESSION]["user_id"])
 
     @staticmethod
     def _int(v: str) -> int | None:
@@ -238,13 +273,31 @@ class Dashboard:
             return web.Response(text="Dashboard files not found (web/dashboard).", status=404)
         return web.FileResponse(index)
 
+    @staticmethod
+    def _page(status: int, title: str, body: str) -> web.Response:
+        return web.Response(status=status, content_type="text/html", text=(
+            "<!doctype html><meta charset=utf-8><meta name=viewport content='width=device-width,initial-scale=1'>"
+            "<title>Guildward</title><body style='font:16px system-ui;padding:3rem 16px;max-width:36rem;margin:auto;"
+            f"background:#0d1117;color:#e6edf3'><h1>{html.escape(title)}</h1><p>{body}</p>"
+            "<p><a style='color:#58a6ff' href='/dashboard'>Back to the dashboard</a>"))
+
+    def _session_response(self, dest: str, *, user_id: int, name: str, avatar: str | None, guilds: list[str],
+                          owner: bool, lang: str) -> web.HTTPFound:
+        token = secrets.token_urlsafe(32)
+        self.store.add_session(_hash(token), user_id=user_id, name=name, avatar=avatar, guilds=guilds, owner=owner,
+                               lang=lang, ttl=SESSION_TTL)
+        resp = web.HTTPFound(dest)
+        resp.set_cookie(COOKIE, token, max_age=SESSION_TTL, httponly=True, samesite="Strict",
+                        secure=self.base_url.startswith("https://"), path="/")
+        return resp
+
     async def auth(self, request: web.Request) -> web.StreamResponse:
         payload = verify(self.secret, request.query.get("t", ""))
-        if payload is None or not self.store.use_nonce(payload["x"], payload["e"]):
-            return web.Response(status=403, content_type="text/html", text=(
-                "<!doctype html><meta charset=utf-8><title>Guildward</title><body style='font:16px system-ui;"
-                "padding:3rem;background:#0d1117;color:#e6edf3'><h1>This sign-in link has expired</h1>"
-                "<p>Links work once, for 10 minutes. Run <code>/guard dashboard</code> in your server for a new one."))
+        # "t" marks the other signed tokens (Discord sign-in state, server-scan state), never a sign-in link.
+        if payload is None or "t" in payload or not self.store.use_nonce(payload["x"], payload["e"]):
+            return self._page(403, "This sign-in link has expired",
+                              "Links work once, for 10 minutes. Run <code>/guard dashboard</code> in your server for a "
+                              "new one, or sign in with Discord.")
         uid = int(payload["u"])
         guilds = {payload["g"]} if payload.get("g") else set()
         old = request.cookies.get(COOKIE)
@@ -252,15 +305,103 @@ class Dashboard:
         if prev is not None and prev["user_id"] == uid:
             guilds |= set(json.loads(prev["guilds"] or "[]"))
             self.store.drop_session(_hash(old))
-        token = secrets.token_urlsafe(32)
-        self.store.add_session(_hash(token), user_id=uid, name=payload["n"], avatar=payload.get("a"),
-                               guilds=sorted(guilds), owner=bool(payload.get("o")), lang=payload.get("l") or "en",
-                               ttl=SESSION_TTL)
         dest = payload.get("p") or (f"/g/{payload['g']}" if payload.get("g") else "/owner")
-        resp = web.HTTPFound(f"/#{dest}")
-        resp.set_cookie(COOKIE, token, max_age=SESSION_TTL, httponly=True, samesite="Strict",
-                        secure=self.base_url.startswith("https://"), path="/")
+        raise self._session_response(f"/#{dest}", user_id=uid, name=payload["n"], avatar=payload.get("a"),
+                                     guilds=sorted(guilds), owner=bool(payload.get("o")),
+                                     lang=payload.get("l") or "en")
+
+    # --- Sign in with Discord (OAuth2, scope identify) --------------------------------------
+    @property
+    def oauth_enabled(self) -> bool:
+        return bool(self.client_secret and self.guard is not None and self.guard.application_id)
+
+    @property
+    def redirect_uri(self) -> str:
+        return f"{self.base_url}/auth/discord/callback"
+
+    async def public_auth(self, request: web.Request) -> web.Response:
+        """No sign-in: which sign-in methods the dashboard should offer."""
+        return web.json_response({"discord": self.oauth_enabled, "link": True})
+
+    def _oauth_off(self) -> web.Response:
+        return self._page(503, "Discord sign-in is off here",
+                          "This Guard instance has no <code>DISCORD_CLIENT_SECRET</code> set. Run "
+                          "<code>/guard dashboard</code> in your server for a sign-in link instead.")
+
+    async def discord_start(self, request: web.Request) -> web.StreamResponse:
+        if not self.oauth_enabled:
+            return self._oauth_off()
+        bind = secrets.token_urlsafe(24)
+        state = sign(self.secret, {"t": "login", "p": safe_next(request.query.get("next")), "b": _hash(bind),
+                                   "e": int(time.time()) + OAUTH_TTL, "x": secrets.token_hex(8)})
+        resp = web.HTTPFound("https://discord.com/oauth2/authorize?" + urlencode({
+            "client_id": str(self.guard.application_id), "response_type": "code", "redirect_uri": self.redirect_uri,
+            "scope": "identify", "state": state, "prompt": "none"}))
+        # Lax, not Strict: the callback is a top-level navigation coming back from discord.com.
+        resp.set_cookie(OAUTH_COOKIE, bind, max_age=OAUTH_TTL, httponly=True, samesite="Lax",
+                        secure=self.base_url.startswith("https://"), path="/auth/discord")
         raise resp
+
+    async def discord_callback(self, request: web.Request) -> web.StreamResponse:
+        q = request.query
+        bind = request.cookies.get(OAUTH_COOKIE, "")
+        payload = verify(self.secret, q.get("state", ""))
+        valid = (payload is not None and payload.get("t") == "login" and bool(bind)
+                 and hmac.compare_digest(str(payload.get("b", "")), _hash(bind))
+                 and self.store.use_nonce("login:" + str(payload.get("x")), int(payload.get("e", 0))))
+        resp: web.StreamResponse
+        if not valid:
+            resp = self._page(403, "This sign-in has expired", "A sign-in has to finish within 10 minutes, in "
+                              "the browser that started it. Start again from the dashboard.")
+        elif q.get("error") or not q.get("code"):
+            resp = web.HTTPFound("/dashboard")  # pressed Cancel on Discord's screen
+        elif not self.oauth_enabled:
+            resp = self._oauth_off()
+        elif (user := await self._discord_user(q["code"])) is None or not str(user.get("id", "")).isdigit():
+            resp = self._page(502, "Discord didn't confirm your account", "Please try again in a moment.")
+        else:
+            uid = int(user["id"])
+            avatar = (f"https://cdn.discordapp.com/avatars/{uid}/{user['avatar']}.png?size=64"
+                      if re.fullmatch(r"(a_)?[0-9a-f]{32}", str(user.get("avatar") or "")) else None)
+            owner = uid in self.owner_ids
+            resp = self._session_response(
+                safe_next(payload.get("p")) or self._home(uid, owner), user_id=uid,
+                name=str(user.get("global_name") or user.get("username") or uid)[:100], avatar=avatar, guilds=[],
+                owner=owner, lang="sv" if str(user.get("locale", "")).startswith("sv") else "en")
+        resp.del_cookie(OAUTH_COOKIE, path="/auth/discord")
+        if isinstance(resp, web.HTTPException):
+            raise resp
+        return resp
+
+    def _home(self, uid: int, owner: bool) -> str:
+        if owner:
+            return "/dashboard/owner"
+        for g in self.store.active_guilds():
+            if self.guard is not None and self.guard.get_guild(g["id"]) is not None and self.guard.access(g["id"], uid):
+                return f"/dashboard/g/{g['id']}"
+        return "/dashboard"
+
+    async def _discord_user(self, code: str) -> dict[str, Any] | None:
+        """Code -> access token -> /users/@me, then revoke the token: only the identity is kept, never the token."""
+        creds = {"client_id": str(self.guard.application_id), "client_secret": self.client_secret}
+        try:
+            async with aiohttp.ClientSession(timeout=aiohttp.ClientTimeout(total=15)) as http:
+                async with http.post(f"{DISCORD_API}/oauth2/token", data={
+                        **creds, "grant_type": "authorization_code", "code": code,
+                        "redirect_uri": self.redirect_uri}) as r:
+                    if r.status != 200:
+                        log.warning("discord sign-in: token exchange failed (%s)", r.status)
+                        return None
+                    access = (await r.json()).get("access_token", "")
+                async with http.get(f"{DISCORD_API}/users/@me", headers={"Authorization": f"Bearer {access}"}) as r:
+                    me = await r.json() if r.status == 200 else None
+                async with http.post(f"{DISCORD_API}/oauth2/token/revoke",
+                                     data={**creds, "token": access, "token_type_hint": "access_token"}):
+                    pass
+        except (aiohttp.ClientError, TimeoutError, ValueError) as e:
+            log.warning("discord sign-in failed: %s", type(e).__name__)
+            return None
+        return me if isinstance(me, dict) else None
 
     async def logout(self, request: web.Request) -> web.Response:
         token = request.cookies.get(COOKIE)
@@ -272,12 +413,13 @@ class Dashboard:
 
     async def me(self, request: web.Request) -> web.Response:
         s = request[SESSION]
-        ids = [g["id"] for g in self.store.active_guilds()] if request[OWNER] else sorted(request[GUILDS])
+        ids = [g["id"] for g in self.store.active_guilds()]
+        ids += [gid for gid in sorted(request[GUILDS]) if gid not in ids and not request[OWNER]]
         guilds = []
         for gid in ids:
             g = self.store.guild(gid)
-            if g is not None and (request[OWNER] or self._may_see(request, gid)):
-                guilds.append({"id": str(gid), "name": g["name"], "icon": g["icon"]})
+            if g is not None and (level := self._level(request, gid)):
+                guilds.append({"id": str(gid), "name": g["name"], "icon": g["icon"], "level": level})
         return web.json_response({"user": {"id": str(s["user_id"]), "name": s["name"], "avatar": s["avatar"]},
                                   "owner": request[OWNER], "lang": request[LANG], "guilds": guilds})
 
@@ -311,15 +453,32 @@ class Dashboard:
         row = self.store.alert(aid) if aid else None
         if row is None or row["guild_id"] != gid:
             return self._err(404, t("g.unknown_alert", lang))
-        action = str((await self._body(request)).get("action", ""))
+        body = await self._body(request)
+        action, note = str(body.get("action", "")), body.get("note")
+        if note is not None and (not isinstance(note, str) or len(note.strip()) > NOTE_MAX):
+            return self._err(400, t("g.note_long", lang))
+        note = (note or "").strip() or None
+        by_id, by_name = self._who(request)
+        if action in ("claim", "unclaim"):
+            force = request[LEVEL] == "admin"  # admins may release someone else's claim
+            if self.guard is not None:
+                ok, text = await self.guard.claim(aid, by_id=by_id, by_name=by_name, action=action, force=force)
+            else:
+                code = self.store.claim_alert(aid, by=by_id, by_name=by_name, action=action, force=force)
+                ok = code in ("claimed", "unclaimed")
+                text = t(f"g.claim_{code}", lang, name=self.store.alert(aid)["assigned_name"] or "?")
+            if not ok:
+                return self._err(409, text)
+            return web.json_response({"ok": True, "text": text,
+                                      "alert": self.reports.alert_dict(self.store.alert(aid), lang)})
         if action not in ALERT_ACTIONS:
             return self._err(400, t("g.fix_unknown", lang))
-        by_id, by_name = self._who(request)
         if self.guard is not None:
-            ok, text = await self.guard.act(gid, row["user_id"], action, by_id=by_id, by_name=by_name, alert_id=aid)
+            ok, text = await self.guard.act(gid, row["user_id"], action, by_id=by_id, by_name=by_name, alert_id=aid,
+                                            actor=self._actor(request, gid), note=note)
         elif action in ("resolve", "false_positive"):
             self.store.resolve_alert(aid, status="false_positive" if action == "false_positive" else "resolved",
-                                     by=by_id, by_name=by_name, action=action)
+                                     by=by_id, by_name=by_name, action=action, note=note)
             ok, text = True, t("g.done", lang, action=t(f"g.act_{action}", lang))
         else:
             return self._err(503, t("g.dash_off", lang))
@@ -351,7 +510,8 @@ class Dashboard:
             return self._err(400, t("g.fix_unknown", lang))
         by_id, by_name = self._who(request)
         if self.guard is not None:
-            ok, text = await self.guard.act(gid, uid, action, by_id=by_id, by_name=by_name)
+            ok, text = await self.guard.act(gid, uid, action, by_id=by_id, by_name=by_name,
+                                            actor=self._actor(request, gid))
         elif action in ("watch", "trust", "clear"):
             status = {"watch": "watch", "trust": "trusted", "clear": "none"}[action]
             self.store.set_member(gid, uid, status=status, status_by=by_id)
@@ -369,6 +529,7 @@ class Dashboard:
         st = self.store.settings(gid)
         out = {k: (str(v) if k.endswith("_id") and v else v) for k, v in st.items()}
         out["minor_role_ids"] = [str(r) for r in st["minor_role_ids"]]
+        out["dashboard_roles"] = dict(st["dashboard_roles"])
         return out
 
     async def get_settings(self, request: web.Request) -> web.Response:
@@ -380,6 +541,11 @@ class Dashboard:
         body = await self._body(request)
         try:
             clean_settings(body)
+            meta = self.guard.guild_meta(request[GID]) if self.guard is not None else None
+            if meta is not None and "dashboard_roles" in body:
+                known = {r["id"] for r in meta["roles"]}  # no @everyone, no bot-managed roles
+                if not {str(k) for k in body["dashboard_roles"]} <= known:
+                    raise ValueError("dashboard_roles: unknown role")
             self.store.update_settings(request[GID], body)
         except ValueError as e:
             return self._err(400, str(e))

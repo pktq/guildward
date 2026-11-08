@@ -84,6 +84,12 @@ CREATE TABLE IF NOT EXISTS sessions(
   owner INTEGER NOT NULL DEFAULT 0, lang TEXT NOT NULL DEFAULT 'en', expires INTEGER NOT NULL);
 CREATE TABLE IF NOT EXISTS used_nonces(nonce TEXT PRIMARY KEY, expires INTEGER NOT NULL);
 """
+# Columns added after a table first shipped. CREATE TABLE IF NOT EXISTS leaves old tables alone, so these are
+# added with ALTER TABLE on open (new and old databases alike).
+ADDED_COLUMNS: dict[str, tuple[tuple[str, str], ...]] = {
+    "alerts": (("assigned_to", "INTEGER"), ("assigned_name", "TEXT"), ("note", "TEXT")),
+}
+NOTE_MAX = 500
 
 DEFAULT_SETTINGS: dict[str, Any] = {
     "mode": "observe",
@@ -101,7 +107,9 @@ DEFAULT_SETTINGS: dict[str, Any] = {
     "minor_role_ids": [],
     "retention_days": 90,
     "lang": "en",
+    "dashboard_roles": {},  # {role_id: "view" | "act"}; owner and Manage Server always get "admin"
 }
+ACCESS = ("view", "act", "admin")  # dashboard levels, lowest first
 _ID_SETTINGS = {"alert_channel_id", "ping_role_id", "quarantine_role_id"}
 _CHOICES = {"mode": {"observe", "protect"}, "alert_min_level": {"yellow", "red"}, "lang": {"en", "sv"}}
 
@@ -124,6 +132,11 @@ def clean_settings(patch: dict[str, Any]) -> dict[str, Any]:
             if not isinstance(value, list) or not all(str(v).isdigit() for v in value):
                 raise ValueError("minor_role_ids must be a list of IDs")
             out[key] = [int(v) for v in value][:50]
+        elif key == "dashboard_roles":
+            if not isinstance(value, dict) or len(value) > 50 or not all(
+                    str(k).isdigit() and len(str(k)) < 21 and v in ("view", "act") for k, v in value.items()):
+                raise ValueError('dashboard_roles must map role IDs to "view" or "act"')
+            out[key] = {str(int(k)): v for k, v in value.items()}
         elif key == "retention_days":
             if not isinstance(value, int) or isinstance(value, bool) or not 7 <= value <= 365:
                 raise ValueError("retention_days must be 7..365")
@@ -137,6 +150,14 @@ def clean_settings(patch: dict[str, Any]) -> dict[str, Any]:
                 raise ValueError(f"{key} must be one of {sorted(_CHOICES[key])}")
             out[key] = value
     return out
+
+
+def role_access(*, admin: bool, role_ids: Iterable[int], dashboard_roles: dict[str, str]) -> str | None:
+    """Dashboard level from a member's current roles: "admin" | "act" | "view" | None (no access)."""
+    if admin:
+        return "admin"
+    got = {dashboard_roles.get(str(r)) for r in role_ids}
+    return "act" if "act" in got else "view" if "view" in got else None
 
 
 def now() -> int:
@@ -160,6 +181,14 @@ class Store:
         self.db = sqlite3.connect(self.path, isolation_level=None, check_same_thread=False)
         self.db.row_factory = sqlite3.Row
         self.db.executescript(SCHEMA)
+        self._add_columns()
+
+    def _add_columns(self) -> None:
+        for table, cols in ADDED_COLUMNS.items():
+            have = {r["name"] for r in self.db.execute(f"PRAGMA table_info({table})")}
+            for name, decl in cols:
+                if name not in have:
+                    self.db.execute(f"ALTER TABLE {table} ADD COLUMN {name} {decl}")
 
     def close(self) -> None:
         self.db.close()
@@ -358,14 +387,33 @@ class Store:
                         "AND created_at>=? ORDER BY id DESC LIMIT 1", gid, kind, user_id, target_id, now() - within)
 
     def resolve_alert(self, aid: int, *, status: str, by: int | None, by_name: str | None,
-                      action: str | None) -> None:
-        self.x("UPDATE alerts SET status=?, resolved_by=?, resolved_by_name=?, resolved_at=?, action=? WHERE id=?",
-               status, by, by_name, now(), action, aid)
+                      action: str | None, note: str | None = None) -> None:
+        self.x("UPDATE alerts SET status=?, resolved_by=?, resolved_by_name=?, resolved_at=?, action=?, "
+               "note=COALESCE(?, note) WHERE id=?", status, by, by_name, now(), action, (note or "")[:NOTE_MAX] or None,
+               aid)
         if status == "false_positive":
             row = self.alert(aid)
             if row:
                 for s in json.loads(row["signals"]):
                     self.x("INSERT INTO feedback(code,guild_id,at) VALUES(?,?,?)", s["code"], row["guild_id"], now())
+
+    def claim_alert(self, aid: int, *, by: int, by_name: str, action: str, force: bool = False) -> str:
+        """action: claim | unclaim | toggle. Returns claimed | unclaimed | taken | not_yours | closed.
+
+        A claim never overwrites another moderator's; unclaiming someone else's needs force (server admins)."""
+        row = self.alert(aid)
+        if row is None or row["status"] != "open":
+            return "closed"
+        if action == "toggle":
+            action = "unclaim" if row["assigned_to"] == by else "claim"
+        if action == "claim":
+            n = self.db.execute("UPDATE alerts SET assigned_to=?, assigned_name=? WHERE id=? AND status='open' "
+                                "AND (assigned_to IS NULL OR assigned_to=?)", (by, by_name[:100], aid, by)).rowcount
+            return "claimed" if n else "taken"
+        if row["assigned_to"] is not None and row["assigned_to"] != by and not force:
+            return "not_yours"
+        self.x("UPDATE alerts SET assigned_to=NULL, assigned_name=NULL WHERE id=?", aid)
+        return "unclaimed"
 
     # --- metrics ----------------------------------------------------------------------------
     def bump(self, gid: int, metric: str, n: int = 1, at: int | None = None) -> None:

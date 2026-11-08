@@ -7,7 +7,7 @@ import { splitName } from "@/lib/dashboard/api";
 import { safeUrl } from "@/lib/dashboard/format";
 import type { MemberReport, MemberRow } from "@/lib/dashboard/types";
 import { Chart } from "./charts";
-import { useApi, useDash } from "./context";
+import { useApi, useCan, useDash } from "./context";
 import { Async, Avatar, Empty, FlagChips, Icon, LevelPill, Panel, PageHead, Sentences, SignalList, TimeEl, Trend, Who } from "./ui";
 
 export function MemberTable({ rows, gid, compact }: { rows: MemberRow[]; gid: string | null; compact?: boolean }) {
@@ -127,6 +127,7 @@ const TR_ICON = { rising: "up", falling: "down", stable: "flat" } as const;
 
 function MemberBody({ r, gid, onUpdate }: { r: MemberReport; gid: string; onUpdate: (m: Partial<MemberRow>) => void }) {
   const { t, f, href, call, confirm, toast, fail } = useDash();
+  const canAct = useCan(gid)("act");
   const [busy, setBusy] = useState<string | null>(null);
   const m = r.member, v = r.verdict, pr = r.prediction, n = splitName(m.name);
   const meta = [
@@ -171,7 +172,7 @@ function MemberBody({ r, gid, onUpdate }: { r: MemberReport; gid: string; onUpda
             </div>
           </div>
         </div>
-        <div className="person-actions" role="group" aria-label={t("memberActions")}>
+        {canAct && <div className="person-actions" role="group" aria-label={t("memberActions")}>
           {MEMBER_ACTIONS.map((a) => {
             const on = (a === "watch" && m.status === "watch") || (a === "trust" && m.status === "trusted");
             return (
@@ -181,7 +182,7 @@ function MemberBody({ r, gid, onUpdate }: { r: MemberReport; gid: string; onUpda
               </button>
             );
           })}
-        </div>
+        </div>}
       </header>
       <div className="grid grid-person">
         <section className="panel panel-verdict" aria-labelledby="p-verdict">
