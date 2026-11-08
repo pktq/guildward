@@ -58,12 +58,22 @@ export const GUARD_STEPS: Step[] = [
     id: "minors",
     title: "Tell Guard which roles mean under 18",
     why: "Guard weighs a message much more heavily when it's aimed at a minor. It picks up ages members state themselves and age roles by name, and you can mark your own roles so nothing is missed.",
-    code: "/guard dashboard",
     same: [
-      "Run /guard dashboard. Guildward sends you a private sign-in link that works once, for 10 minutes.",
+      "Open the dashboard and press Sign in with Discord. (Or run /guard dashboard for a one-time sign-in link.)",
       "Open Settings and tick the roles that mean a member is under 18.",
       "While you're there: alert level, ping role, quarantine role and how long data is kept (7 to 365 days, 90 by default).",
     ],
+  },
+  {
+    id: "team",
+    title: "Give your moderators dashboard access",
+    why: "Admins (the owner and anyone with Manage Server) always get in. Everyone else gets in through a role you pick. Access is checked against their current roles on every page, so taking the role away takes access away at once.",
+    same: [
+      "In the dashboard, open Settings, then Dashboard access.",
+      "Pick a role and choose View (alerts, members and reports) or Act (also resolve alerts and time out, kick or ban, within that person's own Discord permissions).",
+      "Your moderators sign in with Discord on the dashboard. Settings and the one-click fixes stay with admins.",
+    ],
+    tip: "On an alert, I'm on it shows the team who is handling it, and a short note when closing it keeps the case history readable.",
   },
   {
     id: "members",

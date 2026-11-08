@@ -63,7 +63,7 @@ const WHY: [string, ReactNode][] = [
 const DOES: [string, string][] = [
   [
     "One alert per person, not a stream.",
-    "Alerts go to your private mod channel. If someone keeps going, the same alert grows, with buttons for timeout, kick, ban, delete, watch, resolved and false alarm.",
+    "Alerts go to your private mod channel. If someone keeps going, the same alert grows, with buttons for timeout, kick, ban, delete and watch. I'm on it shows who is handling it, and resolving or marking a false alarm takes an optional note.",
   ],
   [
     "Reasons in plain words.",
@@ -83,7 +83,7 @@ const DOES: [string, string][] = [
   ],
   [
     "A dashboard for the team.",
-    "Server health, an A to F grade, alerts, members, full person reports with a timeline, settings and a printable report. Sign-in links come from /guard dashboard and work once.",
+    "Server health, an A to F grade, alerts, members, full person reports with a timeline, settings and a printable report. Your team signs in with Discord; you choose which roles can view or act.",
   ],
 ];
 
@@ -91,7 +91,7 @@ const KEEPS: [string, string][] = [
   ["Message text is never stored.", "Guard reads each message in memory, keeps the warning sign it found and the IDs involved, and lets the text go. An alert can show the message in Discord; Guard itself doesn't keep it."],
   ["Data has an end date.", "Signals and scores are deleted after 90 days by default. You can set anything from 7 to 365 days."],
   ["You can wipe it.", "/guard erase removes everything Guard holds about the server. It needs Administrator or the server owner."],
-  ["Only your team sees it.", "Commands need Manage Server, the dashboard re-checks that permission on every request, and alerts only go to a channel @everyone can't see."],
+  ["Only your team sees it.", "Commands need Manage Server. The dashboard lets in admins and the roles you pick, checked against each person's current roles on every request. Alerts only go to a channel @everyone can't see."],
 ];
 
 export default function AdminsPage() {
@@ -175,7 +175,7 @@ export default function AdminsPage() {
       <section className="pa-setup" id="setup" aria-labelledby="setup-title">
         <div className="pa-setup-head">
           <h2 id="setup-title">Set it up</h2>
-          <p>Eight steps. You need Manage Server, and a moderator role for the alert channel.</p>
+          <p>Nine steps. You need Manage Server, and a moderator role for the alert channel.</p>
         </div>
         <SetupSteps steps={GUARD_STEPS} install={{ guard: links.guard }} storageKey="gw-admins" />
       </section>
