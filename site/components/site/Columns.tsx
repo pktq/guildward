@@ -22,7 +22,6 @@ export function Columns({
   height: string;
 }) {
   const [at, setAt] = useState<number | null>(null);
-  const [table, setTable] = useState(false);
   const max = Math.max(0, ...values);
   const peak = max > 0 ? values.indexOf(max) : -1;
   const last = values.length - 1;
@@ -82,29 +81,24 @@ export function Columns({
         <span>{days[0]}</span>
         <span>{days[last]}</span>
       </figcaption>
-      <details className="gw-table" onToggle={(e) => setTable(e.currentTarget.open)}>
-        <summary>Show as a table</summary>
-        {table && (
-          <div className="gw-table-scroll">
-            <table>
-              <thead>
-                <tr>
-                  <th scope="col">Day</th>
-                  <th scope="col">{unit[0].toUpperCase() + unit.slice(1)}</th>
-                </tr>
-              </thead>
-              <tbody>
-                {values.map((v, i) => (
-                  <tr key={days[i]}>
-                    <td>{days[i]}</td>
-                    <td data-zero={v === 0 || undefined}>{nf.format(v)}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        )}
-      </details>
+      {/* Screen readers get the numbers as a table; sighted users read them off the chart. */}
+      <table className="gw-sr">
+        <caption>{unit[0].toUpperCase() + unit.slice(1)} per day</caption>
+        <thead>
+          <tr>
+            <th scope="col">Day</th>
+            <th scope="col">{unit[0].toUpperCase() + unit.slice(1)}</th>
+          </tr>
+        </thead>
+        <tbody>
+          {values.map((v, i) => (
+            <tr key={days[i]}>
+              <td>{days[i]}</td>
+              <td>{nf.format(v)}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
     </figure>
   );
 }
