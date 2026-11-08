@@ -206,12 +206,17 @@ const PANELS: Panel[] = [
             description={
               <ul className="dc-lines">
                 <li>
-                  <Dot level="red" /> <b>free robux hub</b>: The server is brand new (3 days old). Bad servers are often
-                  new and short-lived.
+                  <Dot level="red" />
+                  <span>
+                    <b>free robux hub</b>: The server is brand new (3 days old). Bad servers are often new and
+                    short-lived.
+                  </span>
                 </li>
                 <li>
-                  <Dot level="yellow" /> <b>late night vc</b>: Anyone can post right away, even accounts made a minute
-                  ago.
+                  <Dot level="yellow" />
+                  <span>
+                    <b>late night vc</b>: Anyone can post right away, even accounts made a minute ago.
+                  </span>
                 </li>
               </ul>
             }
@@ -266,7 +271,7 @@ export function Showcase() {
 
   const p = PANELS[active];
   return (
-    <section className="gw-show" aria-labelledby="show-title" style={{ ["--pw" as string]: `${p.width}px` }}>
+    <section className="gw-show" aria-labelledby="show-title">
       <h2 id="show-title" className="gw-sr">
         Every way a kid can ask
       </h2>

@@ -97,7 +97,7 @@ export function Columns({
                 {values.map((v, i) => (
                   <tr key={days[i]}>
                     <td>{days[i]}</td>
-                    <td>{nf.format(v)}</td>
+                    <td data-zero={v === 0 || undefined}>{nf.format(v)}</td>
                   </tr>
                 ))}
               </tbody>

@@ -123,7 +123,8 @@ async function Stats() {
       </section>
 
       <section className="st-ledger" aria-label="Totals">
-        <div className="st-group" data-reveal>
+        <div className="st-group st-group-guard" data-reveal>
+          <p className="st-eyebrow">Guard</p>
           <h2>In servers running Guard</h2>
           <dl>
             {guard.map(([n, label, sub]) => (
@@ -137,7 +138,8 @@ async function Stats() {
             ))}
           </dl>
         </div>
-        <div className="st-group" data-reveal>
+        <div className="st-group st-group-kids" data-reveal>
+          <p className="st-eyebrow">Kids&rsquo; app</p>
           <h2>In kids&rsquo; own Discord</h2>
           <dl>
             {pocket.map(([n, label]) => (

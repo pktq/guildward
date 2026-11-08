@@ -747,7 +747,7 @@
 .gw-show-caption {
   position: absolute;
   top: calc(50% - 150px);
-  left: calc(50% + var(--pw) * var(--z) / 2 + 48px);
+  left: calc(50% + 230px * var(--z) + 48px); /* half the widest panel (460px): fixed, so it doesn't move per slide */
   width: min(26vw - 96px, 300px);
 }
 .gw-show-name {
@@ -758,6 +758,7 @@
 .gw-show-text {
   color: var(--field-1-soft);
   margin-top: 10px;
+  min-height: 4lh; /* longest caption; keeps the arrows still */
 }
 .gw-show-nav {
   display: flex;
@@ -1166,18 +1167,21 @@
   border: 0;
   padding: 0;
   margin: 0;
+  min-width: 0;
+}
+.gw-seg legend {
+  font-weight: 600;
+  font-size: var(--step-small);
+  color: #3d4664;
+  padding: 0 0 8px;
+}
+.gw-seg-track {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 4px;
   background: #eef1f5;
   border-radius: 8px;
   padding: 4px;
-}
-.gw-seg legend {
-  font-weight: 600;
-  padding: 0 0 8px;
-  float: left;
-  grid-column: 1 / -1;
 }
 .gw-seg label {
   position: relative;
@@ -1227,7 +1231,7 @@
   display: grid;
   grid-template-columns: repeat(12, minmax(0, 1fr));
   gap: 8px;
-  padding: 10px var(--edge) clamp(24px, 3vw, 40px);
+  padding: 10px;
   background: var(--bg);
 }
 .gw-tile {

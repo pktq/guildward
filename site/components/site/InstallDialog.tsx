@@ -28,26 +28,30 @@ export function InstallDialog({ links }: { links: InstallLinks }) {
       </p>
       <fieldset className="gw-seg">
         <legend>Where does it go?</legend>
-        <label>
-          <input type="radio" name="install-where" checked={where === "kid"} onChange={() => setWhere("kid")} />
-          <span>My account</span>
-        </label>
-        <label>
-          <input type="radio" name="install-where" checked={where === "server"} onChange={() => setWhere("server")} />
-          <span>A server I run</span>
-        </label>
+        <div className="gw-seg-track">
+          <label>
+            <input type="radio" name="install-where" checked={where === "kid"} onChange={() => setWhere("kid")} />
+            <span>My account</span>
+          </label>
+          <label>
+            <input type="radio" name="install-where" checked={where === "server"} onChange={() => setWhere("server")} />
+            <span>A server I run</span>
+          </label>
+        </div>
       </fieldset>
       {where === "server" && (
         <fieldset className="gw-seg">
           <legend>How much should it do?</legend>
-          <label>
-            <input type="radio" name="install-mode" checked={mode === "checks"} onChange={() => setMode("checks")} />
-            <span>Checks only</span>
-          </label>
-          <label>
-            <input type="radio" name="install-mode" checked={mode === "guard"} onChange={() => setMode("guard")} />
-            <span>Full Guard</span>
-          </label>
+          <div className="gw-seg-track">
+            <label>
+              <input type="radio" name="install-mode" checked={mode === "checks"} onChange={() => setMode("checks")} />
+              <span>Checks only</span>
+            </label>
+            <label>
+              <input type="radio" name="install-mode" checked={mode === "guard"} onChange={() => setMode("guard")} />
+              <span>Full Guard</span>
+            </label>
+          </div>
         </fieldset>
       )}
       <p className="gw-dialog-copy" aria-live="polite">
