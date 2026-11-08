@@ -20,6 +20,9 @@ export function Footer() {
             <Link href="/parents">For parents</Link>
           </li>
           <li>
+            <Link href="/admins">For server admins</Link>
+          </li>
+          <li>
             <Link href="/stats">Stats</Link>
           </li>
           <li>

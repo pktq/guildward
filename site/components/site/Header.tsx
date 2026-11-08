@@ -6,7 +6,8 @@ import { ShieldMark } from "./ShieldMark";
 
 const LINKS = [
   { href: "/", label: "Home" },
-  { href: "/parents", label: "For parents" },
+  { href: "/parents", label: "Parents" },
+  { href: "/admins", label: "Servers" },
   { href: "/stats", label: "Stats" },
   { href: "/dashboard", label: "Dashboard" },
 ] as const;

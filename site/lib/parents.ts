@@ -10,7 +10,8 @@ export type Step = {
   same?: string[];
   list?: string[];
   see?: { canTitle: string; can: string[]; cannotTitle: string; cannot: string[] };
-  install?: "kid";
+  install?: "kid" | "guard";
+  code?: string; // a command to show as a copyable line
   note?: string;
   tip?: string;
   src?: [string, string][];

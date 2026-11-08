@@ -3,9 +3,19 @@
 import { useEffect, useRef, useState } from "react";
 import type { Step } from "@/lib/parents";
 
-const KEY = "gw-parents"; // { done: string[], at: number }, this browser only
+const LABEL = { kid: "Add Guildward to a Discord account", guard: "Add Guard to your server" };
 
-export function SetupSteps({ steps, install }: { steps: Step[]; install: string }) {
+/** One step per page. Progress ({ done, at }) is kept in this browser only, under `storageKey`. */
+export function SetupSteps({
+  steps,
+  install,
+  storageKey,
+}: {
+  steps: Step[];
+  install: Partial<Record<"kid" | "guard", string>>;
+  storageKey: string;
+}) {
+  const KEY = storageKey;
   const [done, setDone] = useState<string[]>([]);
   const [at, setAt] = useState(0);
   const [device, setDevice] = useState<"desktop" | "mobile">("desktop");
@@ -21,7 +31,7 @@ export function SetupSteps({ steps, install }: { steps: Step[]; install: string 
     } catch {
       // private mode or blocked storage: progress just isn't remembered
     }
-  }, [steps.length]);
+  }, [steps.length, KEY]);
 
   function save(nextDone: string[], nextAt: number) {
     setDone(nextDone);
@@ -95,11 +105,12 @@ export function SetupSteps({ steps, install }: { steps: Step[]; install: string 
             ))}
           </ul>
         )}
-        {s.install && (
-          <a className="gw-btn gw-btn-accent pa-install" href={install} rel="noopener">
-            Add Guildward to a Discord account
+        {s.install && install[s.install] && (
+          <a className="gw-btn gw-btn-accent pa-install" href={install[s.install]} rel="noopener">
+            {LABEL[s.install]}
           </a>
         )}
+        {s.code && <code className="pa-code">{s.code}</code>}
         {lines.length > 0 && (
           <ol className="pa-do">
             {lines.map((x) => (

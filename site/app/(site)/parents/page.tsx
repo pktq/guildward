@@ -281,7 +281,7 @@ export default function ParentsPage() {
           <h2 id="setup-title">Set up Discord together</h2>
           <p>Nine steps. Do them with your kid holding the phone, so they see everything that changes.</p>
         </div>
-        <SetupSteps steps={STEPS} install={install} />
+        <SetupSteps steps={STEPS} install={{ kid: install }} storageKey="gw-parents" />
       </section>
 
       <section className="pa-happens" id="happens" aria-labelledby="happens-title">

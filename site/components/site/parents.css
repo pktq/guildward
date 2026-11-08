@@ -11,6 +11,9 @@
 .pa-intro .gw-lead {
   max-width: 46ch;
 }
+.pa-cta {
+  margin-top: 28px;
+}
 .pa-toc {
   margin-top: 32px;
   display: flex;
@@ -254,6 +257,20 @@
 .pa-install {
   margin-top: 20px;
   align-self: flex-start;
+}
+.pa-code {
+  display: block;
+  margin-top: 20px;
+  align-self: flex-start;
+  padding: 10px 14px;
+  border-radius: 6px;
+  background: #0b1220;
+  color: #e3e9e7;
+  font-family: ui-monospace, "Cascadia Mono", Menlo, Consolas, monospace;
+  font-size: var(--step-small);
+  font-weight: 500;
+  overflow-x: auto;
+  max-width: 100%;
 }
 .pa-do,
 .pa-bullets,

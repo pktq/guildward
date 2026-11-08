@@ -87,9 +87,9 @@ export default function Home() {
             <Link className="gw-textlink" href="/parents">
               For parents <span aria-hidden="true">→</span>
             </Link>
-            <a className="gw-textlink" href="#guard">
+            <Link className="gw-textlink" href="/admins">
               For server admins <span aria-hidden="true">→</span>
-            </a>
+            </Link>
           </div>
         </div>
         <div className="gw-hero-stage">
@@ -313,8 +313,8 @@ export default function Home() {
               members until a moderator looks.
             </p>
             <p>
-              <Link className="gw-textlink" href="/dashboard">
-                Open the admin dashboard <span aria-hidden="true">→</span>
+              <Link className="gw-textlink" href="/admins">
+                Set up Guard on your server <span aria-hidden="true">→</span>
               </Link>
             </p>
           </div>
