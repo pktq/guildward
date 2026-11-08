@@ -25,14 +25,11 @@ export function DoorFilm() {
           />
         ) : (
           <div className="gw-film-poster">
-            <span className="gw-film-door" aria-hidden="true" />
             {ready ? (
-              <button type="button" className="gw-film-play" onClick={() => setPlaying(true)}>
-                <svg viewBox="0 0 24 24" width="28" height="28" aria-hidden="true" focusable="false">
+              <button type="button" className="gw-film-play" onClick={() => setPlaying(true)} aria-label="Play the film">
+                <svg viewBox="0 0 24 24" width="32" height="32" aria-hidden="true" focusable="false">
                   <path d="M8 5v14l11-7z" fill="currentColor" />
                 </svg>
-                Play
-                <span className="gw-film-note">Plays from YouTube</span>
               </button>
             ) : (
               <p className="gw-film-soon">Coming soon</p>
